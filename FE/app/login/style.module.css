@@ -1,0 +1,194 @@
+/* Import font chữ từ Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Chiều cao tối thiểu 100% viewport height */
+  background-image: url("/assets/images/backgrounds/hero-bg.jpg"); /* Đường dẫn đến ảnh nền */
+  background-size: cover; /* Ảnh nền bao phủ toàn bộ container */
+  background-position: center; /* Ảnh nền căn giữa */
+  font-family: 'Poppins', sans-serif; /* Sử dụng font chữ Poppins */
+}
+
+.wrapper {
+  background-color: rgba(255, 255, 255, 0.1); /* Màu trắng trong suốt */
+  border-radius: 1rem;
+  padding: 2rem; /* Giảm padding */
+  backdrop-filter: blur(10px); /* Hiệu ứng làm mờ */
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); /* Bóng đổ */
+  width: 100%;
+  max-width: 350px; /* Giảm max-width */
+  text-align: center; /* Căn giữa nội dung */
+}
+
+.title {
+  font-size: 2rem; /* Giảm kích thước chữ */
+  font-weight: 700; /* In đậm */
+  margin-bottom: 1.5rem; /* Giảm margin bottom */
+  color: #fff; /* Màu trắng */
+  text-shadow: 0 0.2rem 0.3rem rgba(0, 0, 0, 0.3); /* Bóng chữ */
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem; /* Giảm margin bottom */
+}
+
+.formGroup label {
+  font-size: 1rem; /* Giảm kích thước chữ */
+  font-weight: 500; /* Medium */
+  margin-bottom: 0.3rem; /* Giảm margin bottom */
+  color: #eee; /* Màu xám nhạt */
+  text-align: left; /* Căn trái label */
+  transition: color 0.3s ease; /* Hiệu ứng chuyển màu */
+}
+
+.formGroup label:hover {
+  color: #fff; /* Màu trắng khi hover */
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #fff; /* Đường kẻ trắng */
+  padding-bottom: 0.3rem; /* Giảm padding bottom */
+  transition: border-bottom-color 0.3s ease; /* Hiệu ứng chuyển màu đường viền */
+}
+
+.inputContainer:focus-within {
+  border-bottom-color: #29ABE2; /* Màu xanh khi focus */
+}
+
+.icon {
+  position: absolute;
+  left: 0;
+  color: #fff; /* Màu trắng */
+  font-size: 1rem; /* Giảm kích thước icon */
+  opacity: 0.8; /* Độ mờ */
+  transition: transform 0.3s ease, color 0.3s ease; /* Hiệu ứng chuyển động và chuyển màu */
+}
+
+.inputContainer:hover .icon {
+  transform: translateX(0.2rem); /* Di chuyển sang phải một chút */
+}
+
+.inputContainer:focus-within .icon {
+  color: #29ABE2; /* Màu xanh khi focus */
+}
+
+.inputContainer input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0.3rem 2rem; /* Giảm padding */
+  font-size: 0.9rem; /* Giảm kích thước chữ */
+  color: #fff; /* Màu trắng */
+  background: transparent; /* Nền trong suốt */
+}
+
+.inputContainer input::placeholder {
+  color: rgba(255, 255, 255, 0.8); /* Màu chữ placeholder */
+}
+
+.forgotPassword {
+  text-align: right;
+  margin-bottom: 1.5rem; /* Giảm margin bottom */
+}
+
+.forgotPassword a {
+  color: #eee; /* Màu xám nhạt */
+  text-decoration: none;
+  font-weight: 500; /* Medium */
+  transition: color 0.3s ease; /* Hiệu ứng chuyển màu */
+}
+
+.forgotPassword a:hover {
+  color: #fff; /* Màu trắng khi hover */
+}
+
+.loginButton {
+  background: linear-gradient(to right, #29ABE2, #4F51E0, #9951E0); /* Gradient màu */
+  color: #fff; /* Màu trắng */
+  border: none;
+  padding: 0.8rem 1.5rem; /* Giảm padding */
+  border-radius: 3rem;
+  font-size: 1rem; /* Giảm kích thước chữ */
+  font-weight: 600; /* Bán đậm */
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng chuyển động và bóng đổ */
+  box-shadow: 0 0.5rem 1rem rgba(79, 81, 224, 0.3); /* Bóng đổ */
+}
+
+.loginButton:hover {
+  transform: translateY(-0.2rem); /* Nâng lên một chút khi hover */
+  box-shadow: 0 0.7rem 1.2rem rgba(79, 81, 224, 0.5); /* Bóng đổ đậm hơn khi hover */
+}
+
+.orSignUp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem; /* Giảm margin top */
+  margin-bottom: 1rem; /* Giảm margin bottom */
+  color: #eee; /* Màu xám nhạt */
+  font-weight: 500; /* Medium */
+  font-size: 0.9rem; /* Giảm kích thước chữ */
+}
+
+.socialIcons {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem; /* Giảm margin top */
+}
+
+.socialIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem; /* Giảm kích thước icon */
+  height: 3rem; /* Giảm kích thước icon */
+  border-radius: 50%;
+  margin: 0 0.5rem; /* Giảm margin */
+  background-color: rgba(255, 255, 255, 0.2); /* Màu trắng trong suốt */
+  color: #fff; /* Màu trắng */
+  text-decoration: none;
+  transition: transform 0.3s ease; /* Hiệu ứng chuyển động */
+}
+
+.socialIcon:hover {
+  transform: translateY(-0.2rem); /* Nâng lên một chút khi hover */
+}
+
+.socialIcon img {
+  width: 1.5rem; /* Giảm kích thước ảnh */
+  height: 1.5rem; /* Giảm kích thước ảnh */
+}
+
+.signUp {
+  margin-top: 2rem; /* Giảm margin top */
+  font-size: 0.9rem; /* Giảm kích thước chữ */
+  font-weight: 500; /* Medium */
+  color: #eee; /* Màu xám nhạt */
+}
+
+.signUp a {
+  color: #fff; /* Màu trắng */
+  text-decoration: none;
+  font-weight: 600; /* Bán đậm */
+  margin-left: 0.3rem; /* Giảm margin left */
+  transition: color 0.3s ease; /* Hiệu ứng chuyển màu */
+}
+
+.signUp a:hover {
+  color: #29ABE2; /* Màu xanh khi hover */
+}

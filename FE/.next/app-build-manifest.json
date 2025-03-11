@@ -16,10 +16,17 @@
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
-    "/index3/page": [
+    "/login/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/index3/page.js"
+      "static/css/app/login/page.css",
+      "static/chunks/app/login/page.js"
+    ],
+    "/register/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/register/page.css",
+      "static/chunks/app/register/page.js"
     ]
   }
 }
