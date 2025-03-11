@@ -1,7 +1,7 @@
 "use client";
 import useClickOutside from "@/utility/useClickOutside";
 import Link from "next/link";
-import Image from 'next/image';
+import Image from "next/image";
 import { Fragment, useState, useRef, useEffect } from "react";
 import { Accordion } from "react-bootstrap";
 
@@ -33,7 +33,7 @@ const Menu = () => {
         >
           <ul className="navigation clearfix">
             <li className="current">
-              <a href="index3">Home</a>
+              <a href="/">Home</a>
             </li>
             <li>
               <Link href="about">About</Link>
@@ -179,35 +179,18 @@ const Header1 = ({ sidebarClick }) => {
                       className={`dropdown-menu ${
                         isDropdownOpen ? "show" : ""
                       }`}
-
                     >
                       <li>
-                        <Link
-                          href="/login"
-                        >
-                          Login
-                        </Link>
+                        <Link href="/login">Login</Link>
                       </li>
                       <li>
-                        <Link
-                          href="/my-account"
-                        >
-                          My Account
-                        </Link>
+                        <Link href="/my-account">My Account</Link>
                       </li>
                       <li>
-                        <Link
-                          href="/settings"
-                        >
-                          Settings
-                        </Link>
+                        <Link href="/settings">Settings</Link>
                       </li>
                       <li>
-                        <Link
-                          href="/login"
-                        >
-                          Logout
-                        </Link>
+                        <Link href="/login">Logout</Link>
                       </li>
                     </ul>
                   </div>
