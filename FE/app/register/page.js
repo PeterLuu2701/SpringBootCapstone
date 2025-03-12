@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import styles from './style.module.css'; // Import CSS Module
+import ReveloLayout from '@/layout/ReveloLayout';
 
 const RegisterPage = () => {
   const [name, setName] = useState('');
@@ -15,6 +16,7 @@ const RegisterPage = () => {
   };
 
   return (
+    <ReveloLayout>
     <div className={styles.container}>
       <div className={styles.wrapper}>
         <h1 className={styles.title}>Register</h1>
@@ -71,6 +73,7 @@ const RegisterPage = () => {
         </div>
       </div>
     </div>
+    </ReveloLayout>
   );
 };
 

@@ -1,6 +1,10 @@
 {
-  "/about/page": "app/about/page.js",
-  "/page": "app/page.js",
+  "/profile/page": "app/profile/page.js",
+  "/contact/page": "app/contact/page.js",
   "/login/page": "app/login/page.js",
-  "/register/page": "app/register/page.js"
+  "/register/page": "app/register/page.js",
+  "/tour-details/page": "app/tour-details/page.js",
+  "/forgot-password/page": "app/forgot-password/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js"
 }

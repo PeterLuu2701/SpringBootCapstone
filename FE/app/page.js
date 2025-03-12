@@ -199,8 +199,7 @@ const page = () => {
               backgroundImage:
                 "url(assets/images/newsletter/newsletter-bg-lines.png)",
             }}
-          >
-          </div>
+          ></div>
         </div>
       </section>
       {/* CTA Three Area end */}
