@@ -42,6 +42,9 @@ const Menu = () => {
             <li>
               <a href="destination1">Destinations</a>
             </li>
+            <li>
+              <a href="blog">Blog</a>
+            </li>
             <li className="dropdown">
               <a href="#">Pages</a>
               <ul>
