@@ -1,8 +1,6 @@
 {
+  "/faqs/page": "app/faqs/page.js",
+  "/blog-details/page": "app/blog-details/page.js",
   "/page": "app/page.js",
-  "/login/page": "app/login/page.js",
-  "/about/page": "app/about/page.js",
-  "/blog/page": "app/blog/page.js",
-  "/tour-details/page": "app/tour-details/page.js",
-  "/blog-details/page": "app/blog-details/page.js"
+  "/blog/page": "app/blog/page.js"
 }
