@@ -17,7 +17,7 @@ const page = () => {
               >
                 <div className="image">
                   <img
-                    src="assets/images/blog/blog-list1.jpg"
+                    src="/assets/images/blog/blog-list1.jpg"
                     alt="Blog List"
                   />
                 </div>
@@ -61,7 +61,7 @@ const page = () => {
               >
                 <div className="image">
                   <img
-                    src="assets/images/blog/blog-list2.jpg"
+                    src="/assets/images/blog/blog-list2.jpg"
                     alt="Blog List"
                   />
                 </div>
@@ -105,7 +105,7 @@ const page = () => {
               >
                 <div className="image">
                   <img
-                    src="assets/images/blog/blog-list3.jpg"
+                    src="/assets/images/blog/blog-list3.jpg"
                     alt="Blog List"
                   />
                 </div>
@@ -149,7 +149,7 @@ const page = () => {
               >
                 <div className="image">
                   <img
-                    src="assets/images/blog/blog-list4.jpg"
+                    src="/assets/images/blog/blog-list4.jpg"
                     alt="Blog List"
                   />
                 </div>
@@ -193,7 +193,7 @@ const page = () => {
               >
                 <div className="image">
                   <img
-                    src="assets/images/blog/blog-list5.jpg"
+                    src="/assets/images/blog/blog-list5.jpg"
                     alt="Blog List"
                   />
                 </div>
@@ -324,7 +324,7 @@ const page = () => {
                   <ul>
                     <li>
                       <div className="image">
-                        <img src="assets/images/widgets/news1.jpg" alt="News" />
+                        <img src="/assets/images/widgets/news1.jpg" alt="News" />
                       </div>
                       <div className="content">
                         <h6>
@@ -339,7 +339,7 @@ const page = () => {
                     </li>
                     <li>
                       <div className="image">
-                        <img src="assets/images/widgets/news2.jpg" alt="News" />
+                        <img src="/assets/images/widgets/news2.jpg" alt="News" />
                       </div>
                       <div className="content">
                         <h6>
@@ -354,7 +354,7 @@ const page = () => {
                     </li>
                     <li>
                       <div className="image">
-                        <img src="assets/images/widgets/news3.jpg" alt="News" />
+                        <img src="/assets/images/widgets/news3.jpg" alt="News" />
                       </div>
                       <div className="content">
                         <h6>
@@ -377,57 +377,57 @@ const page = () => {
                 >
                   <h5 className="widget-title">Gallery</h5>
                   <div className="gallery">
-                    <a href="assets/images/widgets/gallery1.jpg">
+                    <a href="/assets/images/widgets/gallery1.jpg">
                       <img
-                        src="assets/images/widgets/gallery1.jpg"
+                        src="/assets/images/widgets/gallery1.jpg"
                         alt="Gallery"
                       />
                     </a>
-                    <a href="assets/images/widgets/gallery2.jpg">
+                    <a href="/assets/images/widgets/gallery2.jpg">
                       <img
-                        src="assets/images/widgets/gallery2.jpg"
+                        src="/assets/images/widgets/gallery2.jpg"
                         alt="Gallery"
                       />
                     </a>
-                    <a href="assets/images/widgets/gallery3.jpg">
+                    <a href="/assets/images/widgets/gallery3.jpg">
                       <img
-                        src="assets/images/widgets/gallery3.jpg"
+                        src="/assets/images/widgets/gallery3.jpg"
                         alt="Gallery"
                       />
                     </a>
-                    <a href="assets/images/widgets/gallery4.jpg">
+                    <a href="/assets/images/widgets/gallery4.jpg">
                       <img
-                        src="assets/images/widgets/gallery4.jpg"
+                        src="/assets/images/widgets/gallery4.jpg"
                         alt="Gallery"
                       />
                     </a>
-                    <a href="assets/images/widgets/gallery5.jpg">
+                    <a href="/assets/images/widgets/gallery5.jpg">
                       <img
-                        src="assets/images/widgets/gallery5.jpg"
+                        src="/assets/images/widgets/gallery5.jpg"
                         alt="Gallery"
                       />
                     </a>
-                    <a href="assets/images/widgets/gallery6.jpg">
+                    <a href="/assets/images/widgets/gallery6.jpg">
                       <img
-                        src="assets/images/widgets/gallery6.jpg"
+                        src="/assets/images/widgets/gallery6.jpg"
                         alt="Gallery"
                       />
                     </a>
-                    <a href="assets/images/widgets/gallery7.jpg">
+                    <a href="/assets/images/widgets/gallery7.jpg">
                       <img
-                        src="assets/images/widgets/gallery7.jpg"
+                        src="/assets/images/widgets/gallery7.jpg"
                         alt="Gallery"
                       />
                     </a>
-                    <a href="assets/images/widgets/gallery8.jpg">
+                    <a href="/assets/images/widgets/gallery8.jpg">
                       <img
-                        src="assets/images/widgets/gallery8.jpg"
+                        src="/assets/images/widgets/gallery8.jpg"
                         alt="Gallery"
                       />
                     </a>
-                    <a href="assets/images/widgets/gallery9.jpg">
+                    <a href="/assets/images/widgets/gallery9.jpg">
                       <img
-                        src="assets/images/widgets/gallery9.jpg"
+                        src="/assets/images/widgets/gallery9.jpg"
                         alt="Gallery"
                       />
                     </a>
@@ -451,11 +451,11 @@ const page = () => {
                     </Link>
                   </div>
                   <div className="image">
-                    <img src="assets/images/widgets/cta-widget.png" alt="CTA" />
+                    <img src="/assets/images/widgets/cta-widget.png" alt="CTA" />
                   </div>
                   <div className="cta-shape">
                     <img
-                      src="assets/images/widgets/cta-shape.png"
+                      src="/assets/images/widgets/cta-shape.png"
                       alt="Shape"
                     />
                   </div>

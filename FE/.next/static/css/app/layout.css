@@ -3099,7 +3099,7 @@ h6, .h6, blockquote {
     .main-menu .navbar-header {
       display: flex;
       align-items: center;
-      justify-content: start; } }
+      justify-content: flex-start; } }
   .main-menu .navbar-header .navbar-toggle {
     float: right;
     padding: 4px 0;
@@ -7392,6 +7392,9 @@ blockquote {
       transform: translateY(-10px);
   }
 }
+
+
+
 /*!*************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[3]!./node_modules/rc-slider/assets/index.css ***!
   \*************************************************************************************************************************************************************************************************************************************************************************************/

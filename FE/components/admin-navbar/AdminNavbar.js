@@ -18,6 +18,9 @@ const AdminNavbar = () => {
           <a href="#" className="list-group-item list-group-item-action py-2 ripple" style={{ border: 'none' }}>
             <i className="fas fa-calendar-check fa-fw me-3"></i><span>Bookings</span>
           </a>
+          <a href="/admin/blog-dashboard" className="list-group-item list-group-item-action py-2 ripple" style={{ border: 'none' }}>
+            <i className="fas fa-newspaper -check fa-fw me-3"></i><span>Blog</span>
+          </a>
         </div>
       </div>
     </nav>

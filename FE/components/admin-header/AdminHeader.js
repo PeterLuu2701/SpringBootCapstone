@@ -10,7 +10,7 @@ const AdminMenu = () => {
         <div className="navbar-header">
           <div className="mobile-logo">
             <Link href="/">
-              <img src="assets/images/logos/bootcamp.png" alt="Logo" title="Logo" />
+              <img src="/assets/images/logos/bootcamp.png" alt="Logo" title="Logo" />
             </Link>
           </div>
           {/* Toggle Button */}
@@ -81,7 +81,7 @@ const AdminHeader = () => {
                 <div className="logo">
                   <Link href="/">
                     <img
-                      src="assets/images/logos/bootcamp.png"
+                      src="/assets/images/logos/bootcamp.png"
                       alt="Logo"
                       title="Logo"
                     />

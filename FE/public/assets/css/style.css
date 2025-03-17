@@ -3468,7 +3468,7 @@ h6, .h6, blockquote {
       align-items: center;
       -webkit-box-pack: start;
       -ms-flex-pack: start;
-      justify-content: start; } }
+      justify-content: flex-start; } }
   .main-menu .navbar-header .navbar-toggle {
     float: right;
     padding: 4px 0;
@@ -8310,3 +8310,5 @@ blockquote {
       transform: translateY(-10px);
   }
 }
+
+
