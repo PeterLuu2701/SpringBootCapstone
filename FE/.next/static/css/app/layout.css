@@ -7394,7 +7394,15 @@ blockquote {
 }
 
 
+/* admin-navbar.css */
+.admin-navbar .list-group-item.active {
+  background-color: #007bff !important; /* Màu xanh biển */
+  color: white !important;
+}
 
+.admin-navbar .list-group-item {
+  border: none;
+}
 /*!*************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[3]!./node_modules/rc-slider/assets/index.css ***!
   \*************************************************************************************************************************************************************************************************************************************************************************************/

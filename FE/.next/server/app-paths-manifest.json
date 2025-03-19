@@ -1,7 +1,13 @@
 {
-  "/blog/page": "app/blog/page.js",
-  "/blog-details/page": "app/blog-details/page.js",
-  "/admin/blog-dashboard/page": "app/admin/blog-dashboard/page.js",
+  "/admin/contact/page": "app/admin/contact/page.js",
+  "/admin/coupons/page": "app/admin/coupons/page.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js",
+  "/admin/your-information/page": "app/admin/your-information/page.js",
   "/admin/page": "app/admin/page.js",
-  "/page": "app/page.js"
+  "/admin/destinations/page": "app/admin/destinations/page.js",
+  "/admin/tours/page": "app/admin/tours/page.js",
+  "/admin/bookings/page": "app/admin/bookings/page.js",
+  "/admin/blog/page": "app/admin/blog/page.js",
+  "/admin/payments/page": "app/admin/payments/page.js",
+  "/admin/reviews/page": "app/admin/reviews/page.js"
 }

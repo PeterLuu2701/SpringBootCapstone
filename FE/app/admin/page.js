@@ -1,6 +1,6 @@
 "use client"
-import AdminNavbar from "@/components/admin-navbar/AdminNavbar";
-import UsersDashboard from "@/components/user-dashboard/UserDashboard";
+import AdminNavbar from "@/components/admin-dashboard/admin-navbar/AdminNavbar";
+import UsersDashboard from "@/components/admin-dashboard/user-dashboard/UserDashboard";
 import AdminLayout from "@/layout/AdminLayout";
 import { Container, Row, Col } from "react-bootstrap"; 
 

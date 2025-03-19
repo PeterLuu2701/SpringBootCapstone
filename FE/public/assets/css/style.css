@@ -8312,3 +8312,12 @@ blockquote {
 }
 
 
+/* admin-navbar.css */
+.admin-navbar .list-group-item.active {
+  background-color: #007bff !important; /* Màu xanh biển */
+  color: white !important;
+}
+
+.admin-navbar .list-group-item {
+  border: none;
+}

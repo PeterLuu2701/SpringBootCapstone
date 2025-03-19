@@ -5,7 +5,7 @@ import { roveloUtility } from "@/utility";
 import { useEffect } from "react";
 import niceSelect from "react-nice-select";
 import Footer from "./Footer";
-import AdminHeader from "@/components/admin-header/AdminHeader";
+import AdminHeader from "@/components/admin-dashboard/admin-header/AdminHeader";
 
 const AdminLayout = ({ children, header, footer, insta, sideBar }) => {
   useEffect(() => {
