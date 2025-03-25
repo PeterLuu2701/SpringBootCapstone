@@ -1,0 +1,96 @@
+{
+	"info": {
+		"_postman_id": "e2afdd73-c690-4b7e-bf92-80316ce675d7",
+		"name": "CapStoneSpringBoot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23648943"
+	},
+	"item": [
+		{
+			"name": "sign-up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/auth/sign-up?username=test&email=test@gmail.com&password=123456",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"sign-up"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "test"
+						},
+						{
+							"key": "email",
+							"value": "test@gmail.com"
+						},
+						{
+							"key": "password",
+							"value": "123456"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sign-in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/auth/sign-in?email=test@gmail.com&password=123456",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"sign-in"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "test@gmail.com"
+						},
+						{
+							"key": "password",
+							"value": "123456"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-all-destination",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/destination",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"destination"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
