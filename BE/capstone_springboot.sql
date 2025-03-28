@@ -15,6 +15,54 @@ CREATE TABLE `activity` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+DROP TABLE IF EXISTS `blog`;
+CREATE TABLE `blog` (
+  `id` int NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `content` text,
+  `createdAt` timestamp NULL DEFAULT NULL,
+  `updatedAt` timestamp NULL DEFAULT NULL,
+  `author_id` int DEFAULT NULL,
+  `tour_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `author_id` (`author_id`),
+  KEY `tour_id` (`tour_id`),
+  CONSTRAINT `blog_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `blog_ibfk_2` FOREIGN KEY (`tour_id`) REFERENCES `tour` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `blog_review`;
+CREATE TABLE `blog_review` (
+  `id` int NOT NULL,
+  `blog_id` int DEFAULT NULL,
+  `author_id` int DEFAULT NULL,
+  `rating` int DEFAULT NULL,
+  `comment` text,
+  `review_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `blog_id` (`blog_id`),
+  KEY `author_id` (`author_id`),
+  CONSTRAINT `blog_review_ibfk_1` FOREIGN KEY (`blog_id`) REFERENCES `blog` (`id`),
+  CONSTRAINT `blog_review_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `booking`;
+CREATE TABLE `booking` (
+  `id` int NOT NULL,
+  `booking_date` date DEFAULT NULL,
+  `max_guest` int DEFAULT NULL,
+  `total_price` decimal(10,2) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
+  `tour_id` int DEFAULT NULL,
+  `payment` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `tour_id` (`tour_id`),
+  CONSTRAINT `booking_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `booking_ibfk_2` FOREIGN KEY (`tour_id`) REFERENCES `tour` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 DROP TABLE IF EXISTS `destination`;
 CREATE TABLE `destination` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -56,8 +104,26 @@ CREATE TABLE `tour` (
   `image_url` varchar(255) DEFAULT NULL,
   `is_feature` tinyint(1) DEFAULT NULL,
   `duration` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `destination_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `destination_id` (`destination_id`),
+  CONSTRAINT `tour_ibfk_1` FOREIGN KEY (`destination_id`) REFERENCES `destination` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `tour_review`;
+CREATE TABLE `tour_review` (
+  `id` int NOT NULL,
+  `tour_id` int DEFAULT NULL,
+  `author_id` int DEFAULT NULL,
+  `rating` int DEFAULT NULL,
+  `comment` text,
+  `review_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tour_id` (`tour_id`),
+  KEY `author_id` (`author_id`),
+  CONSTRAINT `tour_review_ibfk_1` FOREIGN KEY (`tour_id`) REFERENCES `tour` (`id`),
+  CONSTRAINT `tour_review_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
@@ -83,6 +149,26 @@ INSERT INTO `activity` (`id`, `name`, `description`) VALUES
 (3, 'Park', 'Outdoor activities and relaxation in green spaces.');
 INSERT INTO `activity` (`id`, `name`, `description`) VALUES
 (4, 'City', 'Exploring urban areas and landmarks.');
+INSERT INTO `blog` (`id`, `title`, `content`, `createdAt`, `updatedAt`, `author_id`, `tour_id`) VALUES
+(1, 'Miami Beach Fun', 'My amazing trip to Miami Beach...', '2023-10-26 10:00:00', '2023-10-26 12:00:00', 1, 1);
+INSERT INTO `blog` (`id`, `title`, `content`, `createdAt`, `updatedAt`, `author_id`, `tour_id`) VALUES
+(2, 'Louvre Art Experience', 'Visiting the Louvre was breathtaking...', '2023-10-27 14:00:00', '2023-10-27 15:00:00', 2, 2);
+INSERT INTO `blog` (`id`, `title`, `content`, `createdAt`, `updatedAt`, `author_id`, `tour_id`) VALUES
+(3, 'Tokyo City Adventure', 'Exploring the vibrant streets of Tokyo...', '2023-10-28 16:00:00', '2023-10-28 18:00:00', 1, 4);
+INSERT INTO `blog_review` (`id`, `blog_id`, `author_id`, `rating`, `comment`, `review_date`) VALUES
+(1, 1, 2, 5, 'Great blog post!', '2023-10-26 13:00:00');
+INSERT INTO `blog_review` (`id`, `blog_id`, `author_id`, `rating`, `comment`, `review_date`) VALUES
+(2, 1, 3, 4, 'Very informative.', '2023-10-26 14:00:00');
+INSERT INTO `blog_review` (`id`, `blog_id`, `author_id`, `rating`, `comment`, `review_date`) VALUES
+(3, 2, 1, 5, 'Amazing experience!', '2023-10-27 16:00:00');
+INSERT INTO `booking` (`id`, `booking_date`, `max_guest`, `total_price`, `start_date`, `user_id`, `tour_id`, `payment`) VALUES
+(1, '2023-11-10', 2, '1200.00', '2023-12-01', 1, 1, 1);
+INSERT INTO `booking` (`id`, `booking_date`, `max_guest`, `total_price`, `start_date`, `user_id`, `tour_id`, `payment`) VALUES
+(2, '2023-11-15', 1, '80.00', '2023-12-05', 2, 2, 0);
+INSERT INTO `booking` (`id`, `booking_date`, `max_guest`, `total_price`, `start_date`, `user_id`, `tour_id`, `payment`) VALUES
+(3, '2023-11-20', 4, '1500.00', '2023-12-10', 3, 4, 1);
+INSERT INTO `booking` (`id`, `booking_date`, `max_guest`, `total_price`, `start_date`, `user_id`, `tour_id`, `payment`) VALUES
+(4, '2023-11-22', 2, '1000.00', '2023-12-12', 1, 5, 1);
 INSERT INTO `destination` (`id`, `name`, `description`, `country`, `city`, `image_url`, `popular`, `duration`) VALUES
 (1, 'Miami Beach', 'Beautiful beaches and vibrant nightlife.', 'USA', 'Miami', 'miami_beach.jpg', 1, '5 days');
 INSERT INTO `destination` (`id`, `name`, `description`, `country`, `city`, `image_url`, `popular`, `duration`) VALUES
@@ -98,16 +184,22 @@ INSERT INTO `role` (`id`, `name`, `description`) VALUES
 (1, 'user', 'user');
 INSERT INTO `role` (`id`, `name`, `description`) VALUES
 (2, 'admin', 'admin');
-INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`) VALUES
-(1, 'Miami Beach Getaway', 'Relaxing beach vacation in Miami.', '1200.00', '4.70', 'miami_tour.jpg', 1, '5 days');
-INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`) VALUES
-(2, 'Louvre Art Tour', 'Guided tour of the Louvre Museum.', '80.00', '4.50', 'louvre_tour.jpg', 1, '1 day');
-INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`) VALUES
-(3, 'Central Park Bike Tour', 'Explore Central Park on a bike.', '50.00', '4.20', 'park_tour.jpg', 0, '1 day');
-INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`) VALUES
-(4, 'Tokyo City Highlights', 'Discover the best of Tokyo city.', '1500.00', '4.80', 'tokyo_tour.jpg', 1, '5 days');
-INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`) VALUES
-(5, 'Barcelona Beach & City Tour', 'Enjoy the beach and explore the city.', '1000.00', '4.60', 'barcelona_tour.jpg', 1, '4 days');
+INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`, `destination_id`) VALUES
+(1, 'Miami Beach Getaway', 'Relaxing beach vacation in Miami.', '1200.00', '4.70', 'miami_tour.jpg', 1, '5 days', 1);
+INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`, `destination_id`) VALUES
+(2, 'Louvre Art Tour', 'Guided tour of the Louvre Museum.', '80.00', '4.50', 'louvre_tour.jpg', 1, '1 day', 2);
+INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`, `destination_id`) VALUES
+(3, 'Central Park Bike Tour', 'Explore Central Park on a bike.', '50.00', '4.20', 'park_tour.jpg', 0, '1 day', 3);
+INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`, `destination_id`) VALUES
+(4, 'Tokyo City Highlights', 'Discover the best of Tokyo city.', '1500.00', '4.80', 'tokyo_tour.jpg', 1, '5 days', 4);
+INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`, `destination_id`) VALUES
+(5, 'Barcelona Beach & City Tour', 'Enjoy the beach and explore the city.', '1000.00', '4.60', 'barcelona_tour.jpg', 1, '4 days', 5);
+INSERT INTO `tour_review` (`id`, `tour_id`, `author_id`, `rating`, `comment`, `review_date`) VALUES
+(1, 1, 2, 5, 'Excellent tour!', '2023-10-26 15:00:00');
+INSERT INTO `tour_review` (`id`, `tour_id`, `author_id`, `rating`, `comment`, `review_date`) VALUES
+(2, 2, 1, 4, 'Very interesting.', '2023-10-27 17:00:00');
+INSERT INTO `tour_review` (`id`, `tour_id`, `author_id`, `rating`, `comment`, `review_date`) VALUES
+(3, 4, 3, 5, 'Best tour ever!', '2023-10-28 19:00:00');
 INSERT INTO `user` (`id`, `username`, `password`, `fullname`, `email`, `phone`, `role_id`) VALUES
 (1, 'john_doe', 'hashed_password_123', 'John Doe', 'john.doe@example.com', '123-456-7890', 1);
 INSERT INTO `user` (`id`, `username`, `password`, `fullname`, `email`, `phone`, `role_id`) VALUES
