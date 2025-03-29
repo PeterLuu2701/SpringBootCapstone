@@ -1,0 +1,119 @@
+/* Import font chữ từ Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-image: url("/assets/images/backgrounds/hero-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.wrapper {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 2rem; /* Giảm padding */
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 350px; /* Giảm max-width */
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem; /* Giảm kích thước chữ */
+  font-weight: 700;
+  margin-bottom: 1.5rem; /* Giảm margin bottom */
+  color: #fff;
+  text-shadow: 0 0.2rem 0.3rem rgba(0, 0, 0, 0.3);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem; /* Giảm margin bottom */
+}
+
+.formGroup label {
+  font-size: 1rem; /* Giảm kích thước chữ */
+  font-weight: 500;
+  margin-bottom: 0.3rem; /* Giảm margin bottom */
+  color: #eee;
+  text-align: left;
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #fff;
+  padding-bottom: 0.3rem; /* Giảm padding bottom */
+}
+
+.icon {
+  position: absolute;
+  left: 0;
+  color: #fff;
+  font-size: 1rem; /* Giảm kích thước icon */
+  opacity: 0.8;
+}
+
+.inputContainer input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0.3rem 2rem; /* Giảm padding */
+  font-size: 0.9rem; /* Giảm kích thước chữ */
+  color: #fff;
+  background: transparent;
+}
+
+.inputContainer input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.registerButton {
+  background: linear-gradient(to right, #29ABE2, #4F51E0, #9951E0);
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.5rem; /* Giảm padding */
+  border-radius: 3rem;
+  font-size: 1rem; /* Giảm kích thước chữ */
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0.5rem 1rem rgba(79, 81, 224, 0.3);
+}
+
+.registerButton:hover {
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0.7rem 1.2rem rgba(79, 81, 224, 0.5);
+}
+
+.loginLink {
+  margin-top: 2rem; /* Giảm margin top */
+  font-size: 0.9rem; /* Giảm kích thước chữ */
+  font-weight: 500;
+  color: #eee;
+}
+
+.loginLink a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 0.3rem; /* Giảm margin left */
+  transition: color 0.3s ease;
+}
+
+.loginLink a:hover {
+  color: #29ABE2;
+}

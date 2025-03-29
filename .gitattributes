@@ -1,0 +1,2 @@
+FE/.next/cache/webpack/client-production/0.pack filter=lfs diff=lfs merge=lfs -text
+FE/node_modules/@next/swc-win32-x64-msvc/next-swc.win32-x64-msvc.node filter=lfs diff=lfs merge=lfs -text
