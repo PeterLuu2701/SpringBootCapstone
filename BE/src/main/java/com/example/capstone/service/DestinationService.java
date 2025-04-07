@@ -1,9 +1,58 @@
 package com.example.capstone.service;
 
-import com.example.capstone.entity.Destination;
-
 import java.util.List;
+import java.util.Optional;
 
-public interface DestinationService {
-    List<Destination> getAllDestinations();
+import org.springframework.stereotype.Service;
+
+import com.example.capstone.entity.Destination;
+import com.example.capstone.repository.DestinationRepository;
+
+@Service
+public class DestinationService {
+    private final DestinationRepository destinationRepository;
+
+    // Constructor injection
+    public DestinationService(DestinationRepository destinationRepository) {
+        this.destinationRepository = destinationRepository;
+    }
+
+    // CREATE
+    public Destination createDestination(Destination destination) {
+        return this.destinationRepository.save(destination);
+    }
+
+    // GET ALL Destination
+    public List<Destination> getAllDestination() {
+        return this.destinationRepository.findAll();
+    }
+
+    // GET Destination BY ID
+    public Optional<Destination> getDestinationById(long id) {
+        return this.destinationRepository.findById(id);
+    }
+
+    public Destination updateDestination(Destination updatedDestination) {
+        return this.destinationRepository.findById(updatedDestination.getId())
+                .map(destination -> {
+                    destination.setName(updatedDestination.getName());
+                    destination.setDescription(updatedDestination.getDescription());
+                    destination.setCountry(updatedDestination.getCountry());
+                    destination.setCity(updatedDestination.getCity());
+                    destination.setImage_url(updatedDestination.getImage_url());
+                    destination.setPopular(updatedDestination.isPopular());
+                    destination.setDuration(updatedDestination.getDuration());
+                    return this.destinationRepository.save(destination);
+                })
+                .orElseThrow(() -> new RuntimeException("Destination không tồn tại!"));
+    }
+
+    // DELETE Destination
+    public String deleteDestination(long id) {
+        if (this.destinationRepository.findById(id).isPresent()) {
+            this.destinationRepository.deleteById(id);
+            return "Xóa thành công!";
+        }
+        return "Xóa không thành công: Destination không tồn tại!";
+    }
 }

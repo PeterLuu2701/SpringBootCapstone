@@ -1,5 +1,7 @@
 {
+  "/destination-details/page": "app/destination-details/page.js",
   "/page": "app/page.js",
+  "/admin/destinations/page": "app/admin/destinations/page.js",
   "/admin/page": "app/admin/page.js",
-  "/admin/your-information/page": "app/admin/your-information/page.js"
+  "/_not-found/page": "app/_not-found/page.js"
 }
