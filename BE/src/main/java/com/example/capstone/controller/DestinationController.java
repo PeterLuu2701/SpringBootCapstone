@@ -2,6 +2,7 @@ package com.example.capstone.controller;
 
 import com.example.capstone.entity.Destination;
 import com.example.capstone.service.DestinationService;
+import com.example.capstone.util.error.IdInvalidException;
 
 import jakarta.validation.Valid;
 
@@ -23,40 +24,46 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 public class DestinationController {
-
-    private DestinationService destinationService;
+    private final DestinationService destinationService;
 
     public DestinationController(DestinationService destinationService) {
         this.destinationService = destinationService;
     }
 
     @GetMapping("/destination")
-    public List<Destination> getAllDestinations() {
-        return this.destinationService.getAllDestination();
+    public ResponseEntity<List<Destination>> getAllDestinations() {
+        List<Destination> destinations = this.destinationService.getAllDestination();
+        return ResponseEntity.ok(destinations);
     }
 
     @GetMapping("/destination/{id}")
-    public Optional<Destination> getDestinationId(@PathVariable("id") long id) {
-        return this.destinationService.getDestinationById(id);
+    public ResponseEntity<Optional<Destination>> getDestinationId(@PathVariable("id") long id)
+            throws IdInvalidException {
+        Optional<Destination> destination = this.destinationService.getDestinationById(id);
+        if (destination.isPresent()) {
+            return ResponseEntity.ok(destination);
+        } else {
+            throw new IdInvalidException("Destination với Id " + id + " không tồn tại");
+        }
     }
 
-    // CREATE
     @PostMapping("/destination")
-    public ResponseEntity<Destination> createNewUcreateNewDestinationser(
+    public ResponseEntity<Destination> createNewDestination(
             @Valid @RequestBody Destination destinationPostMan) {
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(this.destinationService.createDestination(destinationPostMan));
+        Destination createdDestination = this.destinationService.createDestination(destinationPostMan);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdDestination);
     }
 
     @PutMapping("/destination")
-    public Destination updateDestination(@RequestBody Destination destinationPostMan) {
-        return this.destinationService.updateDestination(destinationPostMan);
+    public ResponseEntity<Destination> updateDestination(@RequestBody Destination destinationPostMan)
+            throws IdInvalidException {
+        Destination updatedDestination = this.destinationService.updateDestination(destinationPostMan);
+        return ResponseEntity.ok(updatedDestination);
     }
 
     @DeleteMapping("/destination/{id}")
-    public String deleteDestination(@PathVariable("id") long id) {
-        return this.destinationService.deleteDestination(id);
+    public ResponseEntity<String> deleteDestination(@PathVariable("id") long id) throws IdInvalidException {
+        String result = this.destinationService.deleteDestination(id);
+        return ResponseEntity.ok(result);
     }
-
 }

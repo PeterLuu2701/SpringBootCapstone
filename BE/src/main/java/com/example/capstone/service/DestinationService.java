@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.capstone.entity.Destination;
 import com.example.capstone.repository.DestinationRepository;
+import com.example.capstone.util.error.IdInvalidException;
 
 @Service
 public class DestinationService {
@@ -29,30 +30,34 @@ public class DestinationService {
 
     // GET Destination BY ID
     public Optional<Destination> getDestinationById(long id) {
+
         return this.destinationRepository.findById(id);
     }
 
-    public Destination updateDestination(Destination updatedDestination) {
-        return this.destinationRepository.findById(updatedDestination.getId())
-                .map(destination -> {
-                    destination.setName(updatedDestination.getName());
-                    destination.setDescription(updatedDestination.getDescription());
-                    destination.setCountry(updatedDestination.getCountry());
-                    destination.setCity(updatedDestination.getCity());
-                    destination.setImage_url(updatedDestination.getImage_url());
-                    destination.setPopular(updatedDestination.isPopular());
-                    destination.setDuration(updatedDestination.getDuration());
-                    return this.destinationRepository.save(destination);
-                })
-                .orElseThrow(() -> new RuntimeException("Destination không tồn tại!"));
+    public Destination updateDestination(Destination updatedDestination) throws IdInvalidException {
+        Optional<Destination> optionalDestination = this.destinationRepository.findById(updatedDestination.getId());
+        if (optionalDestination.isPresent()) {
+            Destination destination = optionalDestination.get();
+            destination.setName(updatedDestination.getName());
+            destination.setDescription(updatedDestination.getDescription());
+            destination.setCountry(updatedDestination.getCountry());
+            destination.setCity(updatedDestination.getCity());
+            destination.setImage_url(updatedDestination.getImage_url());
+            destination.setPopular(updatedDestination.isPopular());
+            destination.setDuration(updatedDestination.getDuration());
+            return this.destinationRepository.save(destination);
+        } else {
+            throw new IdInvalidException("Destination với Id " + updatedDestination.getId() + " không tồn tại!");
+        }
     }
 
     // DELETE Destination
-    public String deleteDestination(long id) {
+    public String deleteDestination(long id) throws IdInvalidException {
         if (this.destinationRepository.findById(id).isPresent()) {
             this.destinationRepository.deleteById(id);
             return "Xóa thành công!";
+        } else {
+            throw new IdInvalidException("Destination với Id " + id + " không tồn tại!");
         }
-        return "Xóa không thành công: Destination không tồn tại!";
     }
 }
