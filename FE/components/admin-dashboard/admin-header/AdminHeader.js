@@ -40,7 +40,7 @@ const AdminMenu = () => {
               <a href="tour-list">Tours</a>
             </li>
             <li>
-              <a href="destination1">Destinations</a>
+              <a href="destination">Destinations</a>
             </li>
             <li className="dropdown">
               <a href="#">Pages</a>

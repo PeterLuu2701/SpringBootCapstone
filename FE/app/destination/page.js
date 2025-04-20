@@ -4,7 +4,24 @@ import SectionTitle from "@/components/SectionTitle";
 import Subscribe from "@/components/Subscribe";
 import ReveloLayout from "@/layout/ReveloLayout";
 import Link from "next/link";
-const page = () => {
+
+const fetchDestinations = async () => {
+  try {
+    const response = await fetch('http://localhost:8080/destination');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error("Error fetching destinations:", error);
+    return []; 
+  }
+};
+
+const DestinationsPage = async () => {
+  const destinations = await fetchDestinations();
+
   return (
     <ReveloLayout>
       <Banner pageTitle={"Destinations"} search={true} />
@@ -23,7 +40,16 @@ const page = () => {
             </div>
           </div>
           <div className="row gap-10 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2 justify-content-center">
-            <DestinationItem/>
+            {destinations.map((destination, index) => (
+              <DestinationItem
+                key={destination.id}
+                imageUrl={destination.image_url}
+                title={destination.name}
+                toursCount="258" 
+                destinationDetailsLink={`/destination-details?id=${destination.id}`}
+                aosDelay={index * 50}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -34,4 +60,5 @@ const page = () => {
     </ReveloLayout>
   );
 };
-export default page;
+
+export default DestinationsPage;
