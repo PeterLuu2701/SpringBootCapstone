@@ -85,9 +85,10 @@ const DestinationDashboard = () => {
       try {
         const res = await axios.get("http://localhost:8080/destination");
         console.log("Check res:", res.data);
-        setDestinations(res.data);
+        setDestinations(res.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setDestinations([]);
       }
     };
 
