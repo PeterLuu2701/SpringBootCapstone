@@ -3,6 +3,7 @@ package com.example.capstone.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import com.example.capstone.entity.Destination;
@@ -34,7 +35,7 @@ public class DestinationService {
         return this.destinationRepository.findById(id);
     }
 
-    public Destination updateDestination(Destination updatedDestination) throws IdInvalidException {
+    public Destination updateDestination(@NotNull Destination updatedDestination) throws IdInvalidException {
         Optional<Destination> optionalDestination = this.destinationRepository.findById(updatedDestination.getId());
         if (optionalDestination.isPresent()) {
             Destination destination = optionalDestination.get();
