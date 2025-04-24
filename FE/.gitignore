@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 node_modules/
 
 .next/
+=======
+node_modules/
+
+.next/
+>>>>>>> 23d3403304c0b8000d8c90b62cc15a64eb81fecd
 .next/cache/
