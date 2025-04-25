@@ -63,7 +63,7 @@ public class TourServiceImp implements TourService {
     @Override
     public void deleteTour(long id) {
         if (!tourRepository.existsById(id)) {
-            throw new EntityNotFoundException("Tour not found with id: " + id);
+            throw new EntityNotFoundException("Tour not found  id: " + id);
         }
         tourRepository.deleteById(id);
     }
