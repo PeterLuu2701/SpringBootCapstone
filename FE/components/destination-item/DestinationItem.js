@@ -4,7 +4,7 @@ const DestinationItem = ({
   imageUrl,
   title,
   toursCount,
-  destinationDetailsLink, // No default anymore, it will be passed dynamically
+  destinationDetailsLink,
   aosDelay = 0,
 }) => {
   return (

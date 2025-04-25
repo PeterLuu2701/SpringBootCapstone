@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import SectionTitle from "@/components/SectionTitle";
 import Destination from "@/components/slider/Destination";
@@ -6,19 +6,19 @@ import Subscribe from "@/components/Subscribe";
 import TourItem from "@/components/tour-item/TourItem";
 import ReveloLayout from "@/layout/ReveloLayout";
 import Link from "next/link";
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from "next/navigation";
 
 const fetchDestinationDetails = async (id) => {
   try {
     const response = await fetch(`http://localhost:8080/destination/${id}`);
     if (!response.ok) {
       if (response.status === 404) {
-        return null; 
+        return null;
       }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    return data.data; 
+    return data.data;
   } catch (error) {
     console.error("Error fetching destination details:", error);
     return null;
@@ -26,8 +26,8 @@ const fetchDestinationDetails = async (id) => {
 };
 
 const DestinationDetailPage = async () => {
-  const searchParams = useSearchParams(); 
-  const id = searchParams.get('id'); 
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
 
   const destination = await fetchDestinationDetails(id);
 
@@ -155,11 +155,11 @@ const DestinationDetailPage = async () => {
               >
                 <div className="section-title mb-25">
                   <span className="h2 mb-15">Welcome to </span>
-                  <h2>{destination.name}, {destination.country}</h2>
+                  <h2>
+                    {destination.name}, {destination.country}
+                  </h2>
                 </div>
-                <p>
-                {destination.description}
-                </p>
+                <p>{destination.description}</p>
                 <Link
                   href="destination-details"
                   className="theme-btn mt-25 style-two"
@@ -219,7 +219,7 @@ const DestinationDetailPage = async () => {
           </div>
           <div className="row destinations-active justify-content-center">
             <div>
-              <TourItem/>
+              <TourItem />
             </div>
           </div>
         </div>
