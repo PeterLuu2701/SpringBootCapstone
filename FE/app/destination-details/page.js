@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 "use client";
+=======
+'use client'
+>>>>>>> ceff8d9791aeb091a47c84c8ed8e5d2c203e9f7a
 
 import SectionTitle from "@/components/SectionTitle";
 import Destination from "@/components/slider/Destination";
@@ -6,19 +10,33 @@ import Subscribe from "@/components/Subscribe";
 import TourItem from "@/components/tour-item/TourItem";
 import ReveloLayout from "@/layout/ReveloLayout";
 import Link from "next/link";
+<<<<<<< HEAD
 import { useSearchParams } from "next/navigation";
 
 const fetchDestinationDetails = async (id = 3) => {
+=======
+import { useSearchParams } from 'next/navigation';
+
+const fetchDestinationDetails = async (id) => {
+>>>>>>> ceff8d9791aeb091a47c84c8ed8e5d2c203e9f7a
   try {
     const response = await fetch(`http://localhost:8080/destination/${id}`);
     if (!response.ok) {
       if (response.status === 404) {
+<<<<<<< HEAD
         return null;
+=======
+        return null; 
+>>>>>>> ceff8d9791aeb091a47c84c8ed8e5d2c203e9f7a
       }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
+<<<<<<< HEAD
     return data.data;
+=======
+    return data.data; 
+>>>>>>> ceff8d9791aeb091a47c84c8ed8e5d2c203e9f7a
   } catch (error) {
     console.error("Error fetching destination details:", error);
     return null;
@@ -26,10 +44,17 @@ const fetchDestinationDetails = async (id = 3) => {
 };
 
 const DestinationDetailPage = async () => {
+<<<<<<< HEAD
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
   const destination = fetchDestinationDetails();
+=======
+  const searchParams = useSearchParams(); 
+  const id = searchParams.get('id'); 
+
+  const destination = await fetchDestinationDetails(id);
+>>>>>>> ceff8d9791aeb091a47c84c8ed8e5d2c203e9f7a
 
   // Handle the case where the destination is not found
   if (!destination) {
@@ -155,11 +180,19 @@ const DestinationDetailPage = async () => {
               >
                 <div className="section-title mb-25">
                   <span className="h2 mb-15">Welcome to </span>
+<<<<<<< HEAD
                   <h2>
                     {destination.name}, {destination.country}
                   </h2>
                 </div>
                 <p>{destination.description}</p>
+=======
+                  <h2>{destination.name}, {destination.country}</h2>
+                </div>
+                <p>
+                {destination.description}
+                </p>
+>>>>>>> ceff8d9791aeb091a47c84c8ed8e5d2c203e9f7a
                 <Link
                   href="destination-details"
                   className="theme-btn mt-25 style-two"

@@ -22,6 +22,20 @@ const DestinationDashboard = () => {
   const [nameDelete, setNameDelete] = useState("");
   const [idDelete, setIdDelete] = useState("");
   const [infoUpdate, setInfoUpdate] = useState({});
+<<<<<<< HEAD
+=======
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/destination");
+        console.log("Check res:", res.data);
+        setDestinations(res.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setDestinations([]);
+      }
+    };
+>>>>>>> ceff8d9791aeb091a47c84c8ed8e5d2c203e9f7a
 
   const itemsPerPage = 10;
 
