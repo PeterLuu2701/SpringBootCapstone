@@ -13,32 +13,30 @@ const UpdateDestination = ({
     const { name, value, type, checked } = e.target;
     setInfoUpdateApi((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value, // Kiểm tra nếu là checkbox thì dùng checked, còn lại dùng value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
+
   useEffect(() => {
-    setInfoUpdateApi((prev) => ({ ...prev, id: infoUpdate.id }));
+    setInfoUpdateApi(infoUpdate); // Cập nhật state khi infoUpdate thay đổi
   }, [infoUpdate]);
+
   const handleUpdate = async () => {
     try {
-      const res = await axios.put(
-        "http://localhost:8080/destination",
-        infoUpdateApi
-      );
-
-      setDestinations((prev) =>
-        prev.map((item) => (item.id === infoUpdateApi.id ? res.data : item))
-      );
-
+      await axios.put("http://localhost:8080/destination", infoUpdateApi);
       setOpenUpdate(false);
+      // Gọi hàm làm mới dữ liệu từ component cha
+      if (typeof setDestinations === "function") {
+        setDestinations(); // Gọi hàm refreshDestinations từ DestinationDashboard
+      }
     } catch (error) {
-      console.error("Error adding data:", error);
+      console.error("Error updating data:", error);
     }
   };
 
   return (
     <div
-      className={"modal fade" + (openUpdate ? "show d-block" : "d-none")}
+      className={"modal fade" + (openUpdate ? " show d-block" : " d-none")}
       tabIndex="-1"
       role="dialog"
       style={{
@@ -51,8 +49,7 @@ const UpdateDestination = ({
         display: openUpdate ? "flex" : "none",
         justifyContent: "center",
         alignItems: "center",
-
-        zIndex: 1050, // Đảm bảo modal nằm trên cùng
+        zIndex: 1050,
       }}
     >
       <div className="modal-dialog modal-lg" role="document">
@@ -62,12 +59,10 @@ const UpdateDestination = ({
             <button
               type="button"
               className="close"
-              style={{
-                width: "40px",
-              }}
+              style={{ width: "40px" }}
               onClick={() => setOpenUpdate(false)}
             >
-              <span>&times;</span>
+              <span>×</span>
             </button>
           </div>
           <div className="modal-body p-6 bg-white rounded shadow-lg">
@@ -78,24 +73,19 @@ const UpdateDestination = ({
                   type="text"
                   placeholder="Enter Destination"
                   className="border rounded p-1 focus:outline-none focus:ring focus:border-blue-300"
-                  value={infoUpdateApi.name}
+                  value={infoUpdateApi.name || ""}
                   name="name"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col">
                 <label className="font-medium">Description Destination</label>
                 <textarea
-                  type="text"
                   placeholder="Enter Description"
-                  value={infoUpdateApi.description}
                   className="border rounded p-2 focus:outline-none focus:ring focus:border-blue-300"
+                  value={infoUpdateApi.description || ""}
                   name="description"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col">
@@ -104,39 +94,34 @@ const UpdateDestination = ({
                   type="text"
                   placeholder="Enter Country"
                   style={{ paddingLeft: "10px" }}
-                  value={infoUpdateApi.country}
-                  className="border rounded p-1  focus:outline-none focus:ring focus:border-blue-300"
+                  className="border rounded p-1 focus:outline-none focus:ring focus:border-blue-300"
+                  value={infoUpdateApi.country || ""}
                   name="country"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col">
                 <label className="font-medium">City</label>
-
                 <input
                   type="text"
                   placeholder="Enter City"
                   style={{ paddingLeft: "10px" }}
-                  value={infoUpdateApi.city}
+                  className="border rounded p-1 focus:outline-none focus:ring focus:border-blue-300"
+                  value={infoUpdateApi.city || ""}
                   name="city"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
-                  className="border rounded p-1  focus:outline-none focus:ring focus:border-blue-300"
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col">
                 <label className="font-medium">Image</label>
                 <input
-                  type="file"
+                  type="text"
+                  placeholder="Enter Image URL"
                   style={{ paddingLeft: "10px" }}
-                  className="border rounded p-1  focus:outline-none focus:ring focus:border-blue-300"
+                  className="border rounded p-1 focus:outline-none focus:ring focus:border-blue-300"
+                  value={infoUpdateApi.image_url || ""}
                   name="image_url"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col">
@@ -145,32 +130,26 @@ const UpdateDestination = ({
                 <input
                   type="checkbox"
                   name="popular"
-                  checked={infoUpdateApi.popular}
+                  checked={infoUpdateApi.popular || false}
                   onChange={handleChange}
                   className="custom-checkbox border rounded p-1 focus:outline-none focus:ring focus:border-blue-300"
                 />{" "}
                 <span>{infoUpdateApi.popular ? "true" : "false"}</span>
               </div>
-
               <div className="flex flex-col col-span-2">
-                {" "}
-                {/* Full width */}
                 <label className="font-medium">Duration</label>
                 <input
                   type="text"
                   placeholder="Enter Duration"
                   style={{ paddingLeft: "10px" }}
-                  value={infoUpdateApi.duration}
-                  className="border rounded p-1  focus:outline-none focus:ring focus:border-blue-300"
+                  className="border rounded p-1 focus:outline-none focus:ring focus:border-blue-300"
+                  value={infoUpdateApi.duration || ""}
                   name="duration"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                 />
               </div>
             </div>
           </div>
-
           <div className="modal-footer">
             <button
               type="button"
@@ -182,9 +161,7 @@ const UpdateDestination = ({
             <button
               type="button"
               className="btn btn-primary"
-              onClick={() => {
-                handleUpdate();
-              }}
+              onClick={handleUpdate}
             >
               Update
             </button>

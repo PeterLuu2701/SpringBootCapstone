@@ -4,231 +4,34 @@ const DestinationItem = ({
   imageUrl,
   title,
   toursCount,
-  destinationDetailsLink = "destination-details", // Default link
-  aosDelay = 0, // Default AOS delay
+  destinationDetailsLink,
+  aosDelay = 0,
 }) => {
+  // Nếu imageUrl đã là đường dẫn đầy đủ, sử dụng trực tiếp; nếu không, nối với đường dẫn mặc định
+  const finalImageUrl = imageUrl.startsWith("/")
+    ? imageUrl
+    : `/assets/images/destinations/${imageUrl}`;
+
   return (
-    <>
-      <div className="col">
-        <div
-          className="destination-item style-two"
-          data-aos="fade-up"
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <div className="image">
-            <img
-              src="assets/images/destinations/destination-five1.jpg"
-              alt="Destination"
-            />
-          </div>
-          <div className="content">
-            <h6>
-              <Link href="destination-details">Switzerland's</Link>
-            </h6>
-            <span className="tours">258 tours</span>
-          </div>
+    <div
+      className="col"
+      data-aos="fade-up"
+      data-aos-delay={aosDelay}
+      data-aos-duration={1500}
+      data-aos-offset={50}
+    >
+      <div className="destination-item style-two">
+        <div className="imageeeeee">
+          <img src={finalImageUrl} alt={title} />
+        </div>
+        <div className="content">
+          <h6>
+            <Link href={destinationDetailsLink}>{title}</Link>
+          </h6>
+          <span className="tours">{toursCount} tours</span>
         </div>
       </div>
-      <div className="col">
-        <div
-          className="destination-item style-two"
-          data-aos="fade-up"
-          data-aos-delay={50}
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <div className="image">
-            <img
-              src="assets/images/destinations/destination-five2.jpg"
-              alt="Destination"
-            />
-          </div>
-          <div className="content">
-            <h6>
-              <Link href="destination-details">Poland</Link>
-            </h6>
-            <span className="tours">258 tours</span>
-          </div>
-        </div>
-      </div>
-      <div className="col">
-        <div
-          className="destination-item style-two"
-          data-aos="fade-up"
-          data-aos-delay={100}
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <div className="image">
-            <img
-              src="assets/images/destinations/destination-five3.jpg"
-              alt="Destination"
-            />
-          </div>
-          <div className="content">
-            <h6>
-              <Link href="destination-details">Indonesia</Link>
-            </h6>
-            <span className="tours">258 tours</span>
-          </div>
-        </div>
-      </div>
-      <div className="col">
-        <div
-          className="destination-item style-two"
-          data-aos="fade-up"
-          data-aos-delay={100}
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <div className="image">
-            <img
-              src="assets/images/destinations/destination-five4.jpg"
-              alt="Destination"
-            />
-          </div>
-          <div className="content">
-            <h6>
-              <Link href="destination-details">Thailand</Link>
-            </h6>
-            <span className="tours">258 tours</span>
-          </div>
-        </div>
-      </div>
-      <div className="col">
-        <div
-          className="destination-item style-two"
-          data-aos="fade-up"
-          data-aos-delay={150}
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <div className="image">
-            <img
-              src="assets/images/destinations/destination-five5.jpg"
-              alt="Destination"
-            />
-          </div>
-          <div className="content">
-            <h6>
-              <Link href="destination-details">Rome, Italy</Link>
-            </h6>
-            <span className="tours">258 tours</span>
-          </div>
-        </div>
-      </div>
-      <div className="col">
-        <div
-          className="destination-item style-two"
-          data-aos="fade-up"
-          data-aos-delay={150}
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <div className="image">
-            <img
-              src="assets/images/destinations/destination-five6.jpg"
-              alt="Destination"
-            />
-          </div>
-          <div className="content">
-            <h6>
-              <Link href="destination-details">New York</Link>
-            </h6>
-            <span className="tours">258 tours</span>
-          </div>
-        </div>
-      </div>
-      <div className="col">
-        <div
-          className="destination-item style-two"
-          data-aos="fade-up"
-          data-aos-delay={150}
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <div className="image">
-            <img
-              src="assets/images/destinations/destination-five7.jpg"
-              alt="Destination"
-            />
-          </div>
-          <div className="content">
-            <h6>
-              <Link href="destination-details">Poland</Link>
-            </h6>
-            <span className="tours">258 tours</span>
-          </div>
-        </div>
-      </div>
-      <div className="col">
-        <div
-          className="destination-item style-two"
-          data-aos="fade-up"
-          data-aos-delay={150}
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <div className="image">
-            <img
-              src="assets/images/destinations/destination-five8.jpg"
-              alt="Destination"
-            />
-          </div>
-          <div className="content">
-            <h6>
-              <Link href="destination-details">Wroclaw, Poland</Link>
-            </h6>
-            <span className="tours">258 tours</span>
-          </div>
-        </div>
-      </div>
-      <div className="col">
-        <div
-          className="destination-item style-two"
-          data-aos="fade-up"
-          data-aos-delay={150}
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <div className="image">
-            <img
-              src="assets/images/destinations/destination-five9.jpg"
-              alt="Destination"
-            />
-          </div>
-          <div className="content">
-            <h6>
-              <Link href="destination-details">France, Paris</Link>
-            </h6>
-            <span className="tours">258 tours</span>
-          </div>
-        </div>
-      </div>
-      <div className="col">
-        <div
-          className="destination-item style-two"
-          data-aos="fade-up"
-          data-aos-delay={150}
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <div className="image">
-            <img
-              src="assets/images/destinations/destination-five10.jpg"
-              alt="Destination"
-            />
-          </div>
-          <div className="content">
-            <h6>
-              <Link href="destination-details">Antalya, Turkey</Link>
-            </h6>
-            <span className="tours">258 tours</span>
-          </div>
-        </div>
-      </div>
-    </>
+    </div>
   );
 };
 

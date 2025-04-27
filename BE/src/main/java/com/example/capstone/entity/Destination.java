@@ -25,4 +25,6 @@ public class Destination {
     @Column(columnDefinition = "BOOLEAN DEFAULT true")
     private boolean popular;
     private String duration;
+    private String google_map_url;
+
 }

@@ -5,10 +5,10 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/capstone_springboot
     username: root
-    password: 1234
+    password: Vochithanh2@
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         transaction:

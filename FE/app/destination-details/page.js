@@ -1,10 +1,55 @@
+"use client";
+
 import SectionTitle from "@/components/SectionTitle";
 import Destination from "@/components/slider/Destination";
 import Subscribe from "@/components/Subscribe";
 import TourItem from "@/components/tour-item/TourItem";
 import ReveloLayout from "@/layout/ReveloLayout";
 import Link from "next/link";
-const page = () => {
+import { useSearchParams } from "next/navigation";
+
+const fetchDestinationDetails = async (id = 3) => {
+  try {
+    const response = await fetch(`http://localhost:8080/destination/${id}`);
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null;
+      }
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error("Error fetching destination details:", error);
+    return null;
+  }
+};
+
+const DestinationDetailPage = async () => {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
+  const destination = fetchDestinationDetails();
+
+  // Handle the case where the destination is not found
+  if (!destination) {
+    return (
+      <ReveloLayout>
+        <div className="container">
+          <div className="row justify-content-center pt-100 pb-100">
+            <div className="col-md-8 text-center">
+              <h2>Destination Not Found</h2>
+              <p>Sorry, the destination with ID {id} could not be found.</p>
+              <Link href="/destination" className="theme-btn style-two mt-20">
+                <i className="fal fa-arrow-left mr-2"></i> Back to Destinations
+              </Link>
+            </div>
+          </div>
+        </div>
+      </ReveloLayout>
+    );
+  }
+
   return (
     <ReveloLayout>
       {/* Page Banner Start */}
@@ -19,7 +64,7 @@ const page = () => {
                 data-aos-duration={1500}
                 data-aos-offset={50}
               >
-                Bali, Indonesia
+                {destination.name}, {destination.country}
               </h2>
               <nav aria-label="breadcrumb">
                 <ol
@@ -110,20 +155,11 @@ const page = () => {
               >
                 <div className="section-title mb-25">
                   <span className="h2 mb-15">Welcome to </span>
-                  <h2>Bali, Indonesia</h2>
+                  <h2>
+                    {destination.name}, {destination.country}
+                  </h2>
                 </div>
-                <p>
-                  Bali, Indonesia, is a tropical paradise renowned for
-                  breathtaking beaches, vibrant culture, and lush landscapes.
-                  Located at the westernmost end of the Lesser Sunda Islands,
-                  Bali boasts a warm, tropical climate that is year-round
-                  destination visitors are drawn to its picturesque beaches
-                </p>
-                <p>
-                  The island's rich cultural heritage is evident in numerous
-                  temples, including the iconic Tanah Lot and Uluwatu Temple, as
-                  well as the cultural
-                </p>
+                <p>{destination.description}</p>
                 <Link
                   href="destination-details"
                   className="theme-btn mt-25 style-two"
@@ -183,7 +219,7 @@ const page = () => {
           </div>
           <div className="row destinations-active justify-content-center">
             <div>
-              <TourItem/>
+              <TourItem />
             </div>
           </div>
         </div>
@@ -265,4 +301,4 @@ const page = () => {
     </ReveloLayout>
   );
 };
-export default page;
+export default DestinationDetailPage;

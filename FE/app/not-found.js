@@ -20,7 +20,7 @@ const page = () => {
                 <p>
                   Best features to include on business landing page are those
                   that quickly convey your value proposition, build trust, and
-                  encourage action. Here are six essential features
+                  encourage action. Here are six essential features mmmm
                 </p>
                 <form className="newsletter-form mt-40 mb-50" action="#">
                   <input
