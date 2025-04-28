@@ -6,12 +6,8 @@ import Subscribe from "@/components/Subscribe";
 import TourItem from "@/components/tour-item/TourItem";
 import ReveloLayout from "@/layout/ReveloLayout";
 import Link from "next/link";
-<<<<<<< HEAD
-import { useSearchParams } from "next/navigation";
-=======
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from "react";
->>>>>>> destination
 
 const fetchDestinationDetails = async (id) => {
   try {
@@ -30,15 +26,9 @@ const fetchDestinationDetails = async (id) => {
   }
 };
 
-<<<<<<< HEAD
-const DestinationDetailPage = async () => {
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-=======
 const DestinationDetailPage = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
->>>>>>> destination
 
   const [destination, setDestination] = useState(null);
   const [loading, setLoading] = useState(true);
