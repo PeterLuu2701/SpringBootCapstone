@@ -7,15 +7,16 @@ import Link from "next/link";
 
 const fetchDestinations = async () => {
   try {
-    const response = await fetch('http://localhost:8080/destination');
+    const response = await fetch("http://localhost:8080/destination");
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
+    console.log("Data fetched from API:", data);
     return data.data;
   } catch (error) {
     console.error("Error fetching destinations:", error);
-    return []; 
+    return [];
   }
 };
 
@@ -45,7 +46,7 @@ const DestinationsPage = async () => {
                 key={destination.id}
                 imageUrl={destination.image_url}
                 title={destination.name}
-                toursCount="258" 
+                toursCount="258"
                 destinationDetailsLink={`/destination-details?id=${destination.id}`}
                 aosDelay={index * 50}
               />

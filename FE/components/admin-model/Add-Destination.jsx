@@ -19,16 +19,15 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
       [name]: type === "checkbox" ? checked : value, // Kiểm tra nếu là checkbox thì dùng checked, còn lại dùng value
     }));
   };
+
   const handleAdd = async () => {
     try {
-      const res = await axios.post(
-        "http://localhost:8080/destination",
-        infoAdd
-      );
-
-      // Cập nhật danh sách bằng cách thêm phần tử mới vào mảng
-      setDestinations((prev) => [...prev, res.data]);
+      await axios.post("http://localhost:8080/destination", infoAdd);
       setOpenAdd(false);
+      // Gọi hàm làm mới dữ liệu từ component cha
+      if (typeof setDestinations === "function") {
+        setDestinations(); // Gọi hàm refreshDestinations từ DestinationDashboard
+      }
     } catch (error) {
       console.error("Error adding data:", error);
     }
@@ -36,7 +35,7 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
 
   return (
     <div
-      className={"modal fade" + (openAdd ? "show d-block" : "d-none")}
+      className={"modal fade" + (openAdd ? " show d-block" : " d-none")}
       tabIndex="-1"
       role="dialog"
       style={{
@@ -49,7 +48,6 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
         display: openAdd ? "flex" : "none",
         justifyContent: "center",
         alignItems: "center",
-
         zIndex: 1050, // Đảm bảo modal nằm trên cùng
       }}
     >
@@ -65,7 +63,7 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
               }}
               onClick={() => setOpenAdd(false)}
             >
-              <span>&times;</span>
+              <span>×</span>
             </button>
           </div>
           <div className="modal-body p-6 bg-white rounded shadow-lg">
@@ -77,21 +75,16 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
                   placeholder="Enter Destination"
                   className="border rounded p-1 focus:outline-none focus:ring focus:border-blue-300"
                   name="name"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col">
                 <label className="font-medium">Description Destination</label>
                 <textarea
-                  type="text"
                   placeholder="Enter Description"
                   className="border rounded p-2 focus:outline-none focus:ring focus:border-blue-300"
                   name="description"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col">
@@ -100,11 +93,9 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
                   type="text"
                   placeholder="Enter Country"
                   style={{ paddingLeft: "10px" }}
-                  className="border rounded p-1  focus:outline-none focus:ring focus:border-blue-300"
+                  className="border rounded p-1 focus:outline-none focus:ring focus:border-blue-300"
                   name="country"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col">
@@ -113,11 +104,9 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
                   type="text"
                   placeholder="Enter City"
                   style={{ paddingLeft: "10px" }}
-                  className="border rounded p-1  focus:outline-none focus:ring focus:border-blue-300"
+                  className="border rounded p-1 focus:outline-none focus:ring focus:border-blue-300"
                   name="city"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col">
@@ -126,11 +115,9 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
                   type="text"
                   placeholder="Enter Image"
                   style={{ paddingLeft: "10px" }}
-                  className="border rounded p-1  focus:outline-none focus:ring focus:border-blue-300"
+                  className="border rounded p-1 focus:outline-none focus:ring focus:border-blue-300"
                   name="image_url"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col">
@@ -145,25 +132,19 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
                 />{" "}
                 <span>{infoAdd.popular ? "true" : "false"}</span>
               </div>
-
               <div className="flex flex-col col-span-2">
-                {" "}
-                {/* Full width */}
                 <label className="font-medium">Duration</label>
                 <input
                   type="text"
                   placeholder="Enter Duration"
                   style={{ paddingLeft: "10px" }}
-                  className="border rounded p-1  focus:outline-none focus:ring focus:border-blue-300"
+                  className="border rounded p-1 focus:outline-none focus:ring focus:border-blue-300"
                   name="duration"
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                 />
               </div>
             </div>
           </div>
-
           <div className="modal-footer">
             <button
               type="button"
@@ -175,9 +156,7 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={() => {
-                handleAdd();
-              }}
+              onClick={handleAdd}
             >
               Add
             </button>

@@ -1,9 +1,5 @@
-FE/.next/
-.next/
-FE/node_modules/
-node_modules/
 HELP.md
-BE/target/
+target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -24,23 +20,16 @@ BE/target/
 *.ipr
 
 ### NetBeans ###
-BE/nbproject/private/
-BE/nbbuild/
-BE/dist/
-BE/nbdist/
-BE/.nb-gradle/
-BE/build/
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
 
-# Default ignored files
-/shelf/
-/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
+application.yml

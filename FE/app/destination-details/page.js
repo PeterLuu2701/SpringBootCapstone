@@ -6,7 +6,12 @@ import Subscribe from "@/components/Subscribe";
 import TourItem from "@/components/tour-item/TourItem";
 import ReveloLayout from "@/layout/ReveloLayout";
 import Link from "next/link";
+<<<<<<< HEAD
 import { useSearchParams } from "next/navigation";
+=======
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from "react";
+>>>>>>> destination
 
 const fetchDestinationDetails = async (id) => {
   try {
@@ -25,13 +30,45 @@ const fetchDestinationDetails = async (id) => {
   }
 };
 
+<<<<<<< HEAD
 const DestinationDetailPage = async () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+=======
+const DestinationDetailPage = () => {
+  const searchParams = useSearchParams();
+  const id = searchParams.get('id');
+>>>>>>> destination
 
-  const destination = await fetchDestinationDetails(id);
+  const [destination, setDestination] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Handle the case where the destination is not found
+  useEffect(() => {
+    const getDestination = async () => {
+      if (id) {
+        const data = await fetchDestinationDetails(id);
+        setDestination(data);
+        setLoading(false);
+      }
+    };
+
+    getDestination();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <ReveloLayout>
+        <div className="container">
+          <div className="row justify-content-center pt-100 pb-100">
+            <div className="col-md-8 text-center">
+              <h2>Loading...</h2>
+            </div>
+          </div>
+        </div>
+      </ReveloLayout>
+    );
+  }
+
   if (!destination) {
     return (
       <ReveloLayout>
