@@ -64,17 +64,20 @@ CREATE TABLE `booking` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `destination`;
+
 CREATE TABLE `destination` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `description` text,
-  `country` varchar(255) DEFAULT NULL,
-  `city` varchar(255) DEFAULT NULL,
-  `image_url` varchar(255) DEFAULT NULL,
-  `popular` tinyint(1) DEFAULT NULL,
-  `duration` varchar(255) DEFAULT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `description` TEXT,
+  `country` VARCHAR(255),
+  `city` VARCHAR(255),
+  `image_url` VARCHAR(255),
+  `popular` BOOLEAN DEFAULT TRUE,
+  `duration` VARCHAR(255),
+  `google_map_url` VARCHAR(255),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 DROP TABLE IF EXISTS `destination_activity`;
 CREATE TABLE `destination_activity` (
@@ -169,16 +172,18 @@ INSERT INTO `booking` (`id`, `booking_date`, `max_guest`, `total_price`, `start_
 (3, '2023-11-20', 4, '1500.00', '2023-12-10', 3, 4, 1);
 INSERT INTO `booking` (`id`, `booking_date`, `max_guest`, `total_price`, `start_date`, `user_id`, `tour_id`, `payment`) VALUES
 (4, '2023-11-22', 2, '1000.00', '2023-12-12', 1, 5, 1);
-INSERT INTO `destination` (`id`, `name`, `description`, `country`, `city`, `image_url`, `popular`, `duration`) VALUES
-(1, 'Miami Beach', 'Beautiful beaches and vibrant nightlife.', 'USA', 'Miami', 'miami_beach.jpg', 1, '5 days');
-INSERT INTO `destination` (`id`, `name`, `description`, `country`, `city`, `image_url`, `popular`, `duration`) VALUES
-(2, 'Louvre Museum', 'Home to world-famous art collections.', 'France', 'Paris', 'louvre.jpg', 1, '1 day');
-INSERT INTO `destination` (`id`, `name`, `description`, `country`, `city`, `image_url`, `popular`, `duration`) VALUES
-(3, 'Central Park', 'Large urban park with various attractions.', 'USA', 'New York', 'central_park.jpg', 1, '1 day');
-INSERT INTO `destination` (`id`, `name`, `description`, `country`, `city`, `image_url`, `popular`, `duration`) VALUES
-(4, 'Tokyo City', 'Modern metropolis with rich culture and history.', 'Japan', 'Tokyo', 'tokyo_city.jpg', 1, '5 days');
-INSERT INTO `destination` (`id`, `name`, `description`, `country`, `city`, `image_url`, `popular`, `duration`) VALUES
-(5, 'Barcelona Beach', 'Famous for its sandy beaches and boardwalk.', 'Spain', 'Barcelona', 'barcelona_beach.jpg', 1, '4 days');
+
+-- Insert 5 records đầy đủ các cột (bao gồm google_map_url)
+
+INSERT INTO `destination` 
+(`id`, `name`, `description`, `country`, `city`, `image_url`, `popular`, `duration`, `google_map_url`) 
+VALUES
+(1, 'Miami Beach', 'Beautiful beaches and vibrant nightlife.', 'USA', 'Miami', 'miami_beach.jpg', 1, '5 days', NULL),
+(2, 'Louvre Museum', 'Home to world-famous art collections.', 'France', 'Paris', 'louvre.jpg', 1, '1 day', NULL),
+(3, 'Central Park', 'Large urban park with various attractions.', 'USA', 'New York', 'central_park.jpg', 1, '1 day', NULL),
+(4, 'Tokyo City', 'Modern metropolis with rich culture and history.', 'Japan', 'Tokyo', 'tokyo_city.jpg', 1, '5 days', NULL),
+(5, 'Barcelona Beach', 'Famous for its sandy beaches and boardwalk.', 'Spain', 'Barcelona', 'barcelona_beach.jpg', 1, '4 days', NULL);
+
 
 INSERT INTO `role` (`id`, `name`, `description`) VALUES
 (1, 'user', 'user');
