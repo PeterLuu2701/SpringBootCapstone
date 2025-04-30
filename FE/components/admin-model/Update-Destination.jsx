@@ -23,11 +23,14 @@ const UpdateDestination = ({
 
   const handleUpdate = async () => {
     try {
-      await axios.put("http://localhost:8080/destination", infoUpdateApi);
-      setOpenUpdate(false);
-      // Gọi hàm làm mới dữ liệu từ component cha
-      if (typeof setDestinations === "function") {
-        setDestinations(); // Gọi hàm refreshDestinations từ DestinationDashboard
+      const response = await axios.put("http://localhost:8080/destination", infoUpdateApi);
+      if (response.status === 200) {
+        setOpenUpdate(false);
+        if (typeof setDestinations === "function") {
+          setDestinations(); // Call the refresh function
+        }
+      } else {
+        console.error("Failed to update data");
       }
     } catch (error) {
       console.error("Error updating data:", error);

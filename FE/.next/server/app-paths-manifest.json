@@ -1,8 +1,8 @@
 {
   "/page": "app/page.js",
-  "/destination/page": "app/destination/page.js",
-  "/tour-list/page": "app/tour-list/page.js",
   "/destination-details/page": "app/destination-details/page.js",
+  "/admin/page": "app/admin/page.js",
   "/admin/destinations/page": "app/admin/destinations/page.js",
-  "/admin/page": "app/admin/page.js"
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/admin/your-information/page": "app/admin/your-information/page.js"
 }

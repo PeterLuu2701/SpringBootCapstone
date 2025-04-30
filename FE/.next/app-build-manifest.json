@@ -31,15 +31,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/destination-details/page.js"
     ],
-    "/tour-list/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/tour-list/page.js"
-    ],
     "/admin/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/admin/page.js"
+    ],
+    "/admin/your-information/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/admin/your-information/page.js"
     ],
     "/admin/destinations/page": [
       "static/chunks/webpack.js",
