@@ -9,12 +9,16 @@ const ITEMS_PER_PAGE = 6;
 
 const fetchTours = async () => {
   try {
-    const response = await fetch('http://localhost:8080/tour/get-all-tour', { cache: 'no-store' });
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const response = await fetch('http://localhost:8080/tour/getall', { cache: 'no-store' });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+    }
     const data = await response.json();
-    return data.data || [];
-  } catch (err) {
-    console.error("Error fetching tours:", err);
+    console.log("Data fetched from /tour/get-all-tour:", data.data);
+    return data.data;
+  } catch (error) {
+    console.error("Error fetching tours:", error);
     return [];
   }
 };
