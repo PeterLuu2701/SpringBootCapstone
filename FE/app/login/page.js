@@ -1,24 +1,70 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import styles from "./style.module.css";
-import ReveloLayout from "@/layout/ReveloLayout";
+import { useRouter } from "next/navigation";
 
-const page = () => {
+const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const baseURL = "http://localhost:8080"; 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(`${baseURL}/auth/sign-in?email=${email}&password=${password}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        
+        console.log("Đăng nhập thành công:", data);
+        
+        if (typeof window !== 'undefined') {
+          localStorage.setItem("token", data.data.data); 
+          localStorage.setItem("username", email); //Backend chưa trả về username, tạm thời lưu email vào
+        }
+
+        // Chuyển hướng đến trang chủ
+        router.push("/");
+      } else {
+        
+        setError(data.message || "Đăng nhập thất bại.");
+      }
+    } catch (err) {
+      console.error("Lỗi khi đăng nhập:", err);
+      setError("Đã có lỗi xảy ra. Vui lòng thử lại.");
+    }
+  };
+
   return (
-    <ReveloLayout>
+    
       <div className={styles.container}>
         <div className={styles.wrapper}>
           <h1 className={styles.title}>Login</h1>
-          <form className={styles.form}>
+          {error && <p className={styles.error}>{error}</p>}
+          <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.formGroup}>
-              <label htmlFor="username">Username</label>
+              <label htmlFor="email">Email</label>
               <div className={styles.inputContainer}>
                 <span className={styles.icon}>👤</span>
                 <input
-                  type="text"
-                  id="username"
-                  placeholder="Type your username"
+                  type="email"
+                  id="email"
+                  placeholder="Type your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
             </div>
@@ -30,6 +76,9 @@ const page = () => {
                   type="password"
                   id="password"
                   placeholder="Type your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
             </div>
@@ -60,8 +109,8 @@ const page = () => {
           </div>
         </div>
       </div>
-    </ReveloLayout>
+    
   );
 };
 
-export default page;
+export default LoginPage;
