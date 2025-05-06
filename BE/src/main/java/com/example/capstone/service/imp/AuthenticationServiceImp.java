@@ -38,7 +38,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
         if(userOptional.isPresent()) {
             User user = userOptional.get();
             if (passwordEncoder.matches(password, user.getPassword())) {
-                token = jwtHelper.generateToken("Hello");
+                token = jwtHelper.generateToken(data);
             }
         }
         return token;
