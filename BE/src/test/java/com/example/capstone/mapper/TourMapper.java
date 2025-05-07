@@ -1,4 +1,4 @@
-package com.example.capstone.dto;
+package com.example.capstone.mapper;
 
 import com.example.capstone.dto.TourDTO;
 import com.example.capstone.entity.Destination;
@@ -13,7 +13,7 @@ public class TourMapper {
         dto.setDescription(tour.getDescription());
         dto.setPrice(tour.getPrice());
         dto.setRating(tour.getRating());
-        dto.setImage_url(tour.getImage_url());
+        dto.setFile(tour.getImage_url());
         dto.setIs_feature(tour.getIs_feature());
         dto.setDuration(tour.getDuration());
         dto.setDestination_id(
@@ -30,7 +30,7 @@ public class TourMapper {
         tour.setDescription(dto.getDescription());
         tour.setPrice(dto.getPrice());
         tour.setRating(dto.getRating());
-        tour.setImage_url(dto.getImage_url());
+        tour.setImage_url(dto.getFile());
         tour.setIs_feature(dto.getIs_feature());
         tour.setDuration(dto.getDuration());
         tour.setDestination(destination);

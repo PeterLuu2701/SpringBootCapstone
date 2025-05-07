@@ -50,13 +50,10 @@ public class SecurityConfig {
                                                                                                               // dùng
                                                                                                               // session
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/sign-in", "/auth/sign-up", "/destination", "/destination/**"
+                        .requestMatchers("/auth/sign-in",
+                                "/auth/sign-up", "/destination", "/destination/**",
+                                "/tour","/tour/**","/file","/file/**"
 
-                        ,"/tour/getall",
-                                "/tour/getid",
-                                "/tour/create",
-                                "/tour/update",
-                                "/tour/delete"
                         )
                         .permitAll() // Các API này không cần login
                         .anyRequest().authenticated() // Còn lại thì cần authentication
