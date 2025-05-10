@@ -9,7 +9,7 @@ const ITEMS_PER_PAGE = 6;
 
 const fetchTours = async () => {
   try {
-    const response = await fetch('http://localhost:8080/tour/getall', { cache: 'no-store' });
+    const response = await fetch('http://localhost:8080/tour/get-all-tour', { cache: 'no-store' });
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);

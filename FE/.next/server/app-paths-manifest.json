@@ -1,9 +1,6 @@
 {
   "/page": "app/page.js",
-  "/destination/page": "app/destination/page.js",
-  "/_not-found/page": "app/_not-found/page.js",
   "/tour-list/page": "app/tour-list/page.js",
-  "/destination-details/page": "app/destination-details/page.js",
-  "/admin/tours/page": "app/admin/tours/page.js",
-  "/admin/page": "app/admin/page.js"
+  "/destination/page": "app/destination/page.js",
+  "/_not-found/page": "app/_not-found/page.js"
 }
