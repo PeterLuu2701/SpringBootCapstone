@@ -192,7 +192,11 @@
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	!function() {
+<<<<<<< HEAD
 /******/ 		__webpack_require__.h = function() { return "ddbd8c0fb072b909"; }
+=======
+/******/ 		__webpack_require__.h = function() { return "fb54a89249f26da7"; }
+>>>>>>> tour-list
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
