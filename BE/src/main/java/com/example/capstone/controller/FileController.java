@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
+
 @RestController
 @RequestMapping("/file")
 @CrossOrigin
@@ -17,10 +19,9 @@ public class FileController {
     private FileServices fileServices;
 
 
-    // .+: Bắt người ta pahir truyền file có dấu chấm + tên file ở phía sau
     @GetMapping("/{filename:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+    public ResponseEntity<Resource> getFile(@PathVariable String filename) throws FileNotFoundException {
 
         Resource file = fileServices.loadFile(filename);
 

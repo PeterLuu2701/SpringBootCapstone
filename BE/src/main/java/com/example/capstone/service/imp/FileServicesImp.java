@@ -7,6 +7,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,21 +24,41 @@ public class FileServicesImp implements FileServices {
     @Override
     public void saveFile(MultipartFile file) {
         try{
-            Path rootPath = Paths.get(root); // Biến kiểu String thành Path
+            Path rootPath = Paths.get(root);
             if(!Files.exists(rootPath)) {
-                Files.createDirectory(rootPath);
+                System.out.println("Attempting to create directory: " + rootPath.toAbsolutePath()); // Debug print
+                // Use createDirectories to create parent directories if needed
+                Files.createDirectories(rootPath);
+                System.out.println("Directory creation attempt finished."); // Debug print
+            } else {
+                System.out.println("Directory already exists: " + rootPath.toAbsolutePath()); // Debug print
             }
-            // File.copy sẽ có 2 tham số là InputStream là file của min
-            // tham số thứ 2 l mình lưu .resole là hỗ trợ dấu / của mình hỗ trợ hệ điều hành
-            //Tham số thứ 3 là để không bị trùng file
-            Files.copy(file.getInputStream(), rootPath.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+
+            Path filePath = rootPath.resolve(file.getOriginalFilename());
+            System.out.println("Attempting to save file to: " + filePath.toAbsolutePath()); // Debug print
+            // Use StandardCopyOption.REPLACE_EXISTING if you want to overwrite
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("File saved successfully: " + file.getOriginalFilename()); // Debug print
+
+        } catch (IOException e) {
+            // This block will catch specific IO errors like AccessDeniedException
+            System.err.println("!! IO Error during file save !!");
+            System.err.println("Error message: " + e.getMessage());
+            e.printStackTrace(); // <<<<< THIS IS KEY - IT PRINTS THE REAL REASON
+            // Re-throw as a runtime exception so the controller knows it failed
+            throw new RuntimeException("Failed to save file: " + file.getOriginalFilename(), e);
         } catch (Exception e) {
-            System.out.println("Lỗi không có Folder");
+            // This catches any other unexpected errors
+            System.err.println("!! An unexpected error occurred during file save !!");
+            System.err.println("Error message: " + e.getMessage());
+            e.printStackTrace(); // <<<<< THIS IS KEY - IT PRINTS THE REAL REASON
+            // Re-throw as a runtime exception
+            throw new RuntimeException("An unexpected error occurred while saving file: " + file.getOriginalFilename(), e);
         }
     }
 
     @Override
-    public Resource loadFile(String filename) {
+    public Resource loadFile(String filename) throws FileNotFoundException {
         try{
             Path pathFile = Paths.get(root).resolve(filename);
             //Biến file về kiểu dữ liệu về Resource để kiểm tra nó dễ hơn
@@ -51,12 +72,16 @@ public class FileServicesImp implements FileServices {
             //Nếu không có kiểm tra quyền thì xài File được
             if(resource.exists()) {
                 return resource;
+            } else {
+                System.err.println("File not found or not readable: " + pathFile.toAbsolutePath()); // Log
+                throw new FileNotFoundException("Could not read file: " + filename);
             }
 
         } catch (Exception e) {
-            System.out.println("Lỗi load file "+ e.getMessage());
+            System.err.println("Error loading file: "+ e.getMessage());
+            e.printStackTrace(); // Print stack trace
+            // Wrap and re-throw if it's not a FileNotFoundException already
+            throw new RuntimeException("Error accessing file: " + filename, e);
         }
-
-        return null;
     }
 }

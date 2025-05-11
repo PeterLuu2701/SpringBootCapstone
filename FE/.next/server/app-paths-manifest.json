@@ -1,11 +1,6 @@
 {
-  "/register/page": "app/register/page.js",
-  "/page": "app/page.js",
-  "/destination/page": "app/destination/page.js",
-  "/blog/page": "app/blog/page.js",
-  "/tour-list/page": "app/tour-list/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/about/page": "app/about/page.js",
-  "/destination-details/page": "app/destination-details/page.js"
+  "/page": "app/page.js",
+  "/blog/page": "app/blog/page.js",
+  "/_not-found/page": "app/_not-found/page.js"
 }
