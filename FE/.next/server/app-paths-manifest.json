@@ -1,11 +1,8 @@
 {
-  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/page": "app/page.js",
-<<<<<<< HEAD
-  "/blog/page": "app/blog/page.js",
-=======
   "/tour-list/page": "app/tour-list/page.js",
-  "/destination/page": "app/destination/page.js",
->>>>>>> tour-list
-  "/_not-found/page": "app/_not-found/page.js"
+  "/blog/page": "app/blog/page.js",
+  "/destination-details/page": "app/destination-details/page.js",
+  "/destination/page": "app/destination/page.js"
 }
