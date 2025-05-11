@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tour")
+@CrossOrigin
 public class TourController {
 
     private final TourService tourService;

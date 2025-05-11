@@ -1,7 +1,32 @@
+"use client"; // Thêm dòng này
+
 import Banner from "@/components/Banner";
 import ReveloLayout from "@/layout/ReveloLayout";
 import Link from "next/link";
-const page = () => {
+import { useState, useEffect } from "react";
+
+const BlogListPage = () => {
+  const [blogs, setBlogs] = useState([]);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/blog/get-all");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("API Response:", data); // In response ra console
+        setBlogs(data.data); // Truy cập data.data để lấy mảng blog
+
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
   return (
     <ReveloLayout insta>
       <Banner pageTitle={"Blog List View"} />
@@ -9,226 +34,53 @@ const page = () => {
         <div className="container">
           <div className="row">
             <div className="col-lg-8">
-              <div
-                className="blog-item style-three"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <img
-                    src="/assets/images/blog/blog-list1.jpg"
-                    alt="Blog List"
-                  />
-                </div>
-                <div className="content">
-                  <Link href="blog" className="category">
-                    Travel
-                  </Link>
-                  <h5>
-                    <Link href="blog-details">
-                      Ultimate Guide to Planning Your Dream Vacation
+              {blogs.map((blog) => ( // Không cần kiểm tra Array.isArray nữa vì setBlogs đã được đảm bảo là mảng
+                <div
+                  key={blog.id}
+                  className="blog-item style-three"
+                  data-aos="fade-up"
+                  data-aos-duration={1500}
+                  data-aos-offset={50}
+                >
+                  <div className="image">
+                    {blog.imageUrl && (
+                      <img
+                        src={`http://localhost:8080${blog.imageUrl}`}
+                        alt={blog.title}
+                      />
+                    )}
+                  </div>
+                  <div className="content">
+                    <Link href="blog" className="category">
+                      Travel
                     </Link>
-                  </h5>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-calendar-alt" />{" "}
-                      <a href="#">25 February 2024</a>
-                    </li>
-                    <li>
-                      <i className="far fa-comments" />{" "}
-                      <a href="#">Comments (5)</a>
-                    </li>
-                  </ul>
-                  <p>
-                    We specialize in crafting unforgettable city experiences for
-                    travelers seeking
-                  </p>
-                  <Link
-                    href="blog-details"
-                    className="theme-btn style-two style-three"
-                  >
-                    <span data-hover="Book Now">Read More</span>
-                    <i className="fal fa-arrow-right" />
-                  </Link>
-                </div>
-              </div>
-              <div
-                className="blog-item style-three"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <img
-                    src="/assets/images/blog/blog-list2.jpg"
-                    alt="Blog List"
-                  />
-                </div>
-                <div className="content">
-                  <Link href="blog" className="category">
-                    Travel
-                  </Link>
-                  <h5>
-                    <Link href="blog-details">
-                      Ultimate Guide to Planning Your Dream Vacation
+                    <h5>
+                      <Link href={`/blog-details/${blog.id}`}>
+                        {blog.title}
+                      </Link>
+                    </h5>
+                    <ul className="blog-meta">
+                      <li>
+                        <i className="far fa-calendar-alt" />
+                        <a href="#">{new Date(blog.createdAt).toLocaleDateString()}</a>
+                      </li>
+                      <li>
+                        <i className="far fa-comments" />
+                        <a href="#">Comments (5)</a>
+                      </li>
+                    </ul>
+                    <p>{blog.content}</p>
+                    <Link
+                      href={`/blog-details/${blog.id}`}
+                      className="theme-btn style-two style-three"
+                    >
+                      <span data-hover="Book Now">Read More</span>
+                      <i className="fal fa-arrow-right" />
                     </Link>
-                  </h5>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-calendar-alt" />{" "}
-                      <a href="#">25 February 2024</a>
-                    </li>
-                    <li>
-                      <i className="far fa-comments" />{" "}
-                      <a href="#">Comments (5)</a>
-                    </li>
-                  </ul>
-                  <p>
-                    We specialize in crafting unforgettable city experiences for
-                    travelers seeking
-                  </p>
-                  <Link
-                    href="blog-details"
-                    className="theme-btn style-two style-three"
-                  >
-                    <span data-hover="Book Now">Read More</span>
-                    <i className="fal fa-arrow-right" />
-                  </Link>
+                  </div>
                 </div>
-              </div>
-              <div
-                className="blog-item style-three"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <img
-                    src="/assets/images/blog/blog-list3.jpg"
-                    alt="Blog List"
-                  />
-                </div>
-                <div className="content">
-                  <Link href="blog" className="category">
-                    Travel
-                  </Link>
-                  <h5>
-                    <Link href="blog-details">
-                      Ultimate Guide to Planning Your Dream Vacation
-                    </Link>
-                  </h5>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-calendar-alt" />{" "}
-                      <a href="#">25 February 2024</a>
-                    </li>
-                    <li>
-                      <i className="far fa-comments" />{" "}
-                      <a href="#">Comments (5)</a>
-                    </li>
-                  </ul>
-                  <p>
-                    We specialize in crafting unforgettable city experiences for
-                    travelers seeking
-                  </p>
-                  <Link
-                    href="blog-details"
-                    className="theme-btn style-two style-three"
-                  >
-                    <span data-hover="Book Now">Read More</span>
-                    <i className="fal fa-arrow-right" />
-                  </Link>
-                </div>
-              </div>
-              <div
-                className="blog-item style-three"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <img
-                    src="/assets/images/blog/blog-list4.jpg"
-                    alt="Blog List"
-                  />
-                </div>
-                <div className="content">
-                  <Link href="blog" className="category">
-                    Travel
-                  </Link>
-                  <h5>
-                    <Link href="blog-details">
-                      Ultimate Guide to Planning Your Dream Vacation
-                    </Link>
-                  </h5>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-calendar-alt" />{" "}
-                      <a href="#">25 February 2024</a>
-                    </li>
-                    <li>
-                      <i className="far fa-comments" />{" "}
-                      <a href="#">Comments (5)</a>
-                    </li>
-                  </ul>
-                  <p>
-                    We specialize in crafting unforgettable city experiences for
-                    travelers seeking
-                  </p>
-                  <Link
-                    href="blog-details"
-                    className="theme-btn style-two style-three"
-                  >
-                    <span data-hover="Book Now">Read More</span>
-                    <i className="fal fa-arrow-right" />
-                  </Link>
-                </div>
-              </div>
-              <div
-                className="blog-item style-three"
-                data-aos="fade-up"
-                data-aos-duration={1500}
-                data-aos-offset={50}
-              >
-                <div className="image">
-                  <img
-                    src="/assets/images/blog/blog-list5.jpg"
-                    alt="Blog List"
-                  />
-                </div>
-                <div className="content">
-                  <Link href="blog" className="category">
-                    Travel
-                  </Link>
-                  <h5>
-                    <Link href="blog-details">
-                      Ultimate Guide to Planning Your Dream Vacation
-                    </Link>
-                  </h5>
-                  <ul className="blog-meta">
-                    <li>
-                      <i className="far fa-calendar-alt" />{" "}
-                      <a href="#">25 February 2024</a>
-                    </li>
-                    <li>
-                      <i className="far fa-comments" />{" "}
-                      <a href="#">Comments (5)</a>
-                    </li>
-                  </ul>
-                  <p>
-                    We specialize in crafting unforgettable city experiences for
-                    travelers seeking
-                  </p>
-                  <Link
-                    href="blog-details"
-                    className="theme-btn style-two style-three"
-                  >
-                    <span data-hover="Book Now">Read More</span>
-                    <i className="fal fa-arrow-right" />
-                  </Link>
-                </div>
-              </div>
+              ))}
+
               <ul
                 className="pagination pt-15 flex-wrap"
                 data-aos="fade-up"
@@ -242,7 +94,8 @@ const page = () => {
                 </li>
                 <li className="page-item active">
                   <span className="page-link">
-                    1<span className="sr-only">(current)</span>
+                    1
+                    <span className="sr-only">(current)</span>
                   </span>
                 </li>
                 <li className="page-item">
@@ -267,6 +120,7 @@ const page = () => {
                 </li>
               </ul>
             </div>
+            {/* Sidebar (Không thay đổi nhiều) */}
             <div className="col-lg-4 col-md-8 col-sm-10 rmt-75">
               <div className="blog-sidebar">
                 <div
@@ -283,37 +137,7 @@ const page = () => {
                     />
                   </form>
                 </div>
-                <div
-                  className="widget widget-category"
-                  data-aos="fade-up"
-                  data-aos-duration={1500}
-                  data-aos-offset={50}
-                >
-                  <h5 className="widget-title">Category</h5>
-                  <ul className="list-style-three">
-                    <li>
-                      <Link href="blog">Adventure</Link>
-                    </li>
-                    <li>
-                      <Link href="blog">Hiking &amp; Trekking</Link>
-                    </li>
-                    <li>
-                      <Link href="blog">Cycling Tours</Link>
-                    </li>
-                    <li>
-                      <Link href="blog">Family Tours</Link>
-                    </li>
-                    <li>
-                      <Link href="blog">Mountain Hiking</Link>
-                    </li>
-                    <li>
-                      <Link href="blog">Rafting Excursion</Link>
-                    </li>
-                    <li>
-                      <Link href="blog">Coastal Paragliding</Link>
-                    </li>
-                  </ul>
-                </div>
+
                 <div
                   className="widget widget-news"
                   data-aos="fade-up"
@@ -433,33 +257,6 @@ const page = () => {
                     </a>
                   </div>
                 </div>
-                <div
-                  className="widget widget-cta"
-                  data-aos="fade-up"
-                  data-aos-duration={1500}
-                  data-aos-offset={50}
-                >
-                  <div className="content text-white">
-                    <span className="h6">Explore The World</span>
-                    <h3>Best Tourist Place</h3>
-                    <Link
-                      href="tour-list"
-                      className="theme-btn style-two bgc-secondary"
-                    >
-                      <span data-hover="Explore Now">Explore Now</span>
-                      <i className="fal fa-arrow-right" />
-                    </Link>
-                  </div>
-                  <div className="image">
-                    <img src="/assets/images/widgets/cta-widget.png" alt="CTA" />
-                  </div>
-                  <div className="cta-shape">
-                    <img
-                      src="/assets/images/widgets/cta-shape.png"
-                      alt="Shape"
-                    />
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -468,4 +265,4 @@ const page = () => {
     </ReveloLayout>
   );
 };
-export default page;
+export default BlogListPage;
