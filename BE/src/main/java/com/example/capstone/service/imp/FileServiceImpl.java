@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
-
-
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -49,22 +48,27 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public Resource load(String filename) {
-        try{
-            Path pathFile=Paths.get(root).resolve(filename);
-            Resource resource=new UrlResource(pathFile.toUri());
-            if(resource.exists()){
+        try {
+            Path rootPath = Paths.get(root).toAbsolutePath().normalize();
+            Path filePath = rootPath.resolve(filename).normalize();
+            System.out.println(" Dang load file tu: " + filePath);
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists() && resource.isReadable()) {
                 return resource;
+            } else {
+                throw new RuntimeException(" File khong ton tai hoac khong doc duoc: " + filename);
             }
-        }catch (Exception e){
-            System.out.println("Lỗi upload: "+e.getMessage());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Loi URL khi tai file: " + filename, e);
         }
-        return null;
     }
-
-
-
-
 }
+
+
+
+
+
+
 
 
 

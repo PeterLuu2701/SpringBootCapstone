@@ -1,5 +1,6 @@
 package com.example.capstone.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -22,8 +23,5 @@ public class Destination {
     @Column(columnDefinition = "BOOLEAN DEFAULT true")
     private boolean popular;
     private String duration;
-
-    @OneToMany(mappedBy = "destination")
-    private List<Tour> tours;
-
+    private String google_map_url;
 }
