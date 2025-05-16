@@ -65,8 +65,8 @@ public class DestinationController {
     }
 
     @DeleteMapping("/destination/{id}")
-    public ResponseEntity<String> deleteDestination(@PathVariable("id") long id) throws IdInvalidException {
-        String result = this.destinationService.deleteDestination(id);
+    public ResponseEntity<String> delete_destination(@PathVariable("id") long id) throws IdInvalidException {
+        String result = this.destinationService.delete_destination(id);
         return ResponseEntity.ok(result);
     }
 }

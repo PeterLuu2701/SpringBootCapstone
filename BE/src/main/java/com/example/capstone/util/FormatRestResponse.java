@@ -7,6 +7,8 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 import com.example.capstone.entity.RestResponse;
 import com.example.capstone.util.annotation.ApiMessage;
@@ -29,20 +31,33 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
             Class selectedConverterType,
             ServerHttpRequest request,
             ServerHttpResponse response) {
+
         HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();
         int status = servletResponse.getStatus();
-        RestResponse<Object> res = new RestResponse<Object>();
-        res.setStatusCode(status);
+
         if (body instanceof String) {
-            return body;
+            return body; // String đặc biệt, cần xử lý riêng
         }
+
         if (status >= 400) {
-            return body;
+            return body; // Lỗi thì giữ nguyên response gốc
+        }
+
+        RestResponse<Object> res = new RestResponse<>();
+        res.setStatusCode(status);
+
+        // Nếu là Page hoặc Slice thì lấy getContent()
+        if (body instanceof Page) {
+            res.setData(((Page<?>) body).getContent());
+        } else if (body instanceof Slice) {
+            res.setData(((Slice<?>) body).getContent());
         } else {
             res.setData(body);
-            ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
-            res.setMessage(message != null ? message.value() : "CALL API SUCCESS!");
         }
+
+        ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
+        res.setMessage(message != null ? message.value() : "CALL API SUCCESS!");
+
         return res;
     }
 

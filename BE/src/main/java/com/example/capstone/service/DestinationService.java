@@ -18,5 +18,5 @@ public interface DestinationService {
 
     Destination updateDestination(Destination updatedDestination) throws IdInvalidException;
 
-    String deleteDestination(long id) throws IdInvalidException;
+    String delete_destination(long id) throws IdInvalidException;
 }

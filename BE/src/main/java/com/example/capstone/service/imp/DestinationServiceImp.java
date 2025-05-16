@@ -56,7 +56,7 @@ public class DestinationServiceImp implements DestinationService {
     }
 
     // DELETE Destination
-    public String deleteDestination(long id) throws IdInvalidException {
+    public String delete_destination(long id) throws IdInvalidException {
         if (this.destinationRepository.findById(id).isPresent()) {
             this.destinationRepository.deleteById(id);
             return "Xóa thành công!";
