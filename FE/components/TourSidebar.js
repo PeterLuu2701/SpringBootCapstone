@@ -1,10 +1,31 @@
 "use client";
 import Link from "next/link";
 import Slider from "rc-slider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const TourSidebar = () => {
+  const [activities, setActivities] = useState([]);
+
   const [value, setValue] = useState([10, 30]);
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/activity/get-all-activities', { cache: 'no-store' });
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+        }
+        const data = await response.json();
+        setActivities(data.data);
+      } catch (error) {
+        console.error("Error fetching tours:", error);
+      }
+    };
+
+    fetchActivities();
+  }, []);
+
   return (
     <div className="col-lg-3 col-md-6 col-sm-10 rmb-75">
       <div className="shop-sidebar mb-30">
@@ -47,6 +68,7 @@ const TourSidebar = () => {
         >
           <h6 className="widget-title">By Activities</h6>
           <ul className="radio-filter">
+            {activities.map((activity) => (
             <li>
               <input
                 className="form-check-input"
@@ -56,64 +78,10 @@ const TourSidebar = () => {
                 id="activity1"
               />
               <label htmlFor="activity1">
-                Sea Beach <span>18</span>
+                {activity.name} <span>18</span>
               </label>
             </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByActivities"
-                id="activity2"
-              />
-              <label htmlFor="activity2">
-                Car Parking <span>29</span>
-              </label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByActivities"
-                id="activity3"
-              />
-              <label htmlFor="activity3">
-                Laundry Service <span>23</span>
-              </label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByActivities"
-                id="activity4"
-              />
-              <label htmlFor="activity4">
-                Outdoor Seating <span>25</span>
-              </label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByActivities"
-                id="activity5"
-              />
-              <label htmlFor="activity5">
-                Reservations <span>26</span>
-              </label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByActivities"
-                id="activity6"
-              />
-              <label htmlFor="activity6">
-                Smoking Allowed <span>28</span>
-              </label>
-            </li>
+            ))}
           </ul>
         </div>
         <div
