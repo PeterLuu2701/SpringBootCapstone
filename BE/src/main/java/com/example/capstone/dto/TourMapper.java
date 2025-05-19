@@ -16,9 +16,21 @@ public class TourMapper {
         dto.setImage_url(tour.getImage_url());
         dto.setIs_feature(tour.getIs_feature());
         dto.setDuration(tour.getDuration());
-        dto.setDestination_id(
-                tour.getDestination() != null ? tour.getDestination().getId() : 0
-        );
+        if (tour.getDestination() != null) {
+            dto.setDestination_id(tour.getDestination().getId());
+            dto.setDestinationName(tour.getDestination().getName());
+            dto.setDestinationCountry(tour.getDestination().getCountry());
+            dto.setDestinationCity(tour.getDestination().getCity());
+        } else {
+            dto.setDestination_id(0);
+        }
+        if (tour.getActivity() != null) {
+            dto.setActivity_id(tour.getActivity().getId());
+            dto.setActivityName(tour.getActivity().getName());
+            dto.setActivityDescription(tour.getActivity().getDescription());
+        } else {
+            dto.setActivity_id(0);
+        }
 
         return dto;
     }

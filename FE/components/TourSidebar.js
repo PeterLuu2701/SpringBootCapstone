@@ -5,25 +5,39 @@ import { useEffect, useState } from "react";
 
 const TourSidebar = () => {
   const [activities, setActivities] = useState([]);
-
+  const [countries, setCountries] = useState([]);
   const [value, setValue] = useState([10, 30]);
 
   useEffect(() => {
-    const fetchActivities = async () => {
+    const fetchSidebarData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/activity/get-all-activities', { cache: 'no-store' });
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+        // Fetch Activities
+        const activitiesResponse = await fetch('http://localhost:8080/activity/get-all-activities', { cache: 'no-store' });
+        if (!activitiesResponse.ok) {
+          const errorText = await activitiesResponse.text();
+          throw new Error(`HTTP error fetching activities! status: ${activitiesResponse.status}, body: ${errorText}`);
         }
-        const data = await response.json();
-        setActivities(data.data);
+        const activitiesData = await activitiesResponse.json();
+        setActivities(activitiesData.data);
+
+        // Fetch Tours
+        const toursResponse = await fetch('http://localhost:8080/destination/get-all-tours', { cache: 'no-store' });
+        if (!toursResponse.ok) {
+          const errorText = await toursResponse.text();
+          throw new Error(`HTTP error fetching tours! status: ${toursResponse.status}, body: ${errorText}`);
+        }
+        const toursData = await toursResponse.json();
+        const uniqueActivities = [
+          ...new Set(toursData.data.map((tour) => tour.activityName)),
+        ].filter(Boolean);
+        setCountries(uniqueActivities);
+
       } catch (error) {
-        console.error("Error fetching tours:", error);
+        console.error("Error fetching sidebar data:", error);
       }
     };
 
-    fetchActivities();
+    fetchSidebarData();
   }, []);
 
   return (
@@ -69,18 +83,17 @@ const TourSidebar = () => {
           <h6 className="widget-title">By Activities</h6>
           <ul className="radio-filter">
             {activities.map((activity) => (
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                defaultChecked=""
-                name="ByActivities"
-                id="activity1"
-              />
-              <label htmlFor="activity1">
-                {activity.name} <span>18</span>
-              </label>
-            </li>
+              <li key={activity.id}>
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="ByActivities"
+                  id={`activity-${activity.id}`}
+                />
+                <label htmlFor={`activity-${activity.id}`}>
+                  {activity.name} <span>{activities.length}</span>
+                </label>
+              </li>
             ))}
           </ul>
         </div>
@@ -186,119 +199,25 @@ const TourSidebar = () => {
           data-aos-duration={1500}
           data-aos-offset={50}
         >
-          <h6 className="widget-title">By Languages</h6>
+          <h6 className="widget-title">By Country</h6>
           <ul className="radio-filter">
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                defaultChecked=""
-                name="ByLanguages"
-                id="language1"
-              />
-              <label htmlFor="language1">American</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByLanguages"
-                id="language2"
-              />
-              <label htmlFor="language2">English</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByLanguages"
-                id="language3"
-              />
-              <label htmlFor="language3">German</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByLanguages"
-                id="language4"
-              />
-              <label htmlFor="language4">Japanese</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByLanguages"
-                id="language5"
-              />
-              <label htmlFor="language5">Vietnamese</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ByLanguages"
-                id="language6"
-              />
-              <label htmlFor="language6">French</label>
-            </li>
-          </ul>
-        </div>
-        <div
-          className="widget widget-duration"
-          data-aos="fade-up"
-          data-aos-duration={1500}
-          data-aos-offset={50}
-        >
-          <h6 className="widget-title">Duration</h6>
-          <ul className="radio-filter">
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                defaultChecked=""
-                name="Duration"
-                id="duration1"
-              />
-              <label htmlFor="duration1">0 - 2 hours</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="Duration"
-                id="duration2"
-              />
-              <label htmlFor="duration2">2 - 4 hours</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="Duration"
-                id="duration3"
-              />
-              <label htmlFor="duration3">4 - 8 hours</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="Duration"
-                id="duration4"
-              />
-              <label htmlFor="duration4">Fulda (+8 hours)</label>
-            </li>
-            <li>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="Duration"
-                id="duration5"
-              />
-              <label htmlFor="duration5">Multi days</label>
-            </li>
+            {countries.map((country, index) => (
+              <li key={index}>
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="ByLanguages"
+                  id={`country-${country?.replace(/\s+/g, "-").toLowerCase()}`}
+                />
+                <label
+                  htmlFor={`country-${country
+                    ?.replace(/\s+/g, "-")
+                    .toLowerCase()}`}
+                >
+                  {country}
+                </label>
+              </li>
+            ))}
           </ul>
         </div>
         <div
