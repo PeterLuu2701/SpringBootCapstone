@@ -16,31 +16,40 @@
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
-    "/login/page": [
+    "/tour-list/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/login/page.css",
-      "static/chunks/app/login/page.js"
+      "static/chunks/app/tour-list/page.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/_not-found/page.js"
     ],
-    "/tour-list/page": [
+    "/contact/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/tour-list/page.js"
+      "static/chunks/app/contact/page.js"
     ],
-    "/destination/page": [
+    "/gellery-grid/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/destination/page.js"
+      "static/chunks/app/gellery-grid/page.js"
     ],
     "/destination-details/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/destination-details/page.js"
+    ],
+    "/faqs/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/faqs/page.js"
+    ],
+    "/about/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/about/page.js"
     ]
   }
 }
