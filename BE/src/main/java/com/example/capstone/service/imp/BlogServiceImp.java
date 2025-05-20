@@ -7,8 +7,9 @@ import com.example.capstone.dto.BlogMapper;
 import com.example.capstone.repository.BlogRepository;
 import com.example.capstone.repository.UserRepository;
 import com.example.capstone.service.BlogService;
-import com.example.capstone.service.FileServices;
+import com.example.capstone.service.FileService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired; // Import Autowired
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -20,12 +21,14 @@ public class BlogServiceImp implements BlogService {
 
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
-    private final FileServices fileServices;
+    private final FileService fileService; // Inject FileService thông qua constructor
 
-    public BlogServiceImp(BlogRepository blogRepository, UserRepository userRepository, FileServices fileServices) {
+    // Sửa lại constructor để Autowire FileService
+    @Autowired
+    public BlogServiceImp(BlogRepository blogRepository, UserRepository userRepository, FileService fileService) {
         this.blogRepository = blogRepository;
         this.userRepository = userRepository;
-        this.fileServices = fileServices;
+        this.fileService = fileService;
     }
 
     @Override
@@ -35,16 +38,28 @@ public class BlogServiceImp implements BlogService {
 
         String imageUrl = null;
         if (blogDTO.getImage() != null && !blogDTO.getImage().isEmpty()) {
-            fileServices.saveFile(blogDTO.getImage());  // Lưu file
-            imageUrl = "/file/" + blogDTO.getImage().getOriginalFilename();  // Tạo URL
+            String originalFilename = blogDTO.getImage().getOriginalFilename();
+            String fileName = System.currentTimeMillis() + "_" + originalFilename;
+            fileService.save(blogDTO.getImage(), fileName);
+            // Sửa đường dẫn ở đây
+            imageUrl = "/file/" + fileName;  // Tạo URL tương ứng cho FileController
         }
 
-        Blog blog = BlogMapper.toEntity(blogDTO, author, imageUrl); // Pass imageUrl
+        // Cần thêm logic set Tour nếu blogDTO có tourId
+        // Tour tour = null;
+        // if (blogDTO.getTourId() != null) {
+        //     tour = tourRepository.findById(blogDTO.getTourId()).orElse(null); // Cần inject TourRepository
+        // }
+
+        Blog blog = BlogMapper.toEntity(blogDTO, author, imageUrl);
+        // if (tour != null) {
+        //    blog.setTour(tour); // Set Tour
+        // }
+
 
         Timestamp now = new Timestamp(System.currentTimeMillis());
-        blog.setCreatedAt(new Timestamp(System.currentTimeMillis())); // Đảm bảo set giá trị
-        blog.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // Đảm bảo set giá trị
-
+        blog.setCreatedAt(now);
+        blog.setUpdatedAt(now);
 
         Blog savedBlog = blogRepository.save(blog);
         return BlogMapper.toDTO(savedBlog);
@@ -72,10 +87,23 @@ public class BlogServiceImp implements BlogService {
         User author = userRepository.findById(blogDTO.getAuthorId().intValue())
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + blogDTO.getAuthorId()));
 
+        // Cần thêm logic set Tour nếu blogDTO có tourId và bạn muốn cập nhật Tour
+        // Tour tour = null;
+        // if (blogDTO.getTourId() != null) {
+        //     tour = tourRepository.findById(blogDTO.getTourId()).orElse(null); // Cần inject TourRepository
+        // }
+        // if (tour != null || blogDTO.getTourId() == null) { // Cho phép set Tour null
+        //    existingBlog.setTour(tour);
+        // }
+
+
         String imageUrl = existingBlog.getImageUrl(); // Giữ lại URL cũ nếu không có file mới
         if (blogDTO.getImage() != null && !blogDTO.getImage().isEmpty()) {
-            fileServices.saveFile(blogDTO.getImage());
-            imageUrl = "/file/" + blogDTO.getImage().getOriginalFilename();
+            String originalFilename = blogDTO.getImage().getOriginalFilename();
+            String fileName = System.currentTimeMillis() + "_" + originalFilename;
+            fileService.save(blogDTO.getImage(), fileName);
+            // Sửa đường dẫn ở đây
+            imageUrl = "/file/" + fileName;  // Cập nhật imageUrl cho FileController
         }
 
         existingBlog.setTitle(blogDTO.getTitle());
@@ -90,6 +118,12 @@ public class BlogServiceImp implements BlogService {
 
     @Override
     public void deleteBlog(Long id) {
+        Blog blogToDelete = blogRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Blog not found with id: " + id));
+        // Thêm logic xóa file ảnh cũ nếu cần
+        // if (blogToDelete.getImageUrl() != null && !blogToDelete.getImageUrl().isEmpty()) {
+        //     fileService.delete(blogToDelete.getImageUrl().replace("/file/", "")); // Cần thêm phương thức delete và loại bỏ /file/
+        // }
         blogRepository.deleteById(id);
     }
 }

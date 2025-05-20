@@ -9,8 +9,9 @@ import com.example.capstone.repository.BlogRepository;
 import com.example.capstone.repository.BlogReviewRepository;
 import com.example.capstone.repository.UserRepository;
 import com.example.capstone.service.BlogReviewService;
-import com.example.capstone.service.FileServices;
+import com.example.capstone.service.FileService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired; // Import Autowired
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -23,13 +24,15 @@ public class BlogReviewServiceImp implements BlogReviewService {
     private final BlogReviewRepository blogReviewRepository;
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
-    private final FileServices fileServices;
+    private final FileService fileService; // Inject FileService thông qua constructor
 
-    public BlogReviewServiceImp(BlogReviewRepository blogReviewRepository, BlogRepository blogRepository, UserRepository userRepository, FileServices fileServices) {
+    // Sửa lại constructor để Autowire FileService
+    @Autowired
+    public BlogReviewServiceImp(BlogReviewRepository blogReviewRepository, BlogRepository blogRepository, UserRepository userRepository, FileService fileService) {
         this.blogReviewRepository = blogReviewRepository;
         this.blogRepository = blogRepository;
         this.userRepository = userRepository;
-        this.fileServices = fileServices;
+        this.fileService = fileService;
     }
 
     @Override
@@ -41,8 +44,11 @@ public class BlogReviewServiceImp implements BlogReviewService {
 
         String imageUrl = null;
         if (blogReviewDTO.getImage() != null && !blogReviewDTO.getImage().isEmpty()) {
-            fileServices.saveFile(blogReviewDTO.getImage());
-            imageUrl = "/file/" + blogReviewDTO.getImage().getOriginalFilename();
+            String originalFilename = blogReviewDTO.getImage().getOriginalFilename();
+            String fileName = System.currentTimeMillis() + "_" + originalFilename;
+            fileService.save(blogReviewDTO.getImage(), fileName);
+            // Sửa đường dẫn ở đây
+            imageUrl = "/file/" + fileName; // Tạo URL tương ứng cho FileController
         }
 
         BlogReview blogReview = BlogReviewMapper.toEntity(blogReviewDTO, blog, author, imageUrl);
@@ -76,13 +82,13 @@ public class BlogReviewServiceImp implements BlogReviewService {
         User author = userRepository.findById(blogReviewDTO.getAuthorId().intValue())
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + blogReviewDTO.getAuthorId()));
 
-        String imageUrl = null;
-        if (existingBlogReview != null && existingBlogReview.getImageUrl() != null){
-            imageUrl = existingBlogReview.getImageUrl();
-        }
+        String imageUrl = existingBlogReview.getImageUrl(); // Giữ lại URL cũ nếu không có file mới
         if (blogReviewDTO.getImage() != null && !blogReviewDTO.getImage().isEmpty()) {
-            fileServices.saveFile(blogReviewDTO.getImage());
-            imageUrl = "/file/" + blogReviewDTO.getImage().getOriginalFilename();
+            String originalFilename = blogReviewDTO.getImage().getOriginalFilename();
+            String fileName = System.currentTimeMillis() + "_" + originalFilename;
+            fileService.save(blogReviewDTO.getImage(), fileName);
+            // Sửa đường dẫn ở đây
+            imageUrl = "/file/" + fileName; // Cập nhật imageUrl cho FileController
         }
 
         existingBlogReview.setBlog(blog);
@@ -90,7 +96,7 @@ public class BlogReviewServiceImp implements BlogReviewService {
         existingBlogReview.setRating(blogReviewDTO.getRating());
         existingBlogReview.setComment(blogReviewDTO.getComment());
         existingBlogReview.setImageUrl(imageUrl);
-        existingBlogReview.setReviewDate(new Timestamp(System.currentTimeMillis()));
+        existingBlogReview.setReviewDate(new Timestamp(System.currentTimeMillis())); // Có thể cần cập nhật ngày review khi update?
 
         BlogReview updatedBlogReview = blogReviewRepository.save(existingBlogReview);
         return BlogReviewMapper.toDTO(updatedBlogReview);
@@ -98,6 +104,12 @@ public class BlogReviewServiceImp implements BlogReviewService {
 
     @Override
     public void deleteBlogReview(Long id) {
+        BlogReview reviewToDelete = blogReviewRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("BlogReview not found with id: " + id));
+        // Thêm logic xóa file ảnh cũ nếu cần
+        // if (reviewToDelete.getImageUrl() != null && !reviewToDelete.getImageUrl().isEmpty()) {
+        //     fileService.delete(reviewToDelete.getImageUrl().replace("/file/", "")); // Cần thêm phương thức delete
+        // }
         blogReviewRepository.deleteById(id);
     }
 }

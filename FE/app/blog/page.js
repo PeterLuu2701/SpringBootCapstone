@@ -5,6 +5,9 @@ import ReveloLayout from "@/layout/ReveloLayout";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
+
+
+
 const BlogListPage = () => {
   const [blogs, setBlogs] = useState([]);
 

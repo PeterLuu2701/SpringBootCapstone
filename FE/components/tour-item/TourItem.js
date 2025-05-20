@@ -4,7 +4,7 @@ import Link from "next/link";
 import slugify from "slugify";
 
 const TourItem = ({
-  imageUrl,
+  imageUrl, // Đây là đường dẫn từ API, ví dụ: "/file/tenfile.png"
   location,
   rating = 0,
   title,
@@ -18,6 +18,12 @@ const TourItem = ({
   aosDelay = 0,
 }) => {
   const slug = slugify(title || "", { lower: true, strict: true });
+
+  // Kiểm tra xem imageUrl có tồn tại và không rỗng không
+  // Nếu có, xây dựng URL đầy đủ từ Backend
+  // Nếu không, sử dụng ảnh placeholder mặc định từ thư mục public của Next.js
+  const BACKEND_URL = "http://localhost:8080"; // HOẶC SỬ DỤNG BIẾN MÔI TRƯỜNG
+  const finalImageUrl = imageUrl ? `${BACKEND_URL}${imageUrl}` : '/images/default-tour-image.jpg'; // Sử dụng ảnh mặc định trong public
 
   return (
     <div
@@ -35,7 +41,9 @@ const TourItem = ({
           <a href="#" className="heart">
             <i className="fas fa-heart" />
           </a>
-          <img src={imageUrl} alt={title} />
+          {/* Sử dụng URL đầy đủ trong thuộc tính src */}
+          {/* Đảm bảo ảnh mặc định của bạn nằm trong thư mục public/images */}
+          <img src={finalImageUrl} alt={title} style={{ width: '100%', height: 'auto' }} /> {/* Thêm style cơ bản nếu cần */}
         </div>
         <div className="content">
           <div className="destination-header">

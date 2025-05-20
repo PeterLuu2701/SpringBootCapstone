@@ -16,18 +16,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional; // Import Optional
 
 @Service
 public class TourServiceImp implements TourService {
 
-@Autowired
     private final TourRepository tourRepository;
-@Autowired
     private final DestinationRepository destinationRepository;
-    @Autowired
-    private FileService fileService;
+    private final FileService fileService; // Inject FileService thông qua constructor
 
-    public TourServiceImp(TourRepository tourRepository, DestinationRepository destinationRepository) {
+    // Sửa lại constructor để Autowire FileService
+    @Autowired
+    public TourServiceImp(TourRepository tourRepository, DestinationRepository destinationRepository, FileService fileService) {
         this.tourRepository = tourRepository;
         this.destinationRepository = destinationRepository;
         this.fileService = fileService;
@@ -39,12 +39,19 @@ public class TourServiceImp implements TourService {
         Destination destination = destinationRepository.findById(dto.getDestination_id())
                 .orElseThrow(() -> new EntityNotFoundException("Destination not found with id: " + dto.getDestination_id()));
 
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();  // tự sinh tên file
-        fileService.save(file, fileName);  // truyền file và tên file muốn lưu
-        dto.setImage_url("/uploads/" + fileName);  // gán đường dẫn file vào DTO
-        Tour saved = tourRepository.save(TourMapper.toEntity(dto, destination));
+        String imageUrl = null;
+        if (file != null && !file.isEmpty()) {
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();  // tự sinh tên file
+            fileService.save(file, fileName);  // truyền file và tên file muốn lưu
+            imageUrl = "/file/" + fileName;  // Gán đường dẫn *đúng* cho FileController
+        }
+
+        dto.setImage_url(imageUrl); // Gán imageUrl vào DTO trước khi map sang Entity
+
+        Tour saved = tourRepository.save(TourMapper.toEntity(dto, destination)); // Sử dụng toEntity cho CREATE
         return TourMapper.toDTO(saved);
     }
+
     @Override
     public List<TourDTO> getAllTours() {
         return tourRepository.findAll().stream()
@@ -67,8 +74,26 @@ public class TourServiceImp implements TourService {
         Destination destination = destinationRepository.findById(dto.getDestination_id())
                 .orElseThrow(() -> new EntityNotFoundException("Destination not found with id: " + dto.getDestination_id()));
 
-        Tour updatedTour = TourMapper.toEntity(dto, destination);
-        updatedTour.setId(id);
+        // Xử lý cập nhật ảnh (nếu TourDTO có trường MultipartFile)
+        // Nếu bạn thêm MultipartFile vào TourDTO, bạn sẽ cần sửa phương thức này
+        // Ví dụ:
+        // String imageUrl = existingTour.getImage_url(); // Giữ lại ảnh cũ theo mặc định
+        // if (dto.getFile() != null && !dto.getFile().isEmpty()) {
+        //     String fileName = System.currentTimeMillis() + "_" + dto.getFile().getOriginalFilename();
+        //     fileService.save(dto.getFile(), fileName);
+        //     imageUrl = "/file/" + fileName; // Cập nhật đường dẫn ảnh mới
+        // }
+        // dto.setImage_url(imageUrl); // Set imageUrl vào DTO trước khi map
+
+
+        // Hiện tại, nếu không có file trong DTO update, giữ lại ảnh cũ.
+        // Nếu trong DTO update có image_url, thì dùng image_url đó.
+        // Nếu muốn cập nhật ảnh bằng file, cần thêm MultipartFile vào TourDTO và phương thức này
+        String imageUrlToSave = (dto.getImage_url() != null && !dto.getImage_url().isEmpty()) ? dto.getImage_url() : existingTour.getImage_url();
+        dto.setImage_url(imageUrlToSave);
+
+
+        Tour updatedTour = TourMapper.toEntity(id, dto, destination); // Sử dụng toEntity cho UPDATE với ID
         Tour saved = tourRepository.save(updatedTour);
         return TourMapper.toDTO(saved);
     }
@@ -78,6 +103,11 @@ public class TourServiceImp implements TourService {
         if (!tourRepository.existsById(id)) {
             throw new EntityNotFoundException("Tour not found  id: " + id);
         }
+        // Bạn có thể thêm logic xóa file ảnh cũ ở đây nếu cần
+        // Tour tourToDelete = tourRepository.findById(id).get();
+        // if (tourToDelete.getImage_url() != null && !tourToDelete.getImage_url().isEmpty()) {
+        //     fileService.delete(tourToDelete.getImage_url()); // Cần thêm phương thức delete vào FileService
+        // }
         tourRepository.deleteById(id);
     }
 }

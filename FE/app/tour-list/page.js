@@ -5,7 +5,7 @@ import TourSidebar from "@/components/TourSidebar";
 import ReveloLayout from "@/layout/ReveloLayout";
 import slugify from "slugify";
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 6  ;
 
 const fetchTours = async () => {
   try {
