@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/capstone_springboot
+    username: root
+    password: Vochithanh2@
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        transaction:
+          jta:
+            platform: org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform
+    open-in-view: false
+
+  security:
+    user:
+      name: ""
+      password: ""
+
+jwt:
+  secret: Sf76ODirXZoufqGtUXBgNp3uOL0i1tYvj23Xpu5EQNM=
