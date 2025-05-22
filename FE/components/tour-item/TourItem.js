@@ -4,7 +4,7 @@ import Link from "next/link";
 import slugify from "slugify";
 
 const TourItem = ({
-  imageUrl,
+  imageUrl, // Nhận URL tương đối từ backend (ví dụ: /file/ten_file.png)
   location,
   rating = 0,
   title,
@@ -19,6 +19,10 @@ const TourItem = ({
 }) => {
   const slug = slugify(title || "", { lower: true, strict: true });
 
+  const backendBaseUrl = "http://localhost:8080"; // URL gốc của backend
+  
+  const fullImageUrl = imageUrl ? `${backendBaseUrl}${imageUrl}` : null; 
+
   return (
     <div
       className="col"
@@ -30,12 +34,14 @@ const TourItem = ({
       <div className="destination-item style-three bgc-lighter">
         <div className="image">
           {featured && <span className="badge bgc-pink">Featured</span>}
-          {discount && <span className="badge bgc-green">{discount}</span>}
+          {discount && <span className="badge bgc-green">Discount</span>} 
           {popular && <span className="badge bgc-primary">Popular</span>}
           <a href="#" className="heart">
             <i className="fas fa-heart" />
           </a>
-          <img src={imageUrl} alt={title} />
+          {/* Sử dụng fullImageUrl đã ghép */}
+          {fullImageUrl && <img src={fullImageUrl} alt={title || "Tour Image"} />} 
+          {!fullImageUrl && <div style={{ width: '100%', height: '200px', backgroundColor: '#eee', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>No Image</div>} {/* Hiển thị placeholder nếu không có ảnh */}
         </div>
         <div className="content">
           <div className="destination-header">
@@ -43,9 +49,12 @@ const TourItem = ({
               <i className="fal fa-map-marker-alt" /> {location}
             </span>
             <div className="ratting">
-              {Array.from({ length: Math.round(rating) }).map((_, index) => (
+              {/* Đảm bảo rating là số trước khi làm tròn */}
+              {Array.from({ length: Math.round(rating || 0) }).map((_, index) => (
                 <i key={index} className="fas fa-star" />
               ))}
+               {/* Hiển thị rating số nếu cần */}
+               {rating > 0 && <span className="ms-1">({rating.toFixed(1)})</span>}
             </div>
           </div>
           <h5>
@@ -64,7 +73,8 @@ const TourItem = ({
           </ul>
           <div className="destination-footer">
             <span className="price">
-              <span>${price?.toFixed(2)}</span>/person
+              {/* Đảm bảo price là số trước khi toFixed */}
+              <span>${price != null ? price.toFixed(2) : 'N/A'}</span>/person
             </span>
             <Link
               href={`/tour-details/${slug}`}

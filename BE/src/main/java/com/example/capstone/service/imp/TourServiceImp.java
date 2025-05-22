@@ -41,7 +41,7 @@ public class TourServiceImp implements TourService {
 
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();  // tự sinh tên file
         fileService.save(file, fileName);  // truyền file và tên file muốn lưu
-        dto.setImage_url("/uploads/" + fileName);  // gán đường dẫn file vào DTO
+        dto.setImage_url("/file/" + fileName);  // gán đường dẫn file vào DTO
         Tour saved = tourRepository.save(TourMapper.toEntity(dto, destination));
         return TourMapper.toDTO(saved);
     }

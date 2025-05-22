@@ -3,14 +3,14 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/capstone_springboot
+    url: jdbc:mysql://localhost:3307/capstone_springboot3
     username: root
-    password: 1234
+    password: admin123
   jpa:
     hibernate:
       ddl-auto: update
     properties:
-      hibernate:
+      hibernate:  
         transaction:
           jta:
             platform: org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform
@@ -26,5 +26,5 @@ jwt:
 
 
 file:
-  upload: ./uploads
+  upload: D:\upload
 

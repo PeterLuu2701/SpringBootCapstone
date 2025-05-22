@@ -9,7 +9,7 @@ public class TourDTO {
     private String description;
     private Double price;
     private float rating;
-    private String image_url;
+    private String image_url; // <- Trường này
     private String is_feature;
     private String duration;
     private long destination_id;

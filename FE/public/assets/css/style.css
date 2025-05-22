@@ -8761,3 +8761,22 @@ blockquote {
 .avatar-dropdown.show .dropdown-menu {
   display: block;
 }
+
+
+/* Đảm bảo container ảnh có kích thước cố định và hình vuông */
+.destination-item.style-two .image {
+    width: 150px; /* Hoặc kích thước phù hợp */
+    height: 150px; /* Phải bằng width để tròn */
+    border-radius: 50%; /* Làm tròn container */
+    overflow: hidden; /* Cắt bớt phần ảnh thừa ra ngoài hình tròn */
+    position: relative; /* Cần thiết cho object-fit hoạt động tốt */
+}
+
+/* Đảm bảo ảnh lấp đầy container và giữ nguyên tỷ lệ */
+.destination-item.style-two .image img {
+    display: block; /* Loại bỏ khoảng trắng dưới ảnh */
+    width: 100%; /* Ảnh chiếm toàn bộ chiều rộng container */
+    height: 100%; /* Ảnh chiếm toàn bộ chiều cao container */
+    object-fit: cover; /* Quan trọng: giữ tỷ lệ và lấp đầy container */
+    /* border-radius: 50%; /* Có thể áp dụng border-radius ở đây thay vì container */
+}

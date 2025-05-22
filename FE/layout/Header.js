@@ -12,7 +12,7 @@ const Menu = () => {
                 <div className="navbar-header">
                     <div className="mobile-logo">
                         <Link href="/">
-                            <img src="/assets/images/logos/bootcamp.png" alt="Logo" title="Logo" />
+                            <img src="/assets/images/logos/logo.png" alt="Logo" title="Logo" />
                         </Link>
                     </div>
                     {/* Toggle Button */}
@@ -134,14 +134,14 @@ const Header = () => {
         <Fragment>
             <header className="main-header header-one">
                 {/*Header-Upper*/}
-                <div className="header-upper bg-white rpy-0">
+                <div class="header-upper bg-white py-30 rpy-0">
                     <div className="container-fluid clearfix">
                         <div className="header-inner rel d-flex align-items-center">
                             <div className="logo-outer">
                                 <div className="logo">
                                     <Link href="/">
                                         <img
-                                            src="/assets/images/logos/bootcamp.png"
+                                            src="/assets/images/logos/logo-two.png"
                                             alt="Logo"
                                             title="Logo"
                                         />

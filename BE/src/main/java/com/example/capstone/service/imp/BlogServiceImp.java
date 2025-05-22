@@ -7,9 +7,10 @@ import com.example.capstone.dto.BlogMapper;
 import com.example.capstone.repository.BlogRepository;
 import com.example.capstone.repository.UserRepository;
 import com.example.capstone.service.BlogService;
-import com.example.capstone.service.FileServices;
+import com.example.capstone.service.FileService; // Đã thay đổi import
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile; // Đảm bảo import này có
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -20,12 +21,12 @@ public class BlogServiceImp implements BlogService {
 
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
-    private final FileServices fileServices;
+    private final FileService fileService; // Đã thay đổi kiểu dữ liệu
 
-    public BlogServiceImp(BlogRepository blogRepository, UserRepository userRepository, FileServices fileServices) {
+    public BlogServiceImp(BlogRepository blogRepository, UserRepository userRepository, FileService fileService) { // Đã thay đổi tham số constructor
         this.blogRepository = blogRepository;
         this.userRepository = userRepository;
-        this.fileServices = fileServices;
+        this.fileService = fileService; // Gán giá trị
     }
 
     @Override
@@ -35,8 +36,9 @@ public class BlogServiceImp implements BlogService {
 
         String imageUrl = null;
         if (blogDTO.getImage() != null && !blogDTO.getImage().isEmpty()) {
-            fileServices.saveFile(blogDTO.getImage());  // Lưu file
-            imageUrl = "/file/" + blogDTO.getImage().getOriginalFilename();  // Tạo URL
+            String fileName = System.currentTimeMillis() + "_" + blogDTO.getImage().getOriginalFilename(); // Tạo tên file duy nhất
+            fileService.save(blogDTO.getImage(), fileName); // Sử dụng service và phương thức mới
+            imageUrl = "/file/" + fileName; // Tạo URL dựa trên tên file đã lưu
         }
 
         Blog blog = BlogMapper.toEntity(blogDTO, author, imageUrl); // Pass imageUrl
@@ -44,7 +46,6 @@ public class BlogServiceImp implements BlogService {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         blog.setCreatedAt(new Timestamp(System.currentTimeMillis())); // Đảm bảo set giá trị
         blog.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // Đảm bảo set giá trị
-
 
         Blog savedBlog = blogRepository.save(blog);
         return BlogMapper.toDTO(savedBlog);
@@ -74,8 +75,9 @@ public class BlogServiceImp implements BlogService {
 
         String imageUrl = existingBlog.getImageUrl(); // Giữ lại URL cũ nếu không có file mới
         if (blogDTO.getImage() != null && !blogDTO.getImage().isEmpty()) {
-            fileServices.saveFile(blogDTO.getImage());
-            imageUrl = "/file/" + blogDTO.getImage().getOriginalFilename();
+            String fileName = System.currentTimeMillis() + "_" + blogDTO.getImage().getOriginalFilename(); // Tạo tên file duy nhất
+            fileService.save(blogDTO.getImage(), fileName); // Sử dụng service và phương thức mới
+            imageUrl = "/file/" + fileName; // Cập nhật URL mới
         }
 
         existingBlog.setTitle(blogDTO.getTitle());

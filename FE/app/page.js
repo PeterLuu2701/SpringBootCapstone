@@ -1,5 +1,6 @@
 import Counter from "@/components/Counter";
 import FeaturesTours from "@/components/features-tours/FeaturesTours";
+import TourSidebar from "@/components/TourSidebar";
 import SearchFilter from "@/components/SearchFilter";
 import SectionTitle from "@/components/SectionTitle";
 import Destination from "@/components/slider/Destination";
@@ -206,7 +207,7 @@ const page = () => {
       </section>
       {/* CTA Three Area end */}
       {/* Features Tours Area start */}
-      <section className="features-tour-area pt-100 rel z-1">
+      <section className="features-tour-area rel z-1">
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-12">

@@ -89,9 +89,10 @@ const DestinationsList = ({
             {destinations.map((destination, index) => (
               <DestinationItem
                 key={destination.id}
-                imageUrl={destination.image_url.split("/").pop()}
+                // Sửa đổi ở đây: Truyền destination.imageUrl trực tiếp
+                imageUrl={destination.imageUrl} // Sử dụng imageUrl từ DTO backend
                 title={destination.name}
-                toursCount={destination.toursCount || "10"}
+                // toursCount={destination.toursCount || "10"} // toursCount cần được tính toán hoặc lấy từ backend
                 destinationDetailsLink={`/destination-details?id=${destination.id}`}
                 aosDelay={index * 50}
               />
