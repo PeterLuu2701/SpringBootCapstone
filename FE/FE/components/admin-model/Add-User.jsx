@@ -87,7 +87,7 @@ const AddUser = ({ show, onHide, setUsers }) => {
         closeButton
         className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-t-lg"
       >
-        <Modal.Title className="font-semibold">Add New User</Modal.Title>
+        <Modal.Title className="font-semibold"> + Add New User</Modal.Title>
       </Modal.Header>
       <Modal.Body className="bg-gray-50 p-6 rounded-b-lg">
         {error && (
