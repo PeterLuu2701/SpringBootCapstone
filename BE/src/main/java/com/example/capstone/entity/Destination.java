@@ -1,10 +1,13 @@
 package com.example.capstone.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @Entity
@@ -22,8 +25,6 @@ public class Destination {
     @Column(columnDefinition = "BOOLEAN DEFAULT true")
     private boolean popular;
     private String duration;
-
-    @OneToMany(mappedBy = "destination")
-    private List<Tour> tours;
+    private String google_map_url;
 
 }

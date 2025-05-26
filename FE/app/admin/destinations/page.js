@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import AdminNavbar from "@/components/admin-dashboard/admin-navbar/AdminNavbar";
 import DestinationDashboard from "@/components/admin-dashboard/destination-dashboard/DestinationDashboard";
 import AdminLayout from "@/layout/AdminLayout";

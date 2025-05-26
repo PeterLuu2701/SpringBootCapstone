@@ -1,14 +1,18 @@
 package com.example.capstone.service.imp;
 
 import com.example.capstone.dto.TourDTO;
+import com.example.capstone.dto.TourMapper;
 import com.example.capstone.entity.Destination;
 import com.example.capstone.entity.Tour;
-import com.example.capstone.mapper.TourMapper;
+
 import com.example.capstone.repository.DestinationRepository;
 import com.example.capstone.repository.TourRepository;
+import com.example.capstone.service.FileService;
 import com.example.capstone.service.TourService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,22 +20,31 @@ import java.util.stream.Collectors;
 @Service
 public class TourServiceImp implements TourService {
 
+@Autowired
     private final TourRepository tourRepository;
+@Autowired
     private final DestinationRepository destinationRepository;
+    @Autowired
+    private FileService fileService;
 
     public TourServiceImp(TourRepository tourRepository, DestinationRepository destinationRepository) {
         this.tourRepository = tourRepository;
         this.destinationRepository = destinationRepository;
+        this.fileService = fileService;
     }
 
+
     @Override
-    public TourDTO createTour(TourDTO dto) {
+    public TourDTO createTour(MultipartFile file, TourDTO dto) {
         Destination destination = destinationRepository.findById(dto.getDestination_id())
                 .orElseThrow(() -> new EntityNotFoundException("Destination not found with id: " + dto.getDestination_id()));
+
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();  // tự sinh tên file
+        fileService.save(file, fileName);  // truyền file và tên file muốn lưu
+        dto.setImage_url("/uploads/" + fileName);  // gán đường dẫn file vào DTO
         Tour saved = tourRepository.save(TourMapper.toEntity(dto, destination));
         return TourMapper.toDTO(saved);
     }
-
     @Override
     public List<TourDTO> getAllTours() {
         return tourRepository.findAll().stream()

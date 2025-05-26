@@ -1,9 +1,8 @@
 {
-  "/page": "app/page.js",
-  "/tour-list/page": "app/tour-list/page.js",
+  "/login/page": "app/login/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/blog/page": "app/admin/blog/page.js",
+  "/admin/destinations/page": "app/admin/destinations/page.js",
   "/admin/tours/page": "app/admin/tours/page.js",
-  "/destination/page": "app/destination/page.js",
-  "/destination-details/page": "app/destination-details/page.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/admin/page": "app/admin/page.js"
+  "/admin/bookings/page": "app/admin/bookings/page.js"
 }

@@ -13,4 +13,10 @@ public class TourDTO {
     private String is_feature;
     private String duration;
     private long destination_id;
+    private String destinationName;
+    private String destinationCountry;
+    private String destinationCity;
+    private long activity_id;
+    private String activityName;
+    private String activityDescription;
 }
