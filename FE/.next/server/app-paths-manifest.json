@@ -1,5 +1,15 @@
 {
-  "/tour-list/page": "app/tour-list/page.js",
   "/page": "app/page.js",
-  "/blog/page": "app/blog/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/reviews/page": "app/admin/reviews/page.js",
+  "/admin/payments/page": "app/admin/payments/page.js",
+  "/admin/contact/page": "app/admin/contact/page.js",
+  "/admin/bookings/page": "app/admin/bookings/page.js",
+  "/admin/tours/page": "app/admin/tours/page.js",
+  "/admin/destinations/page": "app/admin/destinations/page.js",
+  "/tour-list/page": "app/tour-list/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/destination-details/page": "app/destination-details/page.js",
+  "/destination/page": "app/destination/page.js"
 }
