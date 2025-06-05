@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity(name = "user")
@@ -22,5 +23,8 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role_id;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Booking> bookings;
 
 }

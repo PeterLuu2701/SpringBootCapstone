@@ -1,5 +1,6 @@
-package com.example.capstone.dto;
+package com.example.capstone.mapper;
 
+import com.example.capstone.dto.TourDTO;
 import com.example.capstone.entity.Destination;
 import com.example.capstone.entity.Tour;
 

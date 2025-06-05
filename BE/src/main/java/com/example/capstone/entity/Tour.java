@@ -4,6 +4,7 @@ package com.example.capstone.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Locale;
 
 @Entity(name = "tour")
@@ -28,4 +29,8 @@ public class Tour {
     @ManyToOne
     @JoinColumn(name = "activity_id")
     private Activity activity;
+
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true) // <-- Sửa mappedBy thành "tour"
+    private List<Booking> bookings; // Hoặc Set<Booking>
+
 }

@@ -1,7 +1,7 @@
 package com.example.capstone.service.imp;
 
 import com.example.capstone.dto.TourDTO;
-import com.example.capstone.dto.TourMapper;
+import com.example.capstone.mapper.TourMapper;
 import com.example.capstone.entity.Destination;
 import com.example.capstone.entity.Tour;
 
