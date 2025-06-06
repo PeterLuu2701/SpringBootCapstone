@@ -122,7 +122,7 @@ const DestinationDetail = () => {
               {/* Image Section */}
               <div className="col-md-6">
                 <Image
-                  src={destination.image_url}
+                  src={destination.image}
                   alt={destination.name}
                   width={600}
                   height={400}

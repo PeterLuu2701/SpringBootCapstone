@@ -114,7 +114,7 @@ const DestinationDashboard = () => {
                     <td>
                       <div className="imageAdmin">
                         <img
-                          src={destination.image_url || "/default-image.jpg"}
+                          src={destination.image || "/default-image.jpg"}
                           alt={destination.name || "Destination image"}
                           style={{ maxWidth: "100px" }}
                         />

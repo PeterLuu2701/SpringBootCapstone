@@ -71,7 +71,7 @@ CREATE TABLE `destination` (
   `description` TEXT,
   `country` VARCHAR(255),
   `city` VARCHAR(255),
-  `image_url` VARCHAR(255),
+  `image` VARCHAR(255),
   `popular` BOOLEAN DEFAULT TRUE,
   `duration` VARCHAR(255),
   `google_map_url` VARCHAR(255),
@@ -104,7 +104,7 @@ CREATE TABLE `tour` (
   `description` text,
   `price` decimal(10,2) DEFAULT NULL,
   `rating` decimal(3,2) DEFAULT NULL,
-  `image_url` varchar(255) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `is_feature` tinyint(1) DEFAULT NULL,
   `duration` varchar(255) DEFAULT NULL,
   `destination_id` int DEFAULT NULL,
@@ -176,7 +176,7 @@ INSERT INTO `booking` (`id`, `booking_date`, `max_guest`, `total_price`, `start_
 -- Insert 5 records đầy đủ các cột (bao gồm google_map_url)
 
 INSERT INTO `destination` 
-(`id`, `name`, `description`, `country`, `city`, `image_url`, `popular`, `duration`, `google_map_url`) 
+(`id`, `name`, `description`, `country`, `city`, `image`, `popular`, `duration`, `google_map_url`) 
 VALUES
 (1, 'Miami Beach', 'Beautiful beaches and vibrant nightlife.', 'USA', 'Miami', 'miami_beach.jpg', 1, '5 days', NULL),
 (2, 'Louvre Museum', 'Home to world-famous art collections.', 'France', 'Paris', 'louvre.jpg', 1, '1 day', NULL),
@@ -189,15 +189,15 @@ INSERT INTO `role` (`id`, `name`, `description`) VALUES
 (1, 'user', 'user');
 INSERT INTO `role` (`id`, `name`, `description`) VALUES
 (2, 'admin', 'admin');
-INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`, `destination_id`) VALUES
+INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image`, `is_feature`, `duration`, `destination_id`) VALUES
 (1, 'Miami Beach Getaway', 'Relaxing beach vacation in Miami.', '1200.00', '4.70', 'miami_tour.jpg', 1, '5 days', 1);
-INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`, `destination_id`) VALUES
+INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image`, `is_feature`, `duration`, `destination_id`) VALUES
 (2, 'Louvre Art Tour', 'Guided tour of the Louvre Museum.', '80.00', '4.50', 'louvre_tour.jpg', 1, '1 day', 2);
-INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`, `destination_id`) VALUES
+INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image`, `is_feature`, `duration`, `destination_id`) VALUES
 (3, 'Central Park Bike Tour', 'Explore Central Park on a bike.', '50.00', '4.20', 'park_tour.jpg', 0, '1 day', 3);
-INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`, `destination_id`) VALUES
+INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image`, `is_feature`, `duration`, `destination_id`) VALUES
 (4, 'Tokyo City Highlights', 'Discover the best of Tokyo city.', '1500.00', '4.80', 'tokyo_tour.jpg', 1, '5 days', 4);
-INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image_url`, `is_feature`, `duration`, `destination_id`) VALUES
+INSERT INTO `tour` (`id`, `name`, `description`, `price`, `rating`, `image`, `is_feature`, `duration`, `destination_id`) VALUES
 (5, 'Barcelona Beach & City Tour', 'Enjoy the beach and explore the city.', '1000.00', '4.60', 'barcelona_tour.jpg', 1, '4 days', 5);
 INSERT INTO `tour_review` (`id`, `tour_id`, `author_id`, `rating`, `comment`, `review_date`) VALUES
 (1, 1, 2, 5, 'Excellent tour!', '2023-10-26 15:00:00');

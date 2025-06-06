@@ -45,7 +45,7 @@ public class DestinationServiceImp implements DestinationService {
             destination.setDescription(updatedDestination.getDescription());
             destination.setCountry(updatedDestination.getCountry());
             destination.setCity(updatedDestination.getCity());
-            destination.setImage_url(updatedDestination.getImage_url());
+            destination.setImage(updatedDestination.getImage());
             destination.setPopular(updatedDestination.isPopular());
             destination.setDuration(updatedDestination.getDuration());
             destination.setGoogle_map_url(updatedDestination.getGoogle_map_url());

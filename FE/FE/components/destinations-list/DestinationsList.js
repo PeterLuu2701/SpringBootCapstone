@@ -102,8 +102,8 @@ const DestinationsList = ({ initialDestinations = [], itemsPerPage = 10 }) => {
               <DestinationItem
                 key={destination.id}
                 imageUrl={
-                  destination.image_url
-                    ? destination.image_url.split("/").pop()
+                  destination.image
+                    ? destination.image.split("/").pop()
                     : "default-image.jpg"
                 }
                 title={destination.name}

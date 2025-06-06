@@ -9,7 +9,7 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
     description: "",
     country: "",
     city: "",
-    image_url: "",
+    image: "",
     popular: true,
     duration: "",
     google_map_url: "", // Added to match API structure
@@ -31,7 +31,7 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
       setError("Destination name is required.");
       return false;
     }
-    if (!infoAdd.image_url.trim()) {
+    if (!infoAdd.image.trim()) {
       setError("Image URL is required.");
       return false;
     }
@@ -56,7 +56,7 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
         description: "",
         country: "",
         city: "",
-        image_url: "",
+        image: "",
         popular: true,
         duration: "",
         google_map_url: "",
@@ -159,16 +159,16 @@ const AddDestination = ({ openAdd, setOpenAdd, setDestinations }) => {
                 />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="image_url" className="font-medium">
+                <label htmlFor="image" className="font-medium">
                   Image URL
                 </label>
                 <input
-                  id="image_url"
+                  id="image"
                   type="text"
                   placeholder="Enter Image URL"
                   className="border rounded p-2 focus:outline-none focus:ring focus:border-blue-300"
-                  name="image_url"
-                  value={infoAdd.image_url}
+                  name="image"
+                  value={infoAdd.image}
                   onChange={handleChange}
                 />
               </div>

@@ -119,8 +119,8 @@ const UpdateDestination = ({
                   placeholder="Enter Image URL"
                   style={{ paddingLeft: "10px" }}
                   className="border rounded p-1 focus:outline-none focus:ring focus:border-blue-300"
-                  value={infoUpdateApi.image_url || ""}
-                  name="image_url"
+                  value={infoUpdateApi.image || ""}
+                  name="image"
                   onChange={handleChange}
                 />
               </div>

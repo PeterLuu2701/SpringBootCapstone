@@ -21,7 +21,7 @@ public class Destination {
     private String description;
     private String country;
     private String city;
-    private String image_url;
+    private String image;
     @Column(columnDefinition = "BOOLEAN DEFAULT true")
     private boolean popular;
     private String duration;

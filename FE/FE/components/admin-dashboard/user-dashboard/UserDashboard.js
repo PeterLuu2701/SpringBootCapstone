@@ -5,6 +5,7 @@ import { Container, Table, Button, Spinner } from "react-bootstrap";
 import axios from "axios";
 import AddUser from "@/components/admin-model/Add-User";
 import UpdateUser from "@/components/admin-model/Update-User";
+import DeleteUser from "@/components/admin-model/Delete-User";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
@@ -14,6 +15,7 @@ const UsersDashboard = () => {
   const [error, setError] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // Add state for delete modal
   const [selectedUser, setSelectedUser] = useState(null);
 
   const fetchUsers = async () => {
@@ -47,19 +49,10 @@ const UsersDashboard = () => {
     setShowUpdateModal(true);
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
-    try {
-      console.log("Sending DELETE request to:", `${API_URL}/users/${id}`);
-      await axios.delete(`${API_URL}/users/${id}`);
-      setUsers((prev) => prev.filter((user) => user.id !== id));
-    } catch (error) {
-      console.error("DELETE error:", error.response?.data || error.message);
-      setError(
-        "Failed to delete user: " +
-          (error.response?.data?.message || error.message)
-      );
-    }
+  const handleDeleteClick = (user) => {
+    console.log("Preparing to delete user:", user);
+    setSelectedUser(user);
+    setShowDeleteModal(true); // Show the delete modal
   };
 
   return (
@@ -118,7 +111,7 @@ const UsersDashboard = () => {
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => handleDelete(user.id)}
+                    onClick={() => handleDeleteClick(user)} // Trigger modal instead of direct delete
                     aria-label={`Delete ${user.username}`}
                   >
                     Delete
@@ -129,7 +122,12 @@ const UsersDashboard = () => {
           </tbody>
         </Table>
       )}
-
+      <DeleteUser
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        user={selectedUser}
+        setUsers={setUsers}
+      />
       <UpdateUser
         show={showUpdateModal}
         onHide={() => setShowUpdateModal(false)}
