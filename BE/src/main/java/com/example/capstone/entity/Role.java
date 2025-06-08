@@ -1,5 +1,6 @@
 package com.example.capstone.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,11 +12,12 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+    private Long id;
     private String name;
     private String description;
 
     @OneToMany(mappedBy = "role_id")
-    private List<User> users;
+    @JsonIgnore
+    private List<User> user;
 }
+

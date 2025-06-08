@@ -1,5 +1,6 @@
 {
-  "/tour-list/page": "app/tour-list/page.js",
   "/page": "app/page.js",
-  "/blog/page": "app/blog/page.js"
+  "/admin/page": "app/admin/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/admin/destinations/page": "app/admin/destinations/page.js"
 }
