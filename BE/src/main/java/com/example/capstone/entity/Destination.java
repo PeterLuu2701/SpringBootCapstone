@@ -26,5 +26,6 @@ public class Destination {
     private boolean popular;
     private String duration;
     private String google_map_url;
+    private String region_name;
 
 }

@@ -77,8 +77,6 @@ CREATE TABLE `destination` (
   `google_map_url` VARCHAR(255),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
 DROP TABLE IF EXISTS `destination_activity`;
 CREATE TABLE `destination_activity` (
   `destination_id` int NOT NULL,
@@ -144,6 +142,10 @@ CREATE TABLE `user` (
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--Thêm cột region_name vào bảng destination
+
+ALTER TABLE `destination`ADD COLUMN `region_name` VARCHAR(255) DEFAULT NULL;
+
 INSERT INTO `activity` (`id`, `name`, `description`) VALUES
 (1, 'Beach', 'Relaxing and recreational activities on the beach.');
 INSERT INTO `activity` (`id`, `name`, `description`) VALUES
@@ -175,15 +177,35 @@ INSERT INTO `booking` (`id`, `booking_date`, `max_guest`, `total_price`, `start_
 
 -- Insert 5 records đầy đủ các cột (bao gồm google_map_url)
 
-INSERT INTO `destination` 
-(`id`, `name`, `description`, `country`, `city`, `image_url`, `popular`, `duration`, `google_map_url`) 
-VALUES
-(1, 'Miami Beach', 'Beautiful beaches and vibrant nightlife.', 'USA', 'Miami', 'miami_beach.jpg', 1, '5 days', NULL),
-(2, 'Louvre Museum', 'Home to world-famous art collections.', 'France', 'Paris', 'louvre.jpg', 1, '1 day', NULL),
-(3, 'Central Park', 'Large urban park with various attractions.', 'USA', 'New York', 'central_park.jpg', 1, '1 day', NULL),
-(4, 'Tokyo City', 'Modern metropolis with rich culture and history.', 'Japan', 'Tokyo', 'tokyo_city.jpg', 1, '5 days', NULL),
-(5, 'Barcelona Beach', 'Famous for its sandy beaches and boardwalk.', 'Spain', 'Barcelona', 'barcelona_beach.jpg', 1, '4 days', NULL);
+-- Update thêm cột region_name
 
+
+
+UPDATE `destination`
+SET `region_name` = 'South Florida'
+WHERE `id` = 1;
+
+UPDATE `destination`
+SET `region_name` = 'Île-de-France'
+WHERE `id` = 2;
+
+UPDATE `destination`
+SET `region_name` = 'Manhattan'
+WHERE `id` = 3;
+
+UPDATE `destination`
+SET `region_name` = 'Kanto'
+WHERE `id` = 4;
+
+UPDATE `destination`
+SET `region_name` = 'Catalonia'
+WHERE `id` = 5;
+
+INSERT INTO `destination` (`id`, `name`, `description`, `city`, `region_name`, `country`, `image_url`, `popular`, `duration`, `google_map_url`) VALUES (1, 'Miami Beach Area', 'Beautiful beaches and vibrant nightlife.', 'Miami', 'South Florida', 'USA', 'miami_beach.jpg', 1, 'Varies', 'https://maps.google.com/?q=Miami+Beach');
+INSERT INTO `destination` (`id`, `name`, `description`, `city`, `region_name`, `country`, `image_url`, `popular`, `duration`, `google_map_url`) VALUES (2, 'Louvre Museum Site', 'Home to world-famous art collections.', 'Paris', 'Île-de-France', 'France', 'louvre.jpg', 1, '1 day', 'https://maps.google.com/?q=Louvre+Museum');
+INSERT INTO `destination` (`id`, `name`, `description`, `city`, `region_name`, `country`, `image_url`, `popular`, `duration`, `google_map_url`) VALUES (3, 'Central Park NYC', 'Large urban park with various attractions.', 'New York', 'Manhattan', 'USA', 'central_park.jpg', 1, 'Varies', 'https://maps.google.com/?q=Central+Park+New+York');
+INSERT INTO `destination` (`id`, `name`, `description`, `city`, `region_name`, `country`, `image_url`, `popular`, `duration`, `google_map_url`) VALUES (4, 'Tokyo Metropolitan Area', 'Modern metropolis with rich culture and history.', 'Tokyo', 'Kanto', 'Japan', 'tokyo_city.jpg', 1, 'Varies', 'https://maps.google.com/?q=Tokyo');
+INSERT INTO `destination` (`id`, `name`, `description`, `city`, `region_name`, `country`, `image_url`, `popular`, `duration`, `google_map_url`) VALUES (5, 'Barcelona Beaches', 'Famous for its sandy beaches and boardwalk.', 'Barcelona', 'Catalonia', 'Spain', 'barcelona_beach.jpg', 1, 'Varies', 'https://maps.google.com/?q=Barcelona+Beach');
 
 INSERT INTO `role` (`id`, `name`, `description`) VALUES
 (1, 'user', 'user');

@@ -21,6 +21,7 @@ public class DestinationDTO {
     private boolean popular;
     private String duration;
     private String google_map_url;
+    private String region_name;
 
     // Getters and Setters (Lombok @Data handles this)
 }

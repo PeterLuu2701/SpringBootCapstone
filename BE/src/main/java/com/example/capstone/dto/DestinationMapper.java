@@ -18,6 +18,7 @@ public class DestinationMapper {
         dto.setPopular(destination.isPopular());
         dto.setDuration(destination.getDuration());
         dto.setGoogle_map_url(destination.getGoogle_map_url());
+        dto.setRegion_name(destination.getRegion_name() != null ? destination.getRegion_name() : "");
         // Không set imageFile ở đây vì DTO này dùng để trả về dữ liệu
         return dto;
     }
@@ -38,6 +39,7 @@ public class DestinationMapper {
         destination.setPopular(dto.isPopular());
         destination.setDuration(dto.getDuration());
         destination.setGoogle_map_url(dto.getGoogle_map_url());
+        destination.setRegion_name(dto.getRegion_name());
         return destination;
     }
 
@@ -51,6 +53,7 @@ public class DestinationMapper {
         existingDestination.setPopular(dto.isPopular());
         existingDestination.setDuration(dto.getDuration());
         existingDestination.setGoogle_map_url(dto.getGoogle_map_url());
+        existingDestination.setRegion_name(dto.getRegion_name());
         // Không update ID ở đây
     }
 }
