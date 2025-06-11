@@ -1,6 +1,7 @@
 package com.example.capstone.mapper;
 
 import com.example.capstone.dto.TourDTO;
+import com.example.capstone.entity.Activity;
 import com.example.capstone.entity.Destination;
 import com.example.capstone.entity.Tour;
 
@@ -45,20 +46,18 @@ public class TourMapper {
         return dto;
     }
 
-    public static Tour toEntity(TourDTO dto, Destination destination) {
+    public static Tour toEntity(TourDTO dto, Destination destination, Activity activity) {
         Tour tour = new Tour();
-        tour.setId(dto.getId()); // Đã sửa từ (int) ở câu trả lời trước
+        tour.setId(dto.getId());
         tour.setName(dto.getName());
         tour.setDescription(dto.getDescription());
         tour.setPrice(dto.getPrice());
         tour.setRating(dto.getRating());
-        // Kiểm tra này
-        tour.setImage_url(dto.getImage_url()); // <- Lấy image_url từ DTO và set vào Entity
+        tour.setImage_url(dto.getImage_url());
         tour.setIs_feature(dto.getIs_feature());
         tour.setDuration(dto.getDuration());
         tour.setDestination(destination);
-
-        // ... (Phần xử lý activity nếu cần thiết ở đây) ...
+        tour.setActivity(activity);
 
         return tour;
     }

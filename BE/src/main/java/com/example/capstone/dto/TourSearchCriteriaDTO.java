@@ -1,16 +1,13 @@
 package com.example.capstone.dto;
 
 import lombok.Data;
-
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Data
 public class TourSearchCriteriaDTO {
-
     private String destination;
-
     private String  activity;
-    private Timestamp start_date;
+    private LocalDate startDate;
     private int guest;
 
 

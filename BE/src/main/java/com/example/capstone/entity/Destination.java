@@ -1,11 +1,6 @@
 package com.example.capstone.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -27,5 +22,8 @@ public class Destination {
     private String duration;
     private String google_map_url;
     private String region_name;
+    @ManyToOne
+    @JoinColumn(name = "activity_id")
+    private Activity activity;
 
 }
