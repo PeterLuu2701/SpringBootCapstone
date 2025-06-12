@@ -1,8 +1,12 @@
 package com.example.capstone.controller;
 
 import com.example.capstone.dto.TourDTO;
+import com.example.capstone.dto.TourSearchCriteriaDTO;
 import com.example.capstone.service.TourService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,5 +57,15 @@ public class TourController {
     public ResponseEntity<String> deleteTour(@RequestParam long id) {
         tourService.deleteTour(id);
         return ResponseEntity.ok("Tour đã được xóa thành công!");
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<Page<TourDTO>> searchTours(
+            @Valid @RequestBody TourSearchCriteriaDTO criteria,
+            @PageableDefault(size = 10, sort = "name") Pageable pageable
+    ) {
+        Page<TourDTO> tourPage = tourService.searchTours(criteria, pageable);
+        return ResponseEntity.ok(tourPage);
+
     }
 }
