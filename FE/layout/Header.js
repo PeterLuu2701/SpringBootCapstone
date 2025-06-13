@@ -1,10 +1,12 @@
-"use client";
+"use client"; // Đảm bảo dòng này có ở đầu file Header.js
+
 import Link from "next/link";
 import { Fragment, useState, useRef, useEffect } from "react";
 import { Accordion } from "react-bootstrap";
 import Image from 'next/image';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 
+// Component Menu (định nghĩa bên ngoài hoặc bên trong tùy cách bạn muốn quản lý)
 const Menu = () => {
     return (
         <nav className="main-menu navbar-expand-lg">
@@ -12,7 +14,8 @@ const Menu = () => {
                 <div className="navbar-header">
                     <div className="mobile-logo">
                         <Link href="/">
-                            <img src="/assets/images/logos/logo.png" alt="Logo" title="Logo" />
+                            {/* Sử dụng component Image của Next.js */}
+                            <Image src="/assets/images/logos/logo.png" alt="Logo" title="Logo" width={100} height={50} /> {/* Cần thêm width và height */}
                         </Link>
                     </div>
                     {/* Toggle Button */}
@@ -33,12 +36,14 @@ const Menu = () => {
                 >
                     <ul className="navigation clearfix">
                         <li className="current">
-                            <a href="/">Home</a>
+                            {/* Sử dụng Link của Next.js */}
+                            <Link href="/">Home</Link>
                         </li>
                         <li>
                             <Link href="about">About</Link>
                         </li>
                         <li>
+                            {/* Đảm bảo route này tồn tại trong ứng dụng Next.js của bạn */}
                             <Link href="tour-list">Tours</Link>
                         </li>
                         <li>
@@ -48,7 +53,8 @@ const Menu = () => {
                             <Link href="blog">Blog</Link>
                         </li>
                         <li className="dropdown">
-                            <a href="#">Pages</a>
+                            {/* Link không có href="#" cho mục menu cha */}
+                            <a href="#">Pages</a> {/* Hoặc chỉ dùng span nếu không muốn link */}
                             <ul>
                                 <li>
                                     <Link href="faqs">FAQs</Link>
@@ -76,9 +82,9 @@ const Header = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
-    const [username, setUsername] = useState(""); 
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // State để kiểm tra đã đăng nhập hay chưa
-    const router = useRouter(); 
+    const [username, setUsername] = useState("");
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const router = useRouter();
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -86,25 +92,25 @@ const Header = () => {
 
     const handleSearchSubmit = (event) => {
         event.preventDefault();
-        
         console.log("Tìm kiếm:", searchTerm);
-        
+        // TODO: Thực hiện logic tìm kiếm thực tế, có thể điều hướng đến trang tìm kiếm với query param
+        // Ví dụ: router.push(`/search?term=${searchTerm}`);
     };
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
-    // Function để logout
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("username");
-        setIsLoggedIn(false);
-        setUsername("");
-        router.push("/"); // Chuyển hướng về trang chủ sau khi logout
+        if (typeof window !== 'undefined') { // Kiểm tra chỉ chạy ở client
+            localStorage.removeItem("token");
+            localStorage.removeItem("username");
+            setIsLoggedIn(false);
+            setUsername("");
+            router.push("/");
+        }
     };
 
-    
     useEffect(() => {
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -112,13 +118,19 @@ const Header = () => {
             }
         }
 
-        document.addEventListener("mousedown", handleClickOutside);
+        // Chỉ add event listener ở client
+        if (typeof window !== 'undefined') {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+             // Chỉ remove event listener ở client
+            if (typeof window !== 'undefined') {
+                document.removeEventListener("mousedown", handleClickOutside);
+            }
         };
     }, [dropdownRef]);
 
-    // Sử dụng useEffect để kiểm tra localStorage khi component được mount
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const storedUsername = localStorage.getItem("username");
@@ -130,27 +142,32 @@ const Header = () => {
         }
     }, []);
 
+
     return (
         <Fragment>
             <header className="main-header header-one">
                 {/*Header-Upper*/}
-                <div class="header-upper bg-white py-30 rpy-0">
+                {/* FIX HERE: Thay class="header-upper ..." bằng className="header-upper ..." */}
+                <div className="header-upper bg-white py-30 rpy-0"> {/* <<< Đã sửa lỗi class -> className */}
                     <div className="container-fluid clearfix">
                         <div className="header-inner rel d-flex align-items-center">
                             <div className="logo-outer">
                                 <div className="logo">
                                     <Link href="/">
-                                        <img
+                                         {/* Sử dụng component Image của Next.js */}
+                                        <Image
                                             src="/assets/images/logos/logo-two.png"
                                             alt="Logo"
                                             title="Logo"
+                                            width={150} // Cần thêm width và height
+                                            height={50}
                                         />
                                     </Link>
                                 </div>
                             </div>
                             <div className="nav-outer mx-lg-auto ps-xxl-5 clearfix">
                                 {/* Main Menu */}
-                                <Menu />
+                                <Menu /> {/* Render component Menu */}
                                 {/* Main Menu End*/}
                             </div>
 
@@ -170,27 +187,27 @@ const Header = () => {
                                         <button type="submit">Tìm</button>
                                     </form>
                                 )}
-                                {isLoggedIn && <span style={{ marginLeft: '10px' }}>Hi, {username}</span>} {/* Hiển thị username sau khi đăng nhập */}
+                                {isLoggedIn && <span style={{ marginLeft: '10px' }}>Hi, {username}</span>}
                             </div>
 
-                            {/* Menu Button */}
+                            {/* Menu Button (Log In) */}
                             <div className="menu-btns py-10">
-                                {!isLoggedIn ? (
+                                {!isLoggedIn && ( // Chỉ render button Log In khi chưa đăng nhập
                                     <Link
-                                        href="login"
+                                        href="/login" // Đảm bảo route này tồn tại
                                         className="theme-btn style-two bgc-secondary"
                                     >
                                         <span data-hover="Log In">Log In</span>
                                     </Link>
-                                ) : null}
+                                )}
                             </div>
 
-                            {/* Avatar Dropdown */}
-                            {isLoggedIn && (
+                            {/* Avatar Dropdown (User Menu) */}
+                            {isLoggedIn && ( // Chỉ render dropdown khi đã đăng nhập
                                 <div className="avatar-dropdown" ref={dropdownRef}>
                                     <div className="avatar-button" onClick={toggleDropdown}>
                                         <Image
-                                            src="/assets/images/icons/avatar.png" 
+                                            src="/assets/images/icons/avatar.png"
                                             alt="User Avatar"
                                             width={45}
                                             height={45}
@@ -201,7 +218,7 @@ const Header = () => {
                                     {isDropdownOpen && (
                                         <ul className="dropdown-menu">
                                             <li>
-                                                <Link href="/my-account">My Account</Link>
+                                                <Link href="/my-account">My Account</Link> {/* Đảm bảo các route này tồn tại */}
                                             </li>
                                             <li>
                                                 <Link href="/history">History</Link>
@@ -210,6 +227,7 @@ const Header = () => {
                                                 <Link href="/change-password">Change Password</Link>
                                             </li>
                                             <li>
+                                                {/* Sử dụng button và className cho style */}
                                                 <button onClick={handleLogout} className="dropdown-item">Logout</button>
                                             </li>
                                         </ul>

@@ -16,15 +16,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
-    "/blog/page": [
+    "/tour-details/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/blog/page.js"
+      "static/chunks/app/tour-details/page.js"
     ],
-    "/tour-list/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/tour-list/page.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }
