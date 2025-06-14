@@ -7,6 +7,7 @@ import com.example.capstone.mapper.UserMapper;
 import com.example.capstone.repository.RoleRepository;
 import com.example.capstone.repository.UserRepository;
 import com.example.capstone.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,26 +33,14 @@ public class UserServiceImp implements UserService {
     public UserDTO createUser(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
 
-        if (userDTO.getRoleName() != null && !userDTO.getRoleName().isEmpty()) {
-            Optional<Role> existingRole = roleRepository.findByName(userDTO.getRoleName());
-            if (existingRole.isPresent()) {
-                user.setRole_id(existingRole.get());
-            } else {
-                Role newRole = new Role();
-                newRole.setName(userDTO.getRoleName());
-                newRole.setDescription(userDTO.getRoleDescription());
-                user.setRole_id(roleRepository.save(newRole)); // Save and set the new role
-            }
-        } else if (userDTO.getRole_id() != null && userDTO.getRole_id().getId() != null) {
-            roleRepository.findById(userDTO.getRole_id().getId())
-                    .ifPresent(user::setRole_id);
+        if (userDTO.getRole_id() != null) {
+            Role role = roleRepository.findById(userDTO.getRole_id()) // Use the Long ID directly
+                    .orElseThrow(() -> new RuntimeException("Role with ID " + userDTO.getRole_id() + " not found."));
+            user.setRole(role);
         } else {
-
         }
 
-
         User savedUser = userRepository.save(user);
-
         return userMapper.toDTO(savedUser);
     }
 
@@ -68,7 +57,6 @@ public class UserServiceImp implements UserService {
                 .collect(Collectors.toList());
     }
 
-    @Override
     public UserDTO updateUser(Long id, UserDTO userDTO) {
         Optional<User> existingUserOptional = userRepository.findById(id);
 
@@ -76,17 +64,19 @@ public class UserServiceImp implements UserService {
             User existingUser = existingUserOptional.get();
 
             existingUser.setUsername(userDTO.getUsername());
-            existingUser.setPassword(userDTO.getPassword());
+
             existingUser.setFullname(userDTO.getFullname());
             existingUser.setEmail(userDTO.getEmail());
             existingUser.setPhone(userDTO.getPhone());
 
-            if (userDTO.getRoleName() != null && !userDTO.getRoleName().isEmpty()) {
-                Optional<Role> roleToSet = roleRepository.findByName(userDTO.getRoleName());
-                roleToSet.ifPresent(existingUser::setRole_id);
-            } else if (userDTO.getRole_id() != null && userDTO.getRole_id().getId() != null) {
-                roleRepository.findById(userDTO.getRole_id().getId())
-                        .ifPresent(existingUser::setRole_id);
+            if (userDTO.getRole_id() != null) {
+                Optional<Role> roleToSetOptional = roleRepository.findById(userDTO.getRole_id());
+                if (roleToSetOptional.isPresent()) {
+                    existingUser.setRole(roleToSetOptional.get());
+                } else {
+                    System.err.println("Warning: Role with ID " + userDTO.getRole_id() + " not found. Keeping old role or setting null.");
+                }
+            } else {
             }
 
             User updatedUser = userRepository.save(existingUser);
@@ -96,6 +86,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean deleteUser(Long id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);

@@ -1,9 +1,9 @@
 package com.example.capstone.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Data; // Lombok will generate getters/setters for 'role'
 
-import java.util.Date;
+import java.util.Date; // Keep if you use it elsewhere, otherwise can remove
 
 @Data
 @Entity(name = "user")
@@ -21,6 +21,6 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "role_id")
-    private Role role_id;
+    private Role role;
 
 }

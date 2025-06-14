@@ -12,15 +12,17 @@ public class UserMapper {
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
-        dto.setPassword(user.getPassword());
+        // For security, do NOT include the password when mapping to DTO for frontend
+        // dto.setPassword(user.getPassword()); // REMOVE THIS LINE IN PRODUCTION
         dto.setFullname(user.getFullname());
         dto.setEmail(user.getEmail());
         dto.setPhone(user.getPhone());
 
-        if (user.getRole_id() != null) {
-            dto.setRole_id(user.getRole_id());
-            dto.setRoleName(user.getRole_id().getName());
-            dto.setRoleDescription(user.getRole_id().getDescription());
+        // Map role details to DTO
+        if (user.getRole() != null) { // Assuming User entity has getRole() returning a Role object
+            dto.setRole_id(user.getRole().getId()); // Set the Long ID from the Role object
+            dto.setRoleName(user.getRole().getName());
+            dto.setRoleDescription(user.getRole().getDescription());
         }
         return dto;
     }
@@ -34,7 +36,6 @@ public class UserMapper {
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
 
-        user.setRole_id(userDTO.getRole_id());
 
         return user;
     }

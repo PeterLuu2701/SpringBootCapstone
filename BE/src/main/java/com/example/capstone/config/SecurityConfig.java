@@ -56,6 +56,7 @@ public class SecurityConfig {
                                 ,"/file/**"
                                 , "/activity/**"
                                 , "/user/**"
+                                , "/role/**"
                         )
                         .permitAll() // Các API này không cần login
                         .anyRequest().authenticated() // Còn lại thì cần authentication
