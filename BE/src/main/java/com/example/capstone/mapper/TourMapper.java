@@ -26,7 +26,7 @@ public class TourMapper {
             dto.setDestinationCountry(tour.getDestination().getCountry());
             dto.setDestinationCity(tour.getDestination().getCity());
         } else {
-            dto.setDestination_id(0);
+            dto.setDestination_id(null);
             dto.setDestinationName(null);
             dto.setDestinationCountry(null);
             dto.setDestinationCity(null);

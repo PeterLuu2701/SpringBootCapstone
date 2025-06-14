@@ -27,4 +27,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings;
 
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
+
 }

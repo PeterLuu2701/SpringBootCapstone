@@ -13,7 +13,7 @@ public class Tour {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String name;
     private String description;
     private double price;
@@ -31,6 +31,6 @@ public class Tour {
     private Activity activity;
 
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true) // <-- Sửa mappedBy thành "tour"
-    private List<Booking> bookings; // Hoặc Set<Booking>
+    private List<Booking> bookings;
 
 }

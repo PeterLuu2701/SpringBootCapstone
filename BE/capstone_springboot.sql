@@ -7,6 +7,44 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+DROP TABLE IF EXISTS `cart`;
+CREATE TABLE `cart` (
+                        `id` BIGINT NOT NULL AUTO_INCREMENT,
+                        `user_id` BIGINT NULL,
+                        `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                        `status` VARCHAR(50) DEFAULT 'active',
+                        `total_price` DECIMAL(10, 2) DEFAULT 0.00,
+                        PRIMARY KEY (`id`),
+                        KEY `user_id_fk_cart` (`user_id`),
+                        CONSTRAINT `fk_cart_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ALTER TABLE `cart_item` DROP FOREIGN KEY `fk_cart_item_cart`;
+
+-- Xóa ràng buộc khóa ngoại tham chiếu đến tour
+ALTER TABLE `cart_item` DROP FOREIGN KEY `fk_cart_item_tour`;
+
+-- Xóa ràng buộc duy nhất
+ALTER TABLE `cart_item` DROP INDEX `cart_tour`;
+
+
+
+
+DROP TABLE IF EXISTS `cart_item`;
+CREATE TABLE `cart_item` (
+                             `id` BIGINT NOT NULL AUTO_INCREMENT,
+                             `cart_id` BIGINT NOT NULL,
+                             `tour_id` BIGINT NOT NULL,
+                             `quantity` INT NOT NULL DEFAULT 1,
+                             PRIMARY KEY (`id`),
+                             UNIQUE KEY `cart_tour` (`cart_id`, `tour_id`),
+                             KEY `cart_id_fk_cart_item` (`cart_id`),
+                             KEY `tour_id_fk_cart_item` (`tour_id`),
+                             CONSTRAINT `fk_cart_item_cart` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`id`) ON DELETE CASCADE,
+                             CONSTRAINT `fk_cart_item_tour` FOREIGN KEY (`tour_id`) REFERENCES `tour` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 DROP TABLE IF EXISTS `activity`;
 CREATE TABLE `activity` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -193,7 +231,7 @@ UPDATE `destination`
 SET `region_name` = 'Manhattan'
 WHERE `id` = 3;
 
-UPDATE `destination`
+UPDATE `destination`a
 SET `region_name` = 'Kanto'
 WHERE `id` = 4;
 

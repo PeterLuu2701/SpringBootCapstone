@@ -26,9 +26,9 @@ public class Destination {
     private String region_name;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "destination_activity",  // Tên bảng trung gian trong DB
-            joinColumns = @JoinColumn(name = "destination_id"), // Cột trong bảng trung gian trỏ về Destination
-            inverseJoinColumns = @JoinColumn(name = "activity_id") // Cột trong bảng trung gian trỏ về Activity
+            name = "destination_activity",
+            joinColumns = @JoinColumn(name = "destination_id"),
+            inverseJoinColumns = @JoinColumn(name = "activity_id")
     )
     private Set<Activity> activities;
 }

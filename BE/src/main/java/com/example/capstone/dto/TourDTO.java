@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class TourDTO {
-    private long id;
+    private Long id;
     private String name;
     private String description;
     private Double price;
@@ -12,7 +12,7 @@ public class TourDTO {
     private String image_url; // <- Trường này
     private String is_feature;
     private String duration;
-    private long destination_id;
+    private Long destination_id;
     private String destinationName;
     private String destinationCountry;
     private String destinationCity;

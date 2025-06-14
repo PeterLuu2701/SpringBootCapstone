@@ -54,7 +54,8 @@ public class SecurityConfig {
                                 "/destination", "/destination/**"
                                 ,"/tour","/tour/**", "/blog","/blog/**"
                                 ,"/file/**"
-                                , "/activity/**","/booking/**"
+                                , "/activity/**","/booking/**",
+                                "/cart/**"
                         )
                         .permitAll() // Các API này không cần login
                         .anyRequest().authenticated() // Còn lại thì cần authentication
