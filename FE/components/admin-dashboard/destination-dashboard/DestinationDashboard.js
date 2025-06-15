@@ -18,7 +18,7 @@ const DestinationDashboard = () => {
   const [nameDelete, setNameDelete] = useState("");
   const [idDelete, setIdDelete] = useState("");
   const [infoUpdate, setInfoUpdate] = useState({});
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
     try {
@@ -44,7 +44,7 @@ const DestinationDashboard = () => {
   }, []);
 
   const refreshDestinations = () => {
-    fetchData(); 
+    fetchData();
   };
 
   if (loading) {

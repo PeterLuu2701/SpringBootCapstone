@@ -1,93 +1,82 @@
 "use client";
 
-import React from "react";
+import CreateUser from "@/components/admin-model/CreateUser";
+import DeleteUser from "@/components/admin-model/DeleteUser";
+import UpdateUser from "@/components/admin-model/UpdateUser";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Container, Table, Button } from "react-bootstrap";
 
 const UsersDashboard = () => {
-  const users = [
-    {
-      id: 1,
-      username: "JohnDoe",
-      email: "john.doe@example.com",
-      phone: "123-456-7890",
-      address: "123 Main St",
-    },
-    {
-      id: 2,
-      username: "JaneSmith",
-      email: "jane.smith@example.com",
-      phone: "987-654-3210",
-      address: "456 Oak Ave",
-    },
-    {
-      id: 3,
-      username: "AliceJohnson",
-      email: "alice.johnson@example.com",
-      phone: "555-123-4567",
-      address: "789 Pine Ln",
-    },
-    {
-      id: 4,
-      username: "RobertBrown",
-      email: "robert.brown@example.com",
-      phone: "111-222-3333",
-      address: "101 Elm Rd",
-    },
-    {
-      id: 5,
-      username: "EmilyDavis",
-      email: "emily.davis@example.com",
-      phone: "444-555-6666",
-      address: "222 Cedar Way",
-    },
-    {
-      id: 6,
-      username: "MichaelWilson",
-      email: "michael.wilson@example.com",
-      phone: "777-888-9999",
-      address: "333 Birch Pl",
-    },
-    {
-      id: 7,
-      username: "SarahGarcia",
-      email: "sarah.garcia@example.com",
-      phone: "100-200-3000",
-      address: "444 Maple Dr",
-    },
-    {
-      id: 8,
-      username: "DavidRodriguez",
-      email: "david.rodriguez@example.com",
-      phone: "600-700-8000",
-      address: "555 Walnut Ct",
-    },
-    {
-      id: 9,
-      username: "JenniferMartinez",
-      email: "jennifer.martinez@example.com",
-      phone: "900-100-2000",
-      address: "666 Cherry Ln",
-    },
-    {
-      id: 10,
-      username: "ChristopherAnderson",
-      email: "christopher.anderson@example.com",
-      phone: "300-400-5000",
-      address: "777 Willow Ave",
-    },
-  ];
+  const [users, setUsers] = useState([]);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [usernameToDelete, setUsernameToDelete] = useState("");
+  const [infoUpdate, setInfoUpdate] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const fetchData = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/user");
+      console.log("API response:", res.data);
+      if (res.data && Array.isArray(res.data.data)) {
+        setUsers(res.data.data);
+      } else {
+        console.error("Unexpected response structure:", res.data);
+        setUsers([]);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const refreshUsers = () => {
+    fetchData();
+  };
+
+  const handleUpdateClick = (user) => {
+    setInfoUpdate(user);
+    setOpenUpdate(true);
+  };
+
+  const handleCreateClick = () => {
+    setOpenAdd(true);
+  };
+
+  const handleDeleteClick = (userId, username) => {
+    setUserIdToDelete(userId);
+    setUsernameToDelete(username);
+    setOpenDelete(true);
+  };
+
+  if (loading) {
+    return <div>Loading users...</div>;
+  }
 
   return (
     <Container className="mt-4">
       <h2 className="mb-4 text-center">Users Dashboard</h2>
+      <Button variant="primary" className="mb-3" onClick={handleCreateClick}>
+        Create User
+      </Button>
+
       <Table striped bordered hover responsive className="shadow">
         <thead className="bg-light">
           <tr>
             <th>No.</th>
             <th>Username</th>
+            <th>Full Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Address</th>
             <th className="text-center">Actions</th>
           </tr>
         </thead>
@@ -96,14 +85,24 @@ const UsersDashboard = () => {
             <tr key={user.id}>
               <td>{user.id}</td>
               <td>{user.username}</td>
+              <td>{user.fullname}</td>
               <td>{user.email}</td>
               <td>{user.phone}</td>
-              <td>{user.address}</td>
               <td className="text-center">
-                <Button variant="primary" size="sm" className="me-2">
-                  Edit
+                <Button
+                  variant="warning"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => handleUpdateClick(user)}
+                >
+                  Update
                 </Button>
-                <Button variant="danger" size="sm">
+
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => handleDeleteClick(user.id, user.username)}
+                >
                   Delete
                 </Button>
               </td>
@@ -111,6 +110,33 @@ const UsersDashboard = () => {
           ))}
         </tbody>
       </Table>
+
+      {openUpdate && (
+        <UpdateUser
+          openUpdate={openUpdate}
+          setOpenUpdate={setOpenUpdate}
+          setUsers={refreshUsers}
+          infoUpdate={infoUpdate}
+        />
+      )}
+
+      {openAdd && (
+        <CreateUser
+          openAdd={openAdd}
+          setOpenAdd={setOpenAdd}
+          setUsers={refreshUsers}
+        />
+      )}
+
+      {openDelete && (
+        <DeleteUser
+          openDelete={openDelete}
+          setOpenDelete={setOpenDelete}
+          userIdToDelete={userIdToDelete}
+          usernameToDelete={usernameToDelete}
+          setUsers={refreshUsers}
+        />
+      )}
     </Container>
   );
 };

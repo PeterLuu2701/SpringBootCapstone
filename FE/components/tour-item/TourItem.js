@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import slugify from "slugify";
 
 const TourItem = ({
   imageUrl, // Nhận URL tương đối từ backend (ví dụ: /file/ten_file.png)
+  id,
   location,
   rating = 0,
   title,
@@ -17,11 +17,9 @@ const TourItem = ({
   popular,
   aosDelay = 0,
 }) => {
-  const slug = slugify(title || "", { lower: true, strict: true });
+  const backendBaseUrl = "http://localhost:8080";
 
-  const backendBaseUrl = "http://localhost:8080"; // URL gốc của backend
-  
-  const fullImageUrl = imageUrl ? `${backendBaseUrl}${imageUrl}` : null; 
+  const fullImageUrl = imageUrl ? `${backendBaseUrl}${imageUrl}` : null;
 
   return (
     <div
@@ -34,14 +32,29 @@ const TourItem = ({
       <div className="destination-item style-three bgc-lighter">
         <div className="image">
           {featured && <span className="badge bgc-pink">Featured</span>}
-          {discount && <span className="badge bgc-green">Discount</span>} 
+          {discount && <span className="badge bgc-green">Discount</span>}
           {popular && <span className="badge bgc-primary">Popular</span>}
           <a href="#" className="heart">
             <i className="fas fa-heart" />
           </a>
-          {/* Sử dụng fullImageUrl đã ghép */}
-          {fullImageUrl && <img src={fullImageUrl} alt={title || "Tour Image"} />} 
-          {!fullImageUrl && <div style={{ width: '100%', height: '200px', backgroundColor: '#eee', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>No Image</div>} {/* Hiển thị placeholder nếu không có ảnh */}
+          {fullImageUrl && (
+            <img src={fullImageUrl} alt={title || "Tour Image"} />
+          )}
+          {!fullImageUrl && (
+            <div
+              style={{
+                width: "100%",
+                height: "200px",
+                backgroundColor: "#eee",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              No Image
+            </div>
+          )}{" "}
+          {/* Hiển thị placeholder nếu không có ảnh */}
         </div>
         <div className="content">
           <div className="destination-header">
@@ -49,16 +62,18 @@ const TourItem = ({
               <i className="fal fa-map-marker-alt" /> {location}
             </span>
             <div className="ratting">
-              {/* Đảm bảo rating là số trước khi làm tròn */}
-              {Array.from({ length: Math.round(rating || 0) }).map((_, index) => (
-                <i key={index} className="fas fa-star" />
-              ))}
-               {/* Hiển thị rating số nếu cần */}
-               {rating > 0 && <span className="ms-1">({rating.toFixed(1)})</span>}
+              {Array.from({ length: Math.round(rating || 0) }).map(
+                (_, index) => (
+                  <i key={index} className="fas fa-star" />
+                )
+              )}
+              {rating > 0 && (
+                <span className="ms-1">({rating.toFixed(1)})</span>
+              )}
             </div>
           </div>
           <h5>
-            <Link href={`/tour-details/${slug}`}>{title}</Link>
+            <Link href={`/tour-details/${id}`}>{title}</Link>
           </h5>
           <p>{description}</p>
           <ul className="blog-meta">
@@ -73,11 +88,10 @@ const TourItem = ({
           </ul>
           <div className="destination-footer">
             <span className="price">
-              {/* Đảm bảo price là số trước khi toFixed */}
-              <span>${price != null ? price.toFixed(2) : 'N/A'}</span>/person
+              <span>${price != null ? price.toFixed(2) : "N/A"}</span>/person
             </span>
             <Link
-              href={`/tour-details/${slug}`}
+              href={`/tour-details/${id}`}
               className="theme-btn style-two style-three"
             >
               <span data-hover="Book Now">Book Now</span>

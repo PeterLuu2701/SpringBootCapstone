@@ -77,6 +77,7 @@ const TourListPage = async () => {
                 displayedTours.map((tour) => (
                   <TourItem
                     key={tour.id}
+                    id={tour.id}
                     title={tour.name}
                     description={tour.description}
                     price={tour.price}

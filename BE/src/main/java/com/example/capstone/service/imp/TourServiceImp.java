@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 @Service
 public  class TourServiceImp implements TourService {
 
-@Autowired
+    @Autowired
     private final TourRepository tourRepository;
-@Autowired
+    @Autowired
     private final DestinationRepository destinationRepository;
     @Autowired
     private FileService fileService;
