@@ -1,14 +1,8 @@
 {
   "/page": "app/page.js",
-<<<<<<< HEAD
-  "/_not-found/page": "app/_not-found/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/tour-details/page": "app/tour-details/page.js"
-=======
-  "/destination/page": "app/destination/page.js",
   "/tour-list/page": "app/tour-list/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/tour-details/[id]/page": "app/tour-details/[id]/page.js"
->>>>>>> master
+  "/blog/page": "app/blog/page.js",
+  "/destination/page": "app/destination/page.js",
+  "/tour-details/[id]/page": "app/tour-details/[id]/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js"
 }

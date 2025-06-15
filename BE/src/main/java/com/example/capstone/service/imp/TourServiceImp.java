@@ -92,8 +92,6 @@ public  class TourServiceImp implements TourService {
         tourRepository.deleteById(id);
     }
 
-
-
     @Transactional(readOnly = true)
     public Page<TourDTO> searchTours(TourSearchCriteriaDTO criteria, Pageable pageable) {
         Specification<Tour> spec = TourSpecifications.buildSpecification(criteria);

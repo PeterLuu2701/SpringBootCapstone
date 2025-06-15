@@ -9,8 +9,5 @@ public class TourSearchCriteriaDTO {
     private String  activity;
     private LocalDate startDate;
     private int guest;
-
-
-
-
+    private String destinationCity;
 }

@@ -66,6 +66,5 @@ public class TourController {
     ) {
         Page<TourDTO> tourPage = tourService.searchTours(criteria, pageable);
         return ResponseEntity.ok(tourPage);
-
     }
 }
