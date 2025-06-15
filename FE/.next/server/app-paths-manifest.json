@@ -1,8 +1,9 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
   "/page": "app/page.js",
-  "/tour-list/page": "app/tour-list/page.js",
-  "/blog/page": "app/blog/page.js",
-  "/destination/page": "app/destination/page.js",
   "/tour-details/[id]/page": "app/tour-details/[id]/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js"
+  "/destination/page": "app/destination/page.js",
+  "/blog/page": "app/blog/page.js",
+  "/blog-details/[id]/page": "app/blog-details/[id]/page.js",
+  "/gellery-grid/page": "app/gellery-grid/page.js"
 }
