@@ -48,26 +48,26 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenFilter customAuthenFilter)
             throws Exception {
         return http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Enable CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/sign-in", "/auth/sign-up", "/destination", "/destination/**", "/roles",
-                                "/roles/**", "/users", "/users/**")
+                                "/roles/**", "/users", "/users/**", "/api/payment/create-order",
+                                "/api/payment/callback")
                         .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(customAuthenFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    // ✅ Define CORS configuration allowing frontend at localhost:3000
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true); // allow cookies, Authorization headers
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
