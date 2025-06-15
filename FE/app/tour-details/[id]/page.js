@@ -1,4 +1,5 @@
 "use client";
+
 import AddCommentForm from "@/components/add-comment-form/AddCommentForm";
 import ClientsComments from "@/components/clients-comments/ClientsComments";
 import RaveloAccordion from "@/components/RaveloAccordion";
@@ -6,56 +7,167 @@ import Subscribe from "@/components/Subscribe";
 import TourBookingForm from "@/components/tour-booking-form/TourBookingForm";
 import ReveloLayout from "@/layout/ReveloLayout";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Accordion } from "react-bootstrap";
-const page = () => {
+
+const TourDetailPage = ({ params }) => {
+  const tourId = params.id;
+
+  const [tourDetail, setTourDetail] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const [active, setActive] = useState("collapse0");
+  const [active2, setActive2] = useState("collapse0");
+
+  const backendBaseUrl = "http://localhost:8080";
+
+  useEffect(() => {
+    const fetchTourDetail = async () => {
+      if (!tourId) {
+        setLoading(false);
+        setError("Tour ID is missing from the URL.");
+        return;
+      }
+      try {
+        const response = await fetch(
+          `${backendBaseUrl}/tour/get-tour-by-id?id=${tourId}`,
+          { cache: "no-store" }
+        );
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(
+            `HTTP error! status: ${response.status}, body: ${errorText}`
+          );
+        }
+        const data = await response.json();
+        if (data.error) {
+          throw new Error(data.message || "Failed to fetch tour details.");
+        }
+        console.log("Fetched Tour Detail:", data.data);
+        setTourDetail(data.data);
+      } catch (err) {
+        console.error("Error fetching tour detail:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTourDetail();
+  }, [tourId]);
+
   const faqItem = [
     {
       id: 1,
       title: "1. What services does your tour and travel agency offer?",
+      content:
+        "We offer a wide range of tour and travel services, including custom tour packages, guided tours, flight and hotel bookings, and travel insurance.",
     },
     {
       id: 2,
-      title: " 2. How do I book a tour or travel package?",
+      title: "2. How do I book a tour or travel package?",
+      content:
+        "You can book directly through our website, by calling our customer service, or by visiting one of our local offices.",
     },
     {
       id: 3,
-      title: " 3. What types of tours do you offer?",
+      title: "3. What types of tours do you offer?",
+      content:
+        "We offer adventure tours, cultural tours, beach getaways, eco-tourism, and customized private tours.",
     },
     {
       id: 4,
-      title: " 4. Can I customize my travel package?",
+      title: "4. Can I customize my travel package?",
+      content:
+        "Yes, absolutely! We specialize in creating tailor-made travel experiences to suit your preferences.",
     },
     {
       id: 5,
-      title: " 5. Are your tours suitable for families with children?",
+      title: "5. Are your tours suitable for families with children?",
+      content:
+        "Many of our tours are family-friendly, offering activities and accommodations suitable for all ages. Please check individual tour details or contact us for recommendations.",
     },
   ];
-  const [active, setActive] = useState("collapse0");
 
   const faqItem2 = [
     {
       id: 1,
       title: "01_What services does your tour and travel agency offer?",
+      content: "Details for FAQ 2, item 1.",
     },
     {
       id: 2,
-      title: " 02_How do I book a tour or travel package?",
+      title: "02_How do I book a tour or travel package?",
+      content: "Details for FAQ 2, item 2.",
     },
     {
       id: 3,
-      title: " 03_What types of tours do you offer?",
+      title: "03_What types of tours do you offer?",
+      content: "Details for FAQ 2, item 3.",
     },
     {
       id: 4,
-      title: " 04_Can I customize my travel package?",
+      title: "04_Can I customize my travel package?",
+      content: "Details for FAQ 2, item 4.",
     },
     {
       id: 5,
-      title: " 05_Are your tours suitable for families with children?",
+      title: "05_Are your tours suitable for families with children?",
+      content: "Details for FAQ 2, item 5.",
     },
   ];
-  const [active2, setActive2] = useState("collapse0");
+
+  if (loading) {
+    return (
+      <ReveloLayout>
+        <section className="tour-details-page py-100 rel z-1">
+          <div className="container">
+            <div className="alert alert-info">Loading tour details...</div>
+          </div>
+        </section>
+      </ReveloLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <ReveloLayout>
+        <section className="tour-details-page py-100 rel z-1">
+          <div className="container">
+            <div className="alert alert-danger">Error: {error}</div>
+          </div>
+        </section>
+      </ReveloLayout>
+    );
+  }
+
+  if (!tourDetail) {
+    return (
+      <ReveloLayout>
+        <section className="tour-details-page py-100 rel z-1">
+          <div className="container">
+            <div className="alert alert-warning">Tour not found.</div>
+          </div>
+        </section>
+      </ReveloLayout>
+    );
+  }
+
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<i key={`star-${i}`} className="fas fa-star" />);
+    }
+    if (hasHalfStar) {
+      stars.push(<i key="half-star" className="fas fa-star-half-alt" />);
+    }
+    return stars;
+  };
+
   return (
     <ReveloLayout>
       <section className="page-banner-two rel z-1">
@@ -69,7 +181,7 @@ const page = () => {
                 data-aos-duration={1500}
                 data-aos-offset={50}
               >
-                Bali, Indonesia
+                {tourDetail.name}
               </h2>
               <nav aria-label="breadcrumb">
                 <ol
@@ -89,51 +201,35 @@ const page = () => {
           </div>
         </div>
       </section>
-      {/* Page Banner End */}
-      {/* Tour Gallery start */}
-      <div className="tour-gallery">
+
+      {/* Tour Gallery start - Dynamically display images */}
+      {/* <div className="tour-gallery">
         <div className="container-fluid">
           <div className="row gap-10 justify-content-center rel">
-            <div className="col-lg-4 col-md-6">
-              <div className="gallery-item">
-                <img
-                  src="assets/images/destinations/destination-details1.jpg"
-                  alt="Destination"
-                />
+            {tourDetail.image_url ? (
+              <div className="col-lg-12">
+                <div className="gallery-item">
+                  <img
+                    src={`${backendBaseUrl}/${tourDetail.image_url}`}
+                    alt={tourDetail.name || "Tour Image"}
+                    style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                  />
+                </div>
               </div>
-              <div className="gallery-item">
-                <img
-                  src="assets/images/destinations/destination-details4.jpg"
-                  alt="Destination"
-                />
+            ) : (
+              <div className="col-lg-12">
+                <div className="gallery-item">
+                  <div style={{ width: '100%', height: '400px', backgroundColor: '#eee', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '1.5em', color: '#666' }}>
+                    No Image Available
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="gallery-item">
-                <img
-                  src="assets/images/destinations/destination-details2.jpg"
-                  alt="Destination"
-                />
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="gallery-item">
-                <img
-                  src="assets/images/destinations/destination-details3.jpg"
-                  alt="Destination"
-                />
-              </div>
-              <div className="gallery-item">
-                <img
-                  src="assets/images/destinations/destination-details5.jpg"
-                  alt="Destination"
-                />
-              </div>
-            </div>
+            )}
           </div>
         </div>
-      </div>
+      </div> */}
       {/* Tour Gallery End */}
+
       {/* Tour Header Area start */}
       <section className="tour-header-area pt-70 rel z-1">
         <div className="container">
@@ -146,19 +242,19 @@ const page = () => {
                 data-aos-offset={50}
               >
                 <span className="location d-inline-block mb-10">
-                  <i className="fal fa-map-marker-alt" /> Bali, Indonesia
+                  <i className="fal fa-map-marker-alt" />{" "}
+                  {tourDetail.destinationName}, {tourDetail.destinationCountry}
                 </span>
                 <div className="section-title pb-5">
-                  <h2>
-                    Relinking Beach in Nusa panada island, Bali, Indonesia
-                  </h2>
+                  <h2>{tourDetail.name}</h2>
                 </div>
                 <div className="ratting">
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star" />
-                  <i className="fas fa-star-half-alt" />
+                  {renderStars(tourDetail.rating)}
+                  {tourDetail.rating > 0 && (
+                    <span className="ms-1">
+                      ({tourDetail.rating.toFixed(1)})
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -184,6 +280,7 @@ const page = () => {
         </div>
       </section>
       {/* Tour Header Area end */}
+
       {/* Tour Details Area start */}
       <section className="tour-details-page pb-100">
         <div className="container">
@@ -191,21 +288,7 @@ const page = () => {
             <div className="col-lg-8">
               <div className="tour-details-content">
                 <h3>Explore Tours</h3>
-                <p>
-                  Bali, Indonesia, is a tropical paradise renowned for its
-                  breathtaking beaches, vibrant culture, and lush landscapes.
-                  Located at the westernmost end of the Lesser Sunda Islands,
-                  Bali boasts a warm, tropical climate that makes it a
-                  year-round destination. Visitors are drawn to its picturesque
-                  beaches like Kuta, Seminyak, and Nusa Dua, ideal for surfing,
-                  sunbathing, and diving. The island's rich cultural heritage is
-                  evident in its numerous temples, including the iconic Tanah
-                  Lot and Uluwatu Temple, as well as in Ubud, the cultural heart
-                  of Bali, known for its traditional dance performances and art
-                  markets. Nature enthusiasts can explore the terraced rice
-                  paddies in Tegallalang, hike up Mount Batur, or visit the
-                  stunning waterfalls of Tegenungan and Gitgit.{" "}
-                </p>
+                <p>{tourDetail.description}</p>
                 <div className="row pb-55">
                   <div className="col-md-6">
                     <div className="tour-include-exclude mt-30">
@@ -218,8 +301,8 @@ const page = () => {
                           <i className="far fa-check" /> 1 Meal Per Day
                         </li>
                         <li>
-                          <i className="far fa-check" /> Cruise Dinner &amp;
-                          Music Event
+                          <i className="far fa-check" /> Cruise Dinner & Music
+                          Event
                         </li>
                         <li>
                           <i className="far fa-check" /> Visit 7 Best Places in
@@ -247,8 +330,7 @@ const page = () => {
                           drop-off
                         </li>
                         <li>
-                          <i className="far fa-times" /> Lunch, Food &amp;
-                          Drinks
+                          <i className="far fa-times" /> Lunch, Food & Drinks
                         </li>
                         <li>
                           <i className="far fa-times" /> Optional upgrade to a
@@ -267,10 +349,12 @@ const page = () => {
               </div>
               <h3>Activities</h3>
               <div className="tour-activities mt-30 mb-45">
-                <div className="tour-activity-item">
-                  <i className="flaticon-hiking" />
-                  <b>Hiking</b>
-                </div>
+                {tourDetail.activityName && (
+                  <div className="tour-activity-item">
+                    <i className="flaticon-hiking" />{" "}
+                    <b>{tourDetail.activityName}</b>
+                  </div>
+                )}
                 <div className="tour-activity-item">
                   <i className="flaticon-fishing" />
                   <b>Fishing</b>
@@ -311,10 +395,12 @@ const page = () => {
                     key={data.id}
                     event={`collapse${i}`}
                     onClick={() =>
-                      setActive(active == `collapse${i}` ? "" : `collapse${i}`)
+                      setActive(active === `collapse${i}` ? "" : `collapse${i}`)
                     }
                     active={active}
-                  />
+                  >
+                    {data.content}
+                  </RaveloAccordion>
                 ))}
               </Accordion>
               <h3>Frequently Asked Questions</h3>
@@ -328,10 +414,14 @@ const page = () => {
                     key={data.id}
                     event={`collapse${i}`}
                     onClick={() =>
-                      setActive(active2 == `collapse${i}` ? "" : `collapse${i}`)
+                      setActive2(
+                        active2 === `collapse${i}` ? "" : `collapse${i}`
+                      )
                     }
                     active={active2}
-                  />
+                  >
+                    {data.content}
+                  </RaveloAccordion>
                 ))}
               </Accordion>
               <h3>Maps</h3>
@@ -347,14 +437,12 @@ const page = () => {
               <h3>Clients Reviews</h3>
               <div className="clients-reviews bgc-black mt-30 mb-60">
                 <div className="left">
-                  <b>4.8</b>
-                  <span>(586 reviews)</span>
+                  <b>
+                    {tourDetail.rating ? tourDetail.rating.toFixed(1) : "N/A"}
+                  </b>
+                  <span>({/* count of reviews here from BE */} reviews)</span>
                   <div className="ratting">
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star" />
-                    <i className="fas fa-star-half-alt" />
+                    {renderStars(tourDetail.rating)}
                   </div>
                 </div>
                 <div className="right">
@@ -444,7 +532,10 @@ const page = () => {
             </div>
             <div className="col-lg-4 col-md-8 col-sm-10 rmt-75">
               <div className="blog-sidebar tour-sidebar">
-                <TourBookingForm/>
+                <TourBookingForm
+                  price={tourDetail.price}
+                  duration={tourDetail.duration}
+                />
                 <div
                   className="widget widget-contact"
                   data-aos="fade-up"
@@ -455,13 +546,13 @@ const page = () => {
                   <ul className="list-style-one">
                     <li>
                       <i className="far fa-envelope" />{" "}
-                      <a href="emilto:helpxample@gmail.com">
+                      <a href="mailto:helpxample@gmail.com">
                         helpxample@gmail.com
                       </a>
                     </li>
                     <li>
                       <i className="far fa-phone-volume" />{" "}
-                      <a href="callto:+000(123)45688">+000 (123) 456 88</a>
+                      <a href="tel:+000(123)45688">+000 (123) 456 88</a>
                     </li>
                   </ul>
                 </div>
@@ -477,4 +568,5 @@ const page = () => {
     </ReveloLayout>
   );
 };
-export default page;
+
+export default TourDetailPage;
