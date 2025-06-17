@@ -25,4 +25,5 @@ public interface DestinationService {
     // Phương thức update nhận ID, DTO và file (file có thể null cho trường hợp không update ảnh)
     DestinationDTO updateDestination(long id, DestinationDTO destinationDTO) throws IdInvalidException; // Đã đổi signature
     String deleteDestination(long id) throws IdInvalidException;
+    Page<DestinationDTO> searchDestinations(String keyword, int page, int size);
 }

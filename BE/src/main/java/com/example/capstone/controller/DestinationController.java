@@ -37,6 +37,17 @@ public class DestinationController {
         return ResponseEntity.ok(destinations); // DestinationDTO đã chứa regionName (nếu mapper đúng)
     }
 
+    @GetMapping("/search")
+    @ApiMessage("Search destinations by keyword")
+    public ResponseEntity<Page<DestinationDTO>> searchDestinations(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<DestinationDTO> searchResults = destinationService.searchDestinations(keyword, page, size);
+        return ResponseEntity.ok(searchResults);
+    }
+
     // GET Destination BY ID
     @GetMapping("/{id}")
     @ApiMessage("Get destination by ID")

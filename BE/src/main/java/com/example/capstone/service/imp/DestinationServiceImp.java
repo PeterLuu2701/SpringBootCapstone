@@ -102,4 +102,17 @@ public class DestinationServiceImp implements DestinationService {
         return "Destination with Id " + id + " deleted successfully!";
     }
 
+    @Override
+    public Page<DestinationDTO> searchDestinations(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Destination> destinationPage = destinationRepository
+                .findByNameContainingIgnoreCase(keyword, pageable);
+
+        List<DestinationDTO> dtoList = destinationPage.getContent().stream()
+                .map(DestinationMapper::toDTO)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtoList, pageable, destinationPage.getTotalElements());
+    }
+
 }
