@@ -14,20 +14,21 @@ public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String name;
     private String description;
     private double price;
-    private float rating;
+    private double rating;
     private String image_url;
-    private  String is_feature;
+    private Boolean is_feature;
     private String duration;
 
-    @ManyToOne
-    @JoinColumn(name = "destination_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "destination_id", referencedColumnName = "id")
     private Destination destination;
 
-    @ManyToOne
-    @JoinColumn(name = "activity_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "activity_id", referencedColumnName = "id")
     private Activity activity;
 
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true) // <-- Sửa mappedBy thành "tour"

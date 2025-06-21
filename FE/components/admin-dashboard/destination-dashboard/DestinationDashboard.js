@@ -74,6 +74,7 @@ const DestinationDashboard = () => {
             <th>Description</th>
             <th>Image</th>
             <th>Country</th>
+            <th>City</th>
             <th className="text-center">Actions</th>
           </tr>
         </thead>
@@ -90,7 +91,8 @@ const DestinationDashboard = () => {
                   style={{ width: "100px", height: "auto" }}
                 />
               </td>
-              <td>{destination.country}</td>
+              <td>{destination.countryName || 'N/A' }</td>
+              <td>{destination.cityName || 'N/A'}</td>
 
               <td className="text-center">
                 <Link

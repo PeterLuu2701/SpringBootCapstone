@@ -10,13 +10,10 @@ import java.util.List;
 
 @Service
 public interface TourService {
-
     TourDTO createTour(MultipartFile file,TourDTO dto);
     List<TourDTO> getAllTours();
     TourDTO getTourById(long id);
     TourDTO updateTour(long id, TourDTO dto);
     void deleteTour(long id);
     Page<TourDTO> searchTours(TourSearchCriteriaDTO criteria, Pageable pageable);
-
-
 }

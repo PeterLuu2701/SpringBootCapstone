@@ -1,6 +1,7 @@
 package com.example.capstone.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class TourDTO {
@@ -9,14 +10,20 @@ public class TourDTO {
     private String description;
     private Double price;
     private float rating;
-    private String image_url; // <- Trường này
-    private String is_feature;
+    private String image_url;
+    private MultipartFile imageFile;
+    private Boolean is_feature;
     private String duration;
-    private long destination_id;
+
+    private Long destination_id;
     private String destinationName;
-    private String destinationCountry;
-    private String destinationCity;
-    private long activity_id;
+    private Long destinationCountryId;
+    private String destinationCountryName;
+    private Long destinationCityId;
+    private String destinationCityName;
+
+    private Long activity_id;
     private String activityName;
     private String activityDescription;
+
 }

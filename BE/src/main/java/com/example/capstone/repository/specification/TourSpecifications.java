@@ -1,4 +1,4 @@
-package com.example.capstone.repository;
+package com.example.capstone.repository.specification;
 
 import com.example.capstone.dto.TourSearchCriteriaDTO;
 import com.example.capstone.entity.Activity;

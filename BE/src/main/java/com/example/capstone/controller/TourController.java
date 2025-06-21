@@ -40,14 +40,21 @@ public class TourController {
 
     // CREATE
     @PostMapping()
-    public ResponseEntity<TourDTO> createTour(@RequestParam MultipartFile file,@ModelAttribute  TourDTO dto) {
-        TourDTO createdTour = tourService.createTour(file,dto);
+    public ResponseEntity<TourDTO> createTour(
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @Valid @ModelAttribute TourDTO dto) {
+        TourDTO createdTour = tourService.createTour(file, dto);
         return ResponseEntity.ok(createdTour);
     }
 
-    // UPDATE - Now uses Path Variable
+    // UPDATE
     @PutMapping("/{id}")
-    public ResponseEntity<TourDTO> updateTour(@PathVariable long id, @Valid @RequestBody TourDTO dto) {
+    public ResponseEntity<TourDTO> updateTour(
+            @PathVariable long id,
+            @Valid @ModelAttribute TourDTO dto,
+            @RequestParam(value = "file", required = false) MultipartFile file
+    ) {
+        dto.setImageFile(file);
         TourDTO updatedTour = tourService.updateTour(id, dto);
         return ResponseEntity.ok(updatedTour);
     }
