@@ -1,4 +1,4 @@
-// File: D:\Bootcamp Java\FinalCapstone\FE\app\page.js
+// File: C:\Users\ASUS\Desktop\capstone\SpringBootCapstone\FE\app\page.js
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
