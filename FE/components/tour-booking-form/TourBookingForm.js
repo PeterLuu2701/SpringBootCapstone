@@ -3,45 +3,29 @@
 // Import các hooks và thư viện cần thiết
 import { useState, useEffect, FormEvent } from 'react'; // <-- Đã thêm FormEvent
 import axios from 'axios';
-import Link from 'next/link'; // Link không cần thiết lắm trong file này nếu không navigate thực sự, nhưng giữ lại
-
-// Giả sử giá vé cho form tạo booking là cố định
+import Link from 'next/link'; 
 const PRICE_ADULT_18_MINUS = 28.50;
 const PRICE_ADULT_18_PLUS = 50.40;
 
-// Không có định nghĩa props interface nếu không dùng initialTourIdForCreation
-// Nếu bạn vẫn muốn dùng initialTourIdForCreation, giữ lại interface hoặc bỏ nó tùy ý
-// Ví dụ giữ lại props nhưng không dùng interface
 const TourBookingForm = ({ initialTourIdForCreation }) => {
-// const BookingManagementPage = () => { // Nếu không dùng bất kỳ props nào
-    // --- State để quản lý dữ liệu và giao diện ---
-    const [bookings, setBookings] = useState([]); // Danh sách tất cả booking
-    const [selectedBookingId, setSelectedBookingId] = useState(null); // ID của booking đang xem/chỉnh sửa
-    const [loading, setLoading] = useState(false); // Trạng thái chung: loading
-    const [error, setError] = useState(null); // Trạng thái chung: lỗi
 
-    // State cho Form Tạo Booking
+    const [bookings, setBookings] = useState([]); // Danh sách tất cả booking
+    const [selectedBookingId, setSelectedBookingId] = useState(null); // BookingId dang chinh sua
+    const [loading, setLoading] = useState(false); // Trạng tháiload
+    const [error, setError] = useState(null); // Trạng thái lỗi
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [createFormData, setCreateFormData] = useState({
         selectedDate: '',
         adultTickets18Minus: 1,
         adultTickets18Plus: 0,
-        tourId: initialTourIdForCreation || 0, // Sử dụng prop hoặc mặc định 0
+        tourId: initialTourIdForCreation || 0, 
     });
     const createFormTotalPrice = (createFormData.adultTickets18Minus * PRICE_ADULT_18_MINUS) + (createFormData.adultTickets18Plus * PRICE_ADULT_18_PLUS);
     const [createBookingResult, setCreateBookingResult] = useState(null);
 
-
-    // State cho Form Cập Nhật Booking
     const [showEditForm, setShowEditForm] = useState(false);
-    const [editBookingData, setEditBookingData] = useState(null); // Dữ liệu booking đang được fetch để chỉnh sửa
-    // State cho dữ liệu trong form edit (dữ liệu người dùng nhập)
+    const [editBookingData, setEditBookingData] = useState(null); 
     const [editFormData, setEditFormData] = useState({});
-
-
-    // --- Effects để fetch dữ liệu khi component mount hoặc state thay đổi ---
-
-    // Effect để fetch TẤT CẢ Booking khi component mount
     useEffect(() => {
         const fetchAllBookings = async () => {
             setLoading(true);
@@ -53,7 +37,6 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
                 setBookings(response.data);
             } catch (err) {
                 console.error("Error fetching all bookings:", err);
-                // Xử lý lỗi axios (không có kiểm tra isAxiosError nữa, giả định response có data/message)
                 setError(`Failed to load bookings: ${err.response?.data?.message || err.message || 'Unknown error'}`);
 
             } finally {
@@ -62,25 +45,22 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
         };
 
         fetchAllBookings();
-    }, []); // Dependency array rỗng: chạy 1 lần khi mount
+    }, []); 
 
-
-    // Effect để fetch CHI TIẾT Booking khi selectedBookingId thay đổi (để xem/chỉnh sửa)
     useEffect(() => {
         const fetchBookingDetails = async (id) => {
             setLoading(true);
-            setError(null); // Reset lỗi trước đó
-            setEditBookingData(null); // Reset dữ liệu booking đang chỉnh sửa
-            setEditFormData({}); // Reset form data edit
-            setShowEditForm(false); // Đóng form edit khi fetch chi tiết
+            setError(null); 
+            setEditBookingData(null); 
+            setEditFormData({});
+            setShowEditForm(false); 
 
             try {
                 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
                 const baseUrl = apiUrl || 'http://localhost:8080';
                 const response = await axios.get(`${baseUrl}/booking/${id}`);
-                setEditBookingData(response.data); // Lưu dữ liệu booking để hiển thị
-                // Khi fetch xong chi tiết, điền dữ liệu vào form edit
-                setEditFormData(response.data); // Sao chép dữ liệu nhận được vào state form edit
+                setEditBookingData(response.data);
+                setEditFormData(response.data); 
             } catch (err) {
                 console.error(`Error fetching booking details for ID ${id}:`, err);
                 // Xử lý lỗi axios
@@ -89,9 +69,9 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
                  } else {
                      setError(`Failed to load booking details: ${err.response?.data?.message || err.message || 'Unknown error'}`);
                  }
-                 setSelectedBookingId(null); // Reset selected ID nếu có lỗi fetch
-                 setEditBookingData(null); // Đảm bảo dữ liệu chi tiết bị xóa
-                 setEditFormData({}); // Đảm bảo form edit rỗng
+                 setSelectedBookingId(null); 
+                 setEditBookingData(null); 
+                 setEditFormData({}); 
 
             } finally {
                 setLoading(false);
@@ -101,22 +81,15 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
         if (selectedBookingId !== null) {
             fetchBookingDetails(selectedBookingId);
         } else {
-            // Reset khi không có booking nào được chọn (ví dụ: click nút Back to list)
             setEditBookingData(null);
             setEditFormData({});
-            setShowEditForm(false); // Đảm bảo form edit tắt
+            setShowEditForm(false);
         }
 
-    }, [selectedBookingId]); // Dependency: chạy khi selectedBookingId thay đổi
-
-
-    // --- Hàm xử lý các hành động (Create, Update, Delete, Select) ---
-
-    // Hàm xử lý submit Form Tạo Booking (POST /booking)
+    }, [selectedBookingId]); 
     const handleCreateBooking = async (event) => {
         event.preventDefault();
-
-        // Kiểm tra tính hợp lệ cơ bản
+        // Kiểm tra hợp lệ
         if (!createFormData.selectedDate) {
             setCreateBookingResult({ success: false, message: 'Please select a date.' });
             return;
@@ -129,90 +102,58 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
              setCreateBookingResult({ success: false, message: 'Please select at least one ticket.' });
              return;
         }
-
-
-        setCreateBookingResult(null); // Reset kết quả trước đó
-        setLoading(true); // Bắt đầu trạng thái loading
-
-        // Chuẩn bị FormData cho backend @ModelAttribute
+        setCreateBookingResult(null);
+        setLoading(true); 
         const formData = new FormData();
-        // Các tên key phải KHỚP với tên thuộc tính trong BookingDTO trên backend
-        // Giá trị phải là string cho FormData
         formData.append('booking_date', createFormData.selectedDate);
         formData.append('max_guest', (createFormData.adultTickets18Minus + createFormData.adultTickets18Plus).toString());
         formData.append('total_price', createFormTotalPrice.toString());
-        formData.append('start_date', createFormData.selectedDate); // Giả định end_date = start_date
-        formData.append('end_date', createFormData.selectedDate); // Giả định end_date = start_date
-        formData.append('user_id', '1'); // Placeholder User ID (cần thay thế bằng ID người dùng thực tế)
-        formData.append('tour_id', createFormData.tourId.toString()); // Sử dụng tourId từ state
-        formData.append('payment', 'Pending'); // Trạng thái ban đầu
+        formData.append('start_date', createFormData.selectedDate);
+        formData.append('end_date', createFormData.selectedDate);
+        formData.append('user_id', '1');
+        formData.append('tour_id', createFormData.tourId.toString());
+        formData.append('payment', 'Pending');
 
-        console.log("Submitting create booking data:", Object.fromEntries(formData.entries())); // Log để debug
+        console.log("Submitting create booking data:", Object.fromEntries(formData.entries())); 
 
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL;
             const baseUrl = apiUrl || 'http://localhost:8080';
 
             const response = await axios.post(`${baseUrl}/booking`, formData);
-            const newBooking = response.data; // Dữ liệu nhận được từ BE (dạng JSON)
-
+            const newBooking = response.data; 
             setCreateBookingResult({ success: true, message: 'Booking created successfully!' });
-            // Thêm booking mới vào danh sách hiện tại (frontend update)
-            // Tạo một bản sao mới của mảng bookings để đảm bảo React nhận ra sự thay đổi
             setBookings(prev => [...prev, newBooking]);
-            // Reset form tạo về giá trị ban đầu
             setCreateFormData({ selectedDate: '', adultTickets18Minus: 1, adultTickets18Plus: 0, tourId: initialTourIdForCreation || 0 });
-            setShowCreateForm(false); // Đóng form sau khi tạo thành công
-
+            setShowCreateForm(false);
         } catch (err) {
             console.error("Error creating booking:", err);
-            // Xử lý lỗi axios (không có kiểm tra isAxiosError nữa, giả định response có data/message)
             const errorMessage = err.response?.data?.message || err.message || 'Unknown error';
             setCreateBookingResult({ success: false, message: `Failed to create booking: ${errorMessage}` });
 
         } finally {
-            setLoading(false); // Kết thúc trạng thái loading
+            setLoading(false);
         }
     };
-
-    // Hàm xử lý submit Form Cập Nhật Booking (PUT /booking/{id})
     const handleUpdateBooking = async (event) => {
-        event.preventDefault(); // Ngăn chặn hành vi submit mặc định
-
-        // Đảm bảo có dữ liệu booking đang được chỉnh sửa và có ID
+        event.preventDefault();
         if (!editBookingData || typeof editBookingData.id === 'undefined') {
             console.error("No booking data available for update.");
             setEditBookingResult({ success: false, message: 'No booking selected for update.' });
             return;
         }
-         // Kiểm tra tính hợp lệ cơ bản của dữ liệu form edit
         if (!editFormData.booking_date || !editFormData.tour_id || editFormData.max_guest <= 0 || editFormData.total_price < 0) {
              setEditBookingResult({ success: false, message: 'Please fill in all required fields with valid data.' });
              return;
         }
-
-
-        setEditBookingResult(null); // Reset kết quả trước đó
-        setLoading(true); // Bắt đầu trạng thái loading
-
-        // Chuẩn bị FormData cho backend @ModelAttribute
+        setEditBookingResult(null);
+        setLoading(true);
         const formUpdateData = new FormData();
-        // Lặp qua các trường trong editFormData và append vào FormData
         Object.keys(editFormData).forEach(key => {
             const value = editFormData[key];
-            // Kiểm tra null/undefined trước khi append. Chuyển đổi sang string.
             if (value !== null && value !== undefined) {
-                 // Cần cẩn thận với key 'id' - không nên cập nhật ID qua form
                  if (key !== 'id') {
-                      // Xử lý chuyển đổi kiểu dữ liệu tùy theo key nếu cần
                       let stringValue = value.toString();
-                       // Ví dụ: nếu key là 'max_guest' hoặc 'tour_id', đảm bảo giá trị là số nguyên trước khi toString
-                       // if (key === 'max_guest' || key === 'tour_id' || key === 'user_id') {
-                       //     stringValue = parseInt(value, 10).toString();
-                       // } else if (key === 'total_price') {
-                       //      stringValue = parseFloat(value).toFixed(2).toString(); // Format tiền tệ
-                       // }
-
                      formUpdateData.append(key, stringValue);
                  }
             }
@@ -223,66 +164,44 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL;
             const baseUrl = apiUrl || 'http://localhost:8080';
-
-            // Sử dụng ID từ editBookingData (booking đang được chỉnh sửa) trong URL path
             const response = await axios.put(`${baseUrl}/booking/${editBookingData.id}`, formUpdateData);
-            const updatedBooking = response.data; // Dữ liệu nhận được từ BE (dạng JSON)
-
+            const updatedBooking = response.data;
             setEditBookingResult({ success: true, message: 'Booking updated successfully!' });
-            // Cập nhật booking trong danh sách hiện tại (frontend update)
              setBookings(prev => prev.map(b => b.id === updatedBooking.id ? updatedBooking : b));
-            // Reset state chỉnh sửa sau khi cập nhật thành công
             setEditBookingData(null);
             setEditFormData({});
-            setSelectedBookingId(null); // Trở về chế độ không xem chi tiết
-            setShowEditForm(false); // Đóng form edit
+            setSelectedBookingId(null);
+            setShowEditForm(false);
 
         } catch (err) {
             console.error("Error updating booking:", err);
-            // Xử lý lỗi axios (không có kiểm tra isAxiosError nữa, giả định response có data/message)
             const errorMessage = err.response?.data?.message || err.message || 'Unknown error';
             setEditBookingResult({ success: false, message: `Failed to update booking: ${errorMessage}` });
 
         } finally {
-            setLoading(false); // Kết thúc trạng thái loading
+            setLoading(false);
         }
     };
-
-
-    // Hàm xử lý Xóa Booking (DELETE /booking/{id})
     const handleDeleteBooking = async (id) => {
-        // Hiển thị hộp thoại xác nhận trước khi xóa
         if (window.confirm(`Are you sure you want to delete booking ${id}?`)) {
-            setLoading(true); // Bắt đầu trạng thái loading
-            setError(null); // Reset lỗi chung
-
+            setLoading(true);
+            setError(null);
             try {
                 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
                 const baseUrl = apiUrl || 'http://localhost:8080';
 
-                console.log(`Deleting booking with ID: ${id} from ${baseUrl}/booking/${id}`); // Log để debug
-
-                // Gửi DELETE request đến endpoint /booking/{id}
+                console.log(`Deleting booking with ID: ${id} from ${baseUrl}/booking/${id}`); 
                 const response = await axios.delete(`${baseUrl}/booking/${id}`);
-
-                // Backend trả về 204 No Content khi xóa thành công
                 if (response.status === 204) {
                     console.log(`Booking ${id} deleted successfully.`);
-                    // Cập nhật danh sách booking trên frontend bằng cách lọc bỏ booking vừa xóa
                     setBookings(prev => prev.filter(b => b.id !== id));
-                    // Đóng chế độ xem chi tiết/chỉnh sửa nếu đang mở booking này
                     if (selectedBookingId === id) {
                         setSelectedBookingId(null);
                         setEditBookingData(null);
                         setEditFormData({});
                         setShowEditForm(false);
                     }
-                    // (Tùy chọn) Hiển thị thông báo xóa thành công tạm thời
-                    // alert(`Booking ${id} deleted successfully.`);
-
                 } else {
-                     // Xử lý các trường hợp thành công khác nếu BE trả về (ví dụ 200 OK)
-                     // Nếu BE trả về 200 nhưng không có body, cũng coi là xóa thành công
                     console.log(`Delete request for booking ${id} returned status ${response.status}. Assuming success.`);
                      setBookings(prev => prev.filter(b => b.id !== id));
                      if (selectedBookingId === id) {
@@ -291,79 +210,52 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
                          setEditFormData({});
                          setShowEditForm(false);
                      }
-                     // (Tùy chọn) Hiển thị thông báo xóa thành công tạm thời
-                     // alert(`Booking ${id} deleted successfully.`);
                 }
 
 
             } catch (err) {
                 console.error(`Error deleting booking ${id}:`, err);
-                 // Xử lý lỗi axios (không có kiểm tra isAxiosError nữa, giả định response có data/message)
-                 // Backend có thể trả về 404 nếu không tìm thấy để xóa
                 const errorMessage = err.response?.data?.message || err.message || 'Unknown error';
                  if (err.response?.status === 404) {
                      setError(`Booking with ID ${id} not found.`);
                  } else {
                     setError(`Failed to delete booking: ${errorMessage}`);
                  }
-                 // (Tùy chọn) Hiển thị thông báo lỗi
-                 // alert(`Failed to delete booking ${id}: ${errorMessage}`);
-
-
             } finally {
-                setLoading(false); // Kết thúc trạng thái loading
+                setLoading(false);
             }
         }
     };
-
-
-    // Hàm để chọn booking xem chi tiết hoặc chỉnh sửa
     const handleSelectBooking = (id) => {
-        // Nếu click lại vào booking đang được chọn, bỏ chọn
         if (selectedBookingId === id) {
             setSelectedBookingId(null);
-            // Đảm bảo tắt hết các chế độ liên quan đến chi tiết/edit
             setEditBookingData(null);
             setEditFormData({});
             setShowEditForm(false);
         } else {
-            // Chọn booking mới
-            setSelectedBookingId(id); // Việc này sẽ kích hoạt useEffect để fetch chi tiết
-            // Khi chọn xem chi tiết, đóng form tạo nếu đang mở
+            setSelectedBookingId(id);
             setShowCreateForm(false);
         }
     };
-
-    // Hàm để hiển thị form cập nhật khi đã có editBookingData
     const handleShowEditForm = () => {
-        // Đảm bảo có dữ liệu booking để điền vào form edit trước khi mở form
         if (editBookingData) {
-            setShowEditForm(true); // Bật trạng thái hiển thị form edit
-             setEditBookingResult(null); // Reset kết quả edit trước đó
+            setShowEditForm(true); 
+             setEditBookingResult(null); // 
         } else {
             console.warn("No booking data available to show edit form.");
              setEditBookingResult({ success: false, message: "Cannot open edit form: Booking data not loaded." });
         }
     };
-
-    // Hàm xử lý thay đổi trong Form Cập Nhật (cho tất cả các input)
     const handleEditFormChange = (event) => {
          const { name, value } = event.target;
-         // Cần xử lý chuyển đổi kiểu dữ liệu cho các trường số
          let processedValue = value;
          if (name === 'max_guest' || name === 'user_id' || name === 'tour_id') {
-             processedValue = parseInt(value, 10) || 0; // Chuyển sang số nguyên, mặc định 0 nếu không hợp lệ
+             processedValue = parseInt(value, 10) || 0; 
          } else if (name === 'total_price') {
-              processedValue = parseFloat(value) || 0.00; // Chuyển sang số thập phân, mặc định 0.00
+              processedValue = parseFloat(value) || 0.00;
          }
-         // Giữ nguyên string cho các trường khác (date, payment, description, name, ...)
-
          setEditFormData(prev => ({ ...prev, [name]: processedValue }));
     };
-
-
-    // --- Render Giao diện ---
-
     return (
         <div className="container mx-auto p-4">
             <h1 className="text-3xl font-bold mb-6 text-center">Booking Management</h1>
@@ -391,8 +283,7 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
                       <button
                           className="theme-btn style-two"
                           onClick={() => {
-                              setShowCreateForm(!showCreateForm); // Toggle form tạo
-                              // Đảm bảo các chế độ khác tắt
+                              setShowCreateForm(!showCreateForm); 
                               setSelectedBookingId(null);
                               setShowEditForm(false);
                                setError(null); // Reset lỗi chung khi mở form tạo
@@ -406,7 +297,6 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
 
             {/* Form Tạo Booking (Hiển thị khi showCreateForm là true) */}
             {showCreateForm && (
-                // Sử dụng className 'max-w-md mx-auto' nếu muốn căn giữa và giới hạn chiều rộng
                  <div className="bg-gray-100 p-6 rounded-lg shadow-md mb-6 max-w-md mx-auto">
                      <h2 className="text-xl font-semibold mb-4">Create New Booking</h2>
                       {/* Hiển thị kết quả/lỗi riêng cho form tạo */}
@@ -426,7 +316,7 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
                                  value={createFormData.selectedDate}
                                  onChange={(e) => setCreateFormData({...createFormData, selectedDate: e.target.value})}
                                  required
-                                 disabled={loading} // Disable khi đang loading
+                                 disabled={loading} 
                              />
                          </div>
 
@@ -493,7 +383,6 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
 
             {/* Chi tiết Booking hoặc Form Cập Nhật (Hiển thị khi selectedBookingId có giá trị, không loading, không lỗi) */}
             {selectedBookingId !== null && !loading && !error && (
-                // Sử dụng className 'max-w-md mx-auto' nếu muốn căn giữa và giới hạn chiều rộng
                 <div className="mb-6 bg-blue-50 p-6 rounded-lg shadow-md max-w-md mx-auto">
                     {/* Nếu đang xem chi tiết (chưa bật form edit) */}
                     {!showEditForm && editBookingData && (
@@ -510,8 +399,8 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
                             {/* Nút mở Form Cập Nhật */}
                              <button
                                  className="theme-btn style-two mr-2"
-                                 onClick={handleShowEditForm} // Gọi hàm mở form edit
-                                  disabled={loading} // Disable khi đang loading
+                                 onClick={handleShowEditForm} 
+                                  disabled={loading} 
                              >
                                  Edit This Booking
                              </button>
@@ -706,6 +595,4 @@ const TourBookingForm = ({ initialTourIdForCreation }) => {
         </div>
     );
 };
-
-// Đảm bảo export đúng tên component
-export default TourBookingForm; // Hoặc TourBookingForm nếu bạn không đổi tên component
+export default TourBookingForm; 
