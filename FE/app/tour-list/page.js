@@ -8,7 +8,7 @@ const ITEMS_PER_PAGE = 6;
 
 const fetchTours = async (destinationCity = null) => {
   try {
-    let url = "http://localhost:8080/tour/get-all-tour";
+    let url = "http://localhost:8080/tour";
     let options = {
       method: "GET",
       headers: { "Content-Type": "application/json" },

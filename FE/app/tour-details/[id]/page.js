@@ -31,7 +31,7 @@ const TourDetailPage = ({ params }) => {
       }
       try {
         const response = await fetch(
-          `${backendBaseUrl}/tour/get-tour-by-id?id=${tourId}`,
+          `${backendBaseUrl}/tour/${tourId}`,
           { cache: "no-store" }
         );
         if (!response.ok) {
