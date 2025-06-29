@@ -84,11 +84,11 @@ public class BookingServiceImp implements BookingService {
         existing.setTour(tour);
         existing.setUser(user);
 
-        existing.setStart_date((bookingDTO.getStart_date()));
-        existing.setEnd_date((bookingDTO.getEnd_date()));
+        existing.setStart_date(Timestamp.valueOf((bookingDTO.getStart_date())));
+        existing.setEnd_date(Timestamp.valueOf((bookingDTO.getEnd_date())));
         existing.setMax_guest(bookingDTO.getMax_guest());
         existing.setTotal_price(bookingDTO.getTotal_price());
-        existing.setPayment(Boolean.TRUE.equals(bookingDTO.getPayment()));
+        existing.setPayment(Boolean.TRUE.equals(bookingDTO.getPaymentStatus()));
 
         Booking updated = bookingRepository.save(existing);
         return BookingMapper.toDTO(updated);

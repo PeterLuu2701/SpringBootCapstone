@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "/admin/destinations/page": "app/admin/destinations/page.js",
   "/_not-found/page": "app/_not-found/page.js",
   "/admin/tours/page": "app/admin/tours/page.js",
@@ -6,4 +7,9 @@
   "/tour-list/page": "app/tour-list/page.js",
   "/destination-details/page": "app/destination-details/page.js",
   "/tour-details/[id]/page": "app/tour-details/[id]/page.js"
+=======
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js",
+  "/tour-details/page": "app/tour-details/page.js"
+>>>>>>> origin/feature/booking
 }

@@ -1,5 +1,9 @@
 {
   "node": {},
   "edge": {},
+<<<<<<< HEAD
   "encryptionKey": "xtWyUHKXT6/ViejLGq9Wi9c9skND7r4z3PoUqtqF8sg="
+=======
+  "encryptionKey": "kcpOCE0tfs41YKTthMPY+Cfw8CtgklRYbz6JFnMNU5s="
+>>>>>>> origin/feature/booking
 }
