@@ -192,11 +192,7 @@
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	!function() {
-<<<<<<< HEAD
-/******/ 		__webpack_require__.h = function() { return "61b6c3196484dc3b"; }
-=======
-/******/ 		__webpack_require__.h = function() { return "17a1d12971bba4c8"; }
->>>>>>> origin/feature/booking
+/******/ 		__webpack_require__.h = function() { return "f4fb438bf2138acb"; }
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

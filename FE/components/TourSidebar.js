@@ -21,7 +21,7 @@ const TourSidebar = () => {
         setActivities(activitiesData.data);
 
         // Fetch Tours
-        const toursResponse = await fetch('http://localhost:8080/destination/get-all-tours', { cache: 'no-store' });
+        const toursResponse = await fetch('http://localhost:8080/tour', { cache: 'no-store' });
         if (!toursResponse.ok) {
           const errorText = await toursResponse.text();
           throw new Error(`HTTP error fetching tours! status: ${toursResponse.status}, body: ${errorText}`);

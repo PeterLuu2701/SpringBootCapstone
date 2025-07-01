@@ -18,7 +18,7 @@ const FeaturesTours = () => { // Giữ nguyên tên component FeaturesTours
         setLoading(true);
         setError(null);
         // Fetch từ endpoint get-all-tour
-        const response = await fetch(`${backendBaseUrl}/tour/get-all-tour`, { cache: 'no-store' }); // Sử dụng biến backendBaseUrl
+        const response = await fetch(`${backendBaseUrl}/tour`, { cache: 'no-store' }); // Sử dụng biến backendBaseUrl
         if (!response.ok) {
           const errorText = await response.text();
           throw new Error(`HTTP error: ${response.status}, body: ${errorText}`);

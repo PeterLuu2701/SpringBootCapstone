@@ -30,7 +30,7 @@ const TourListingPage = () => {
       setError(null); // Xóa lỗi
       try {
         // Gọi API để lấy danh sách tour (get-all-tour không phân trang)
-        const response = await axios.get('/tour/get-all-tour');
+        const response = await axios.get('/tour');
 
         if (response.data) {
              // API get-all-tour trả về List<TourDTO>, không phải Page

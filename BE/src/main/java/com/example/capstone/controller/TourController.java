@@ -33,7 +33,7 @@ public class TourController {
 
     // GET BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<TourDTO> getTourById(@PathVariable long id) {
+    public ResponseEntity<TourDTO> getTourById(@PathVariable Long id) {
         TourDTO tour = tourService.getTourById(id);
         return ResponseEntity.ok(tour);
     }
