@@ -25,5 +25,4 @@ public class TourDTO {
     private Long activity_id;
     private String activityName;
     private String activityDescription;
-
 }

@@ -20,39 +20,51 @@ const TourDashboard = () => {
         setLoading(true);
         setError(null);
         try {
-            // This endpoint remains the same, as the BE for "get all" still has no path/request params.
             const response = await axios.get(`${API_BASE_URL}/tour`);
 
+            // --- FIX START ---
+            // Your backend response wraps the actual list of tours in a 'data' field.
+            // So we need to access response.data.data
             if (response.status === 200 && response.data && Array.isArray(response.data.data)) {
                 const formattedTours = response.data.data.map(tour => ({
                     id: tour.id,
                     name: tour.name,
                     description: tour.description,
-                    imageUrl: tour.image_url ? `/uploads/images/${tour.image_url}` : "https://placehold.co/100x70/A0A0A0/FFFFFF?text=No+Image",
+                    // Correctly construct the image URL.
+                    // If your backend serves files via '/file/', then this path is correct.
+                    imageUrl: tour.image_url ? `${API_BASE_URL}/file/${tour.image_url}` : "https://placehold.co/100x70/A0A0A0/FFFFFF?text=No+Image",
                     duration: tour.duration,
                     price: tour.price,
+                    // These fields are correctly named in your TourDTO and Postman response
                     destinationName: tour.destinationName,
-                    destinationCountry: tour.destinationCountry,
-                    destinationCity: tour.destinationCity,
+                    destinationCountryName: tour.destinationCountryName,
+                    destinationCityName: tour.destinationCityName,
                     activityName: tour.activityName,
+                    // Keep the original image_url for sending back during updates if needed
                     image_url: tour.image_url,
-                    is_feature: tour.is_feature, // Ensure is_feature is passed
-                    rating: tour.rating,         // Ensure rating is passed
+                    is_feature: tour.is_feature,
+                    rating: tour.rating,
                     destination_id: tour.destination_id,
                     activity_id: tour.activity_id,
-                    // Copy other destination fields if needed by UpdateTour for new destination creation
-                    destinationDescription: tour.description,
-                    destinationPopular: tour.popular,
-                    destinationDuration: tour.duration,
-                    destinationGoogleMapUrl: tour.google_map_url,
-                    destinationRegionName: tour.region_name,
+                    // Remove these lines as they are not properties of TourDTO and were causing confusion.
+                    // If your UpdateTour component truly needs these for a *new* destination,
+                    // it would need to fetch Destination details separately or handle them differently.
+                    // destinationDescription: tour.description,
+                    // destinationPopular: tour.popular,
+                    // destinationDuration: tour.duration,
+                    // destinationGoogleMapUrl: tour.google_map_url,
+                    // destinationRegionName: tour.region_name,
                 }));
                 setTours(formattedTours);
             } else {
-                setError(response.data.message || "Failed to fetch tours: Unexpected response structure.");
+                // If response.data.data is not an array, or response.data is null/undefined
+                // Use the message from the backend if available, otherwise a generic one.
+                setError(response.data?.message || "Failed to fetch tours: Unexpected response structure or no data.");
             }
+            // --- FIX END ---
         } catch (e) {
             console.error("Error fetching tours:", e);
+            // Access the error message from the response if available, or use generic error.
             setError(e.response?.data?.message || e.message || "Error fetching tours. Please try again later.");
         } finally {
             setLoading(false);
@@ -72,15 +84,13 @@ const TourDashboard = () => {
         setOpenUpdate(true);
     };
 
-    // *** FE FIX: Added handleDelete function for DELETE /tour/{id} ***
     const handleDelete = async (id, name) => {
         if (window.confirm(`Are you sure you want to delete tour "${name}" (ID: ${id})?`)) {
             try {
-                // Using path variable for DELETE
                 const response = await axios.delete(`${API_BASE_URL}/tour/${id}`);
                 if (response.status === 200) {
                     alert(response.data || "Tour deleted successfully!");
-                    refreshTours(); // Refresh the list after deletion
+                    refreshTours();
                 } else {
                     alert(response.data?.message || "Failed to delete tour.");
                 }
@@ -151,14 +161,11 @@ const TourDashboard = () => {
                             <td>{tour.duration}</td>
                             <td>{tour.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
                             <td>{tour.destinationName}</td>
-                            <td>{tour.destinationCountry}</td>
-                            <td>{tour.destinationCity}</td>
+                            <td>{tour.destinationCountryName}</td>
+                            <td>{tour.destinationCityName}</td>
                             <td>{tour.activityName}</td>
                             <td className="text-center">
                                 <div className="d-flex justify-content-center">
-                                    {/* The Link to tour-details page remains as query param. */}
-                                    {/* The actual GET /tour/{id} API call will be made on the tour-details page. */}
-                                    {/* That page will need to extract the ID from the query param and use it in the path. */}
                                     <Link href={`/admin/tour-details?id=${tour.id}`} passHref>
                                         <Button variant="primary" size="sm" className="me-1">
                                             View
@@ -172,7 +179,6 @@ const TourDashboard = () => {
                                     >
                                         Edit
                                     </Button>
-                                    {/* *** FE FIX: Updated Delete button to call handleDelete with path variable *** */}
                                     <Button variant="danger" size="sm" onClick={() => handleDelete(tour.id, tour.name)}>
                                         Delete
                                     </Button>

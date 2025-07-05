@@ -85,11 +85,31 @@ public class TourMapper {
         if (existingTour == null || dto == null) {
             return;
         }
-        existingTour.setName(dto.getName());
-        existingTour.setDescription(dto.getDescription());
-        existingTour.setPrice(dto.getPrice());
+
+        // Update name, description, duration if provided in DTO
+        if (dto.getName() != null) {
+            existingTour.setName(dto.getName());
+        }
+        if (dto.getDescription() != null) {
+            existingTour.setDescription(dto.getDescription());
+        }
+        if (dto.getDuration() != null) {
+            existingTour.setDuration(dto.getDuration());
+        }
+
+
+        if (dto.getPrice() != null) {
+            existingTour.setPrice(dto.getPrice());
+        } else {
+            existingTour.setPrice(0.0);
+        }
+
         existingTour.setRating(dto.getRating());
-        existingTour.setIs_feature(dto.getIs_feature()); // Always update boolean directly
-        existingTour.setDuration(dto.getDuration());
+
+        if (dto.getIs_feature() != null) {
+            existingTour.setIs_feature(dto.getIs_feature());
+        } else {
+            existingTour.setIs_feature(false);
+        }
     }
 }
