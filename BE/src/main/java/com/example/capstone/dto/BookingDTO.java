@@ -16,15 +16,15 @@ public class BookingDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String  booking_date;
     private int max_guest;
-    private BigDecimal total_price;
+    private Double total_price;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String  start_date;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String  end_date;
     private Long user_id;
     private Long tour_id;
-    private PaymentStatus paymentStatus;
+    private int payment;
 
-
+    private TourBookingInfoDTO tourInfo;
 
 }

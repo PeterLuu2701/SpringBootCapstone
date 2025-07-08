@@ -1,9 +1,8 @@
 package com.example.capstone.mapper;
 
 import com.example.capstone.dto.BookingDTO;
-import com.example.capstone.entity.Booking;
-import com.example.capstone.entity.User;
-import com.example.capstone.entity.Tour;
+import com.example.capstone.dto.TourBookingInfoDTO;
+import com.example.capstone.entity.*;
 import com.example.capstone.enums.PaymentStatus;
 
 import java.sql.Timestamp;
@@ -13,21 +12,14 @@ import java.time.format.DateTimeParseException; // Import để xử lý lỗi p
 
 public class BookingMapper {
 
-    // Định nghĩa formatter dựa trên định dạng chuỗi bạn đang nhận
-    // Ví dụ: nếu chuỗi có dạng "2023-10-27 10:30:00", formatter sẽ là:
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    // Nếu chuỗi có thể có phần mili/nano giây, hãy thêm ".SSS" hoặc ".nnnnnnnnn" vào pattern
-
 
     public static BookingDTO toDTO(Booking booking) {
-        // ... (phần này giữ nguyên hoặc có thể cải thiện việc format Timestamp sang String)
         if (booking == null) return null;
 
         BookingDTO dto = new BookingDTO();
         dto.setId(booking.getId());
 
-        // Chuyển đổi Timestamp sang String với định dạng mong muốn
-        // Nếu entity Booking lưu Timestamp, bạn có thể format nó
         if (booking.getBooking_date() != null) {
             dto.setBooking_date(booking.getBooking_date().toLocalDateTime().format(formatter));
         } else {
@@ -44,15 +36,9 @@ public class BookingMapper {
             dto.setEnd_date(null);
         }
 
-
         dto.setMax_guest(booking.getMax_guest());
         dto.setTotal_price(booking.getTotal_price());
-
-        if (booking.isPayment()) {
-            dto.setPaymentStatus(PaymentStatus.COMPLETED);
-        } else {
-            dto.setPaymentStatus(PaymentStatus.PENDING);
-        }
+        dto.setPayment(booking.getPayment());
 
         if (booking.getUser() != null) {
             dto.setUser_id(booking.getUser().getId());
@@ -66,73 +52,45 @@ public class BookingMapper {
             dto.setTour_id(null);
         }
 
+        // Populate TourBookingInfoDTO
+        if (booking.getTour() != null) {
+            TourBookingInfoDTO tourInfoDTO = new TourBookingInfoDTO();
+            Tour tour = booking.getTour();
+            tourInfoDTO.setId(tour.getId());
+            tourInfoDTO.setName(tour.getName());
+            tourInfoDTO.setDescription(tour.getDescription());
+            tourInfoDTO.setPrice(tour.getPrice());
+            tourInfoDTO.setRating((float) tour.getRating());
+            tourInfoDTO.setImage_url(tour.getImage_url());
+            tourInfoDTO.setDuration(tour.getDuration());
+
+            if (tour.getDestination() != null) {
+                Destination destination = tour.getDestination();
+                tourInfoDTO.setDestination_id(destination.getId());
+                tourInfoDTO.setDestinationName(destination.getName());
+
+                if (destination.getCountry() != null) {
+                    Country country = destination.getCountry();
+                    tourInfoDTO.setDestinationCountryName(country.getName());
+                }
+                if (destination.getCity() != null) {
+                    City city = destination.getCity();
+                    tourInfoDTO.setDestinationCityName(city.getName());
+                }
+            }
+            dto.setTourInfo(tourInfoDTO);
+        } else {
+            dto.setTourInfo(null);
+        }
+
         return dto;
     }
 
-    // Phương thức ánh xạ từ DTO sang Entity (khi đã có Tour và User)
     public static Booking toEntity(BookingDTO dto, Tour tour, User user) {
         if (dto == null) return null;
 
         Booking booking = new Booking();
 
-        // Sử dụng formatter để phân tích chuỗi và tạo Timestamp
-        if (dto.getBooking_date() != null && !dto.getBooking_date().isEmpty()) {
-            try {
-                LocalDateTime localDateTime = LocalDateTime.parse(dto.getBooking_date(), formatter);
-                booking.setBooking_date(Timestamp.valueOf(localDateTime));
-            } catch (DateTimeParseException e) {
-                // Xử lý lỗi nếu chuỗi không đúng định dạng
-                // Ví dụ: throw một exception khác hoặc log lỗi
-                throw new IllegalArgumentException("Invalid booking_date format: " + dto.getBooking_date(), e);
-            }
-        } else {
-            booking.setBooking_date(null); // Hoặc giá trị mặc định phù hợp
-        }
-
-        if (dto.getStart_date() != null && !dto.getStart_date().isEmpty()) {
-            try {
-                LocalDateTime localDateTime = LocalDateTime.parse(dto.getStart_date(), formatter);
-                booking.setStart_date(Timestamp.valueOf(localDateTime));
-            } catch (DateTimeParseException e) {
-                throw new IllegalArgumentException("Invalid start_date format: " + dto.getStart_date(), e);
-            }
-        } else {
-            booking.setStart_date(null);
-        }
-
-        if (dto.getEnd_date() != null && !dto.getEnd_date().isEmpty()) {
-            try {
-                LocalDateTime localDateTime = LocalDateTime.parse(dto.getEnd_date(), formatter);
-                booking.setEnd_date(Timestamp.valueOf(localDateTime));
-            } catch (DateTimeParseException e) {
-                throw new IllegalArgumentException("Invalid end_date format: " + dto.getEnd_date(), e);
-            }
-        } else {
-            booking.setEnd_date(null);
-        }
-
-
-        booking.setMax_guest(dto.getMax_guest());
-        booking.setTotal_price(dto.getTotal_price());
-
-        if (dto.getPaymentStatus() != null && dto.getPaymentStatus() == PaymentStatus.COMPLETED) {
-            booking.setPayment(true);
-        } else {
-            booking.setPayment(false);
-        }
-
-        booking.setUser(user);
-        booking.setTour(tour);
-
-        return booking;
-    }
-
-    // Phương thức ánh xạ từ DTO sang Entity (khi chưa có Tour và User đầy đủ)
-    public static Booking toEntity(BookingDTO dto) {
-        if (dto == null) return null;
-
-        Booking booking = new Booking();
-        // Sử dụng formatter để phân tích chuỗi và tạo Timestamp
         if (dto.getBooking_date() != null && !dto.getBooking_date().isEmpty()) {
             try {
                 LocalDateTime localDateTime = LocalDateTime.parse(dto.getBooking_date(), formatter);
@@ -166,16 +124,57 @@ public class BookingMapper {
             booking.setEnd_date(null);
         }
 
+        booking.setMax_guest(dto.getMax_guest());
+        booking.setTotal_price(dto.getTotal_price());
+        booking.setPayment(dto.getPayment());
+
+        booking.setUser(user);
+        booking.setTour(tour);
+
+        return booking;
+    }
+
+    public static Booking toEntity(BookingDTO dto) {
+        if (dto == null) return null;
+
+        Booking booking = new Booking();
+
+        if (dto.getBooking_date() != null && !dto.getBooking_date().isEmpty()) {
+            try {
+                LocalDateTime localDateTime = LocalDateTime.parse(dto.getBooking_date(), formatter);
+                booking.setBooking_date(Timestamp.valueOf(localDateTime));
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Invalid booking_date format: " + dto.getBooking_date(), e);
+            }
+        } else {
+            booking.setBooking_date(null);
+        }
+
+        if (dto.getStart_date() != null && !dto.getStart_date().isEmpty()) {
+            try {
+                LocalDateTime localDateTime = LocalDateTime.parse(dto.getStart_date(), formatter);
+                booking.setStart_date(Timestamp.valueOf(localDateTime));
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Invalid start_date format: " + dto.getStart_date(), e);
+            }
+        } else {
+            booking.setStart_date(null);
+        }
+
+        if (dto.getEnd_date() != null && !dto.getEnd_date().isEmpty()) {
+            try {
+                LocalDateTime localDateTime = LocalDateTime.parse(dto.getEnd_date(), formatter);
+                booking.setEnd_date(Timestamp.valueOf(localDateTime));
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Invalid end_date format: " + dto.getEnd_date(), e);
+            }
+        } else {
+            booking.setEnd_date(null);
+        }
 
         booking.setMax_guest(dto.getMax_guest());
         booking.setTotal_price(dto.getTotal_price());
-
-        if (dto.getPaymentStatus() != null && dto.getPaymentStatus() == PaymentStatus.COMPLETED) {
-            booking.setPayment(true);
-        } else {
-            booking.setPayment(false);
-        }
-
+        booking.setPayment(dto.getPayment()); // Set the int payment field from DTO
 
         if (dto.getUser_id() != null && dto.getUser_id() > 0) {
             User user = new User();
@@ -185,14 +184,13 @@ public class BookingMapper {
             booking.setUser(null);
         }
 
-        if (dto.getTour_id() != null && dto.getTour_id() > 0) {
+        if (dto.getTourInfo() != null && dto.getTourInfo().getId() != null) {
             Tour tour = new Tour();
-            tour.setId(dto.getTour_id());
+            tour.setId(dto.getTourInfo().getId());
             booking.setTour(tour);
         } else {
             booking.setTour(null);
         }
-
 
         return booking;
     }

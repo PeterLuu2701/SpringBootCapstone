@@ -19,8 +19,9 @@ public class BookingController {
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
+
     @PostMapping
-    public ResponseEntity<BookingDTO> createBooking(@ModelAttribute  BookingDTO bookingDTO) {
+    public ResponseEntity<BookingDTO> createBooking(@RequestBody  BookingDTO bookingDTO) {
         try {
             BookingDTO createdBooking = bookingService.createBooking(bookingDTO);
 
@@ -57,18 +58,20 @@ public class BookingController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<BookingDTO> updateBooking(@PathVariable Long id, @ModelAttribute BookingDTO bookingDTO) { // ID booking là Long
+    public ResponseEntity<BookingDTO> updateBooking(@PathVariable Long id, @RequestBody BookingDTO bookingDTO) {
         try {
             BookingDTO updatedBooking = bookingService.updateBooking(id, bookingDTO);
             return new ResponseEntity<>(updatedBooking, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            e.printStackTrace(); // Log lỗi
+            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
         try {

@@ -15,10 +15,10 @@ public class Booking {
     private int id;
     private Timestamp booking_date;
     private int max_guest;
-    private BigDecimal total_price;
+    private Double total_price;
     private Timestamp start_date;
     private Timestamp end_date;
-    private boolean payment;
+    private int payment;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
