@@ -30,10 +30,9 @@ const TourDetailPage = ({ params }) => {
         return;
       }
       try {
-        const response = await fetch(
-          `${backendBaseUrl}/tour/${tourId}`,
-          { cache: "no-store" }
-        );
+        const response = await fetch(`${backendBaseUrl}/tour/${tourId}`, {
+          cache: "no-store",
+        });
         if (!response.ok) {
           const errorText = await response.text();
           throw new Error(
@@ -202,34 +201,6 @@ const TourDetailPage = ({ params }) => {
         </div>
       </section>
 
-      {/* Tour Gallery start - Dynamically display images */}
-      {/* <div className="tour-gallery">
-        <div className="container-fluid">
-          <div className="row gap-10 justify-content-center rel">
-            {tourDetail.image_url ? (
-              <div className="col-lg-12">
-                <div className="gallery-item">
-                  <img
-                    src={`${backendBaseUrl}/${tourDetail.image_url}`}
-                    alt={tourDetail.name || "Tour Image"}
-                    style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="col-lg-12">
-                <div className="gallery-item">
-                  <div style={{ width: '100%', height: '400px', backgroundColor: '#eee', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '1.5em', color: '#666' }}>
-                    No Image Available
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div> */}
-      {/* Tour Gallery End */}
-
       {/* Tour Header Area start */}
       <section className="tour-header-area pt-70 rel z-1">
         <div className="container">
@@ -243,10 +214,14 @@ const TourDetailPage = ({ params }) => {
               >
                 <span className="location d-inline-block mb-10">
                   <i className="fal fa-map-marker-alt" />{" "}
-                  {tourDetail.destinationName}, {tourDetail.destinationCountry}
+                  {tourDetail.destinationCityName},{" "}
+                  {tourDetail.destinationCountryName}
                 </span>
                 <div className="section-title pb-5">
                   <h2>{tourDetail.name}</h2>
+                </div>
+                <div className="section-title pb-5">
+                  <h3>${tourDetail.price} per Guest</h3>
                 </div>
                 <div className="ratting">
                   {renderStars(tourDetail.rating)}
@@ -533,6 +508,7 @@ const TourDetailPage = ({ params }) => {
             <div className="col-lg-4 col-md-8 col-sm-10 rmt-75">
               <div className="blog-sidebar tour-sidebar">
                 <TourBookingForm
+                  tourId={tourId}
                   price={tourDetail.price}
                   duration={tourDetail.duration}
                 />

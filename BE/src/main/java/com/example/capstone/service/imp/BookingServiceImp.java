@@ -103,7 +103,7 @@ public class BookingServiceImp implements BookingService {
         Booking existing = bookingRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Booking not found with id: " + id));
 
-        boolean maxGuestChanged = false; // Flag to check if max_guest was updated
+        boolean maxGuestChanged = false;
 
         // 1. Update max_guest:
         if (bookingDTO.getMax_guest() > 0 && existing.getMax_guest() != bookingDTO.getMax_guest()) {
@@ -123,18 +123,16 @@ public class BookingServiceImp implements BookingService {
         }
 
         // 3. Recalculate total_price if max_guest or tour changed
-        // This logic comes AFTER max_guest and tour have potentially been updated
         if (maxGuestChanged) {
             // Get the current tour associated with the booking
             Tour currentTour = existing.getTour();
             if (currentTour != null) {
-                Double newTotalPrice = currentTour.getPrice() * existing.getMax_guest(); // Using double
+                Double newTotalPrice = currentTour.getPrice() * existing.getMax_guest();
                 existing.setTotal_price(newTotalPrice);
             }
         }
 
-        // 4. Update total_price directly (if provided, it overrides calculation)
-        // Check for null and if the value is different
+        // 4. Update total_price directly
         if (bookingDTO.getTotal_price() != null && !bookingDTO.getTotal_price().equals(existing.getTotal_price())) {
             existing.setTotal_price(bookingDTO.getTotal_price());
         }
@@ -166,7 +164,6 @@ public class BookingServiceImp implements BookingService {
 
 
         // 7. Update user_id:
-        // Using Math.toIntExact here because userRepository.findById likely expects int for User ID
         if (bookingDTO.getUser_id() != null && !bookingDTO.getUser_id().equals(Long.valueOf(existing.getUser().getId()))) {
             User newUser = userRepository.findById(Math.toIntExact(bookingDTO.getUser_id()))
                     .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + bookingDTO.getUser_id()));
@@ -174,9 +171,6 @@ public class BookingServiceImp implements BookingService {
         }
 
         // 8. Update payment:
-        // Assuming 0 for pending/unpaid, 1 for paid, etc.
-        // If bookingDTO.getPayment() can be 0, and you only want to change if it's different
-        // For primitive int, compare directly
         if (bookingDTO.getPayment() != existing.getPayment()) {
             existing.setPayment(bookingDTO.getPayment());
         }
