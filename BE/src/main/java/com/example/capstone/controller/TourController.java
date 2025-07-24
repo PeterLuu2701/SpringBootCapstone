@@ -74,4 +74,14 @@ public class TourController {
         Page<TourDTO> tourPage = tourService.searchTours(criteria, pageable);
         return ResponseEntity.ok(tourPage);
     }
+
+    // GET tour by destination id
+    @GetMapping("/destination/{destinationId}")
+    public ResponseEntity<List<TourDTO>> getToursByDestinationId(@PathVariable Long destinationId) {
+        List<TourDTO> tours = tourService.getToursByDestinationId(destinationId);
+        if (tours.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Or HttpStatus.NOT_FOUND if you prefer
+        }
+        return ResponseEntity.ok(tours);
+    }
 }

@@ -3,6 +3,7 @@
 import SectionTitle from "@/components/SectionTitle";
 import Destination from "@/components/slider/Destination";
 import Subscribe from "@/components/Subscribe";
+import TourByDestination from "@/components/tour-item/TourByDestination";
 import TourItem from "@/components/tour-item/TourItem";
 import ReveloLayout from "@/layout/ReveloLayout";
 import Link from "next/link";
@@ -26,23 +27,47 @@ const fetchDestinationDetails = async (id) => {
   }
 };
 
+const fetchToursByDestination = async (destinationId) => {
+  try {
+    const response = await fetch(`http://localhost:8080/tour/destination/${destinationId}`);
+    if (!response.ok) {
+      if (response.status === 404) {
+        return []; 
+      }
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.data || []; 
+  } catch (error) {
+    console.error("Error fetching tours by destination:", error);
+    return [];
+  }
+};
+
 const DestinationDetailPage = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
 
   const [destination, setDestination] = useState(null);
+  const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getDestination = async () => {
+    const getData = async () => {
       if (id) {
-        const data = await fetchDestinationDetails(id);
-        setDestination(data);
+        setLoading(true);
+        const destinationData = await fetchDestinationDetails(id);
+        setDestination(destinationData);
+
+        if (destinationData) {
+          const toursData = await fetchToursByDestination(id);
+          setTours(toursData);
+        }
         setLoading(false);
       }
     };
 
-    getDestination();
+    getData();
   }, [id]);
 
   if (loading) {
@@ -246,7 +271,27 @@ const DestinationDetailPage = () => {
           </div>
           <div className="row destinations-active justify-content-center">
             <div>
-              <TourItem />
+              {tours.length > 0 ? (
+              tours.map((tour, index) => (
+                <TourByDestination
+                  key={tour.id}
+                  id={tour.id}
+                  imageUrl={tour.image_url}
+                  location={`${tour.destinationCityName}, ${tour.destinationCountryName}`}
+                  rating={tour.rating}
+                  title={tour.name}
+                  description={tour.description}
+                  duration={tour.duration}
+                  price={tour.price}
+                  featured={tour.is_feature}
+                  aosDelay={index * 100} // Example for staggered animation
+                />
+              ))
+            ) : (
+              <div className="col-12 text-center text-white pt-50 pb-50">
+                <h3>No tours found for this destination.</h3>
+              </div>
+            )}
             </div>
           </div>
         </div>

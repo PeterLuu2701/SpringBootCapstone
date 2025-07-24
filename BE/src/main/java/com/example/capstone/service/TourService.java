@@ -16,4 +16,5 @@ public interface TourService {
     TourDTO updateTour(long id, TourDTO dto);
     void deleteTour(long id);
     Page<TourDTO> searchTours(TourSearchCriteriaDTO criteria, Pageable pageable);
+    List<TourDTO> getToursByDestinationId(Long destinationId);
 }

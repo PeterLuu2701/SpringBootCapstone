@@ -153,4 +153,14 @@ public  class TourServiceImp implements TourService {
         Page<Tour> tourPage = tourRepository.findAll(spec, pageable);
         return tourPage.map(TourMapper::toDTO);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TourDTO> getToursByDestinationId(Long destinationId) {
+        // You'll need to add a method to TourRepository to find tours by destination ID
+        // For example: List<Tour> findByDestination_Id(Long destinationId);
+        return tourRepository.findByDestination_Id(destinationId).stream()
+                .map(TourMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }
