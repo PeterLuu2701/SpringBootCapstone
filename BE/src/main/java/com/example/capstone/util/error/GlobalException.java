@@ -17,40 +17,31 @@ import com.example.capstone.entity.RestResponse;
 
 @RestControllerAdvice
 public class GlobalException {
-
     @ExceptionHandler(value = {
             UsernameNotFoundException.class,
             BadCredentialsException.class,
             IdInvalidException.class
     })
-    public ResponseEntity<RestResponse<Object>> handleAuthenticationAndIdInvalidExceptions(Exception ex) {
-        RestResponse<Object> res = new RestResponse<>();
+
+    public ResponseEntity<RestResponse<Object>> handleIdException(IdInvalidException ex) {
+        RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
         res.setError(ex.getMessage());
-        res.setMessage("Exception occurs...");
+        res.setMessage("Exception occurs....");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    // validate nhap vao user va password
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<RestResponse<Object>> validationError(
             MethodArgumentNotValidException methodArgumentNotValidException) {
         BindingResult result = methodArgumentNotValidException.getBindingResult();
         final List<FieldError> fieldErrors = result.getFieldErrors();
-        RestResponse<Object> res = new RestResponse<>();
+        RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
         res.setError(methodArgumentNotValidException.getBody().getDetail());
-        List<String> errors = fieldErrors.stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
+        List<String> errors = fieldErrors.stream().map(f -> f.getDefaultMessage()).collect(Collectors.toList());
         res.setMessage(errors.size() > 1 ? errors : errors.get(0));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGeneralException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + ex.getMessage());
     }
 }

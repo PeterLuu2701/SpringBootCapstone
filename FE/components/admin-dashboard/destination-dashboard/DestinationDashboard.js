@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Container, Table, Button, Spinner } from "react-bootstrap";
+import { Container, Table, Button, Pagination } from "react-bootstrap"; // Import Pagination
 import Link from "next/link";
 import UpdateDestination from "@/components/admin-model/Update-Destination";
 import { FaEye, FaPen } from "react-icons/fa";
@@ -10,39 +10,58 @@ import { GrFormAdd } from "react-icons/gr";
 import AddDestination from "@/components/admin-model/Add-Destination";
 import DeleteDestination from "@/components/admin-model/Delete-Destination";
 import axios from "axios";
-import ReactPaginate from "react-paginate";
 
 const DestinationDashboard = () => {
   const [destinations, setDestinations] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [nameDelete, setNameDelete] = useState("");
   const [idDelete, setIdDelete] = useState("");
   const [infoUpdate, setInfoUpdate] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const itemsPerPage = 10;
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(0); // Backend pages are 0-indexed
+  const [pageSize, setPageSize] = useState(10); // Matches backend default
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0); // To display total items
+
   const fetchData = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      setError(null);
-      const res = await axios.get(`${API_URL}/destination`);
-      const data = res.data?.data || [];
-      if (!Array.isArray(data)) {
-        throw new Error("Invalid API response: data is not an array");
+      // Pass page and size as query parameters
+      const res = await axios.get(
+        `http://localhost:8080/destination?page=${currentPage}&size=${pageSize}`
+      );
+      if (res.data && res.data.data) {
+        const { content, totalPages, totalElements } = res.data.data;
+        if (Array.isArray(content)) {
+          setDestinations(content);
+          setTotalPages(totalPages);
+          setTotalElements(totalElements);
+        } else {
+          console.error("Unexpected content structure:", res.data.data);
+          setDestinations([]);
+          setTotalPages(0);
+          setTotalElements(0);
+        }
+      } else if (Array.isArray(res.data)) {
+        // Fallback for unexpected response structure (if it returns just an array without pagination info)
+        setDestinations(res.data);
+        setTotalPages(1); // Assume one page if no pagination info
+        setTotalElements(res.data.length);
+      } else {
+        console.error("Unexpected response structure:", res.data);
+        setDestinations([]);
+        setTotalPages(0);
+        setTotalElements(0);
       }
-      setDestinations(data);
-      setPageCount(Math.ceil(data.length / itemsPerPage));
     } catch (error) {
       console.error("Error fetching data:", error);
-      setError("Failed to load destinations. Please try again.");
       setDestinations([]);
-      setPageCount(0);
+      setTotalPages(0);
+      setTotalElements(0);
     } finally {
       setLoading(false);
     }
@@ -50,18 +69,35 @@ const DestinationDashboard = () => {
 
   useEffect(() => {
     fetchData();
-  }, [API_URL, openUpdate]);
+  }, [currentPage, pageSize]); // Re-fetch data when currentPage or pageSize changes
 
-  // Calculate the current page's destinations for client-side pagination
-  const startIndex = currentPage * itemsPerPage;
-  const currentDestinations = Array.isArray(destinations)
-    ? destinations.slice(startIndex, startIndex + itemsPerPage)
-    : [];
-
-  const handlePageClick = ({ selected }) => {
-    setCurrentPage(selected);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const refreshDestinations = () => {
+    // When refreshing, reset to first page or keep current page, depending on desired behavior
+    // For simplicity, let's re-fetch the current page.
+    fetchData();
   };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  if (loading) {
+    return <div>Loading destinations...</div>;
+  }
+
+  // Generate pagination items
+  let items = [];
+  for (let number = 0; number < totalPages; number++) {
+    items.push(
+      <Pagination.Item
+        key={number}
+        active={number === currentPage}
+        onClick={() => handlePageChange(number)}
+      >
+        {number + 1}
+      </Pagination.Item>
+    );
+  }
 
   return (
     <Container className="mt-4">
@@ -69,31 +105,20 @@ const DestinationDashboard = () => {
       <Button
         variant="success"
         size="sm"
-        onClick={() => setOpenAdd(true)}
-        aria-label="Add new destination"
+        onClick={() => {
+          setOpenAdd(true);
+        }}
       >
         Add Destination <GrFormAdd />
       </Button>
       <br />
       <br />
 
-      {error && <div className="text-center text-red-500 mb-4">{error}</div>}
-
-      {loading ? (
-        <div className="text-center">
-          <Spinner animation="border" />
-          <p>Loading destinations...</p>
-        </div>
+      {totalElements === 0 ? (
+        <p className="text-center">No destinations found.</p>
       ) : (
         <>
-          <Table
-            striped
-            bordered
-            hover
-            responsive
-            className="shadow"
-            aria-label="Destinations table"
-          >
+          <Table striped bordered hover responsive className="shadow">
             <thead className="bg-light">
               <tr>
                 <th>No.</th>
@@ -101,123 +126,104 @@ const DestinationDashboard = () => {
                 <th>Description</th>
                 <th>Image</th>
                 <th>Country</th>
+                <th>City</th>
                 <th className="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {currentDestinations.length > 0 ? (
-                currentDestinations.map((destination) => (
-                  <tr key={destination.id}>
-                    <td>{destination.id}</td>
-                    <td>{destination.name}</td>
-                    <td>{destination.description}</td>
-                    <td>
-                      <div className="imageAdmin">
-                        <img
-                          src={destination.image || "/default-image.jpg"}
-                          alt={destination.name || "Destination image"}
-                          style={{ maxWidth: "100px" }}
-                        />
-                      </div>
-                    </td>
-                    <td>{destination.country}</td>
-                    <td className="text-center">
-                      <Link
-                        href={`/admin/destination-details/${destination.id}`}
-                        passHref
-                      >
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          className="me-2"
-                          aria-label={`View details for ${destination.name}`}
-                        >
-                          <FaEye />
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="warning"
-                        size="sm"
-                        className="me-2"
-                        onClick={() => {
-                          setOpenUpdate(true);
-                          setInfoUpdate(destination);
-                        }}
-                        aria-label={`Edit ${destination.name}`}
-                      >
-                        <FaPen />
+              {destinations.map((destination) => (
+                <tr key={destination.id}>
+                  <td>{destination.id}</td>
+                  <td>{destination.name}</td>
+                  <td>{destination.description}</td>
+                  <td>
+                    <img
+                      src={destination.imageUrl}
+                      alt={destination.name}
+                      style={{ width: "100px", height: "auto" }}
+                    />
+                  </td>
+                  <td>{destination.countryName || "N/A"}</td>
+                  <td>{destination.cityName || "N/A"}</td>
+
+                  <td className="text-center">
+                    <Link
+                      href={`/admin/destination-details/${destination.id}`}
+                      passHref
+                    >
+                      <Button variant="primary" size="sm" className="me-2">
+                        <FaEye />
                       </Button>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() => {
-                          setOpenDelete(true);
-                          setNameDelete(destination.name);
-                          setIdDelete(destination.id);
-                        }}
-                        aria-label={`Delete ${destination.name}`}
-                      >
-                        <MdDelete />
-                      </Button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" className="text-center">
-                    No destinations available
+                    </Link>
+                    <Button
+                      variant="warning"
+                      size="sm"
+                      className="me-2"
+                      onClick={() => {
+                        setOpenUpdate(true);
+                        setInfoUpdate(destination);
+                      }}
+                    >
+                      <FaPen />
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => {
+                        setOpenDelete(true);
+                        setNameDelete(destination.name);
+                        setIdDelete(destination.id);
+                      }}
+                    >
+                      <MdDelete />
+                    </Button>
                   </td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </Table>
 
-          {pageCount > 0 && (
-            <div className="row justify-content-center mt-4 mb-4">
-              <ReactPaginate
-                nextLabel=" >"
-                onPageChange={handlePageClick}
-                pageRangeDisplayed={3}
-                marginPagesDisplayed={2}
-                pageCount={pageCount}
-                previousLabel="< "
-                pageClassName="page-item"
-                pageLinkClassName="page-link"
-                previousClassName="page-item"
-                previousLinkClassName="page-link"
-                nextClassName="page-item"
-                nextLinkClassName="page-link"
-                breakLabel="..."
-                breakClassName="page-item"
-                breakLinkClassName="page-link"
-                containerClassName="pagination flex justify-center space-x-2 mt-10"
-                activeClassName="bg-blue-600 text-white"
-                disabledClassName="disabled"
-                ariaLabelBuilder={(page) => `Page ${page}`}
-                renderOnZeroPageCount={null}
-              />
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="d-flex justify-content-center">
+              <Pagination>
+                <Pagination.Prev
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 0}
+                />
+                {items}
+                <Pagination.Next
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages - 1}
+                />
+              </Pagination>
             </div>
           )}
+          <div className="text-center mt-2">
+            <small>
+              Showing {destinations.length} of {totalElements} destinations.
+            </small>
+          </div>
         </>
       )}
 
       <UpdateDestination
         openUpdate={openUpdate}
         setOpenUpdate={setOpenUpdate}
-        setDestinations={setDestinations}
+        setDestinations={refreshDestinations}
         infoUpdate={infoUpdate}
       />
       <AddDestination
         openAdd={openAdd}
         setOpenAdd={setOpenAdd}
-        setDestinations={setDestinations}
+        setDestinations={refreshDestinations}
       />
       <DeleteDestination
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
         name={nameDelete}
         id={idDelete}
-        setDestinations={setDestinations}
+        setDestinations={refreshDestinations}
       />
     </Container>
   );

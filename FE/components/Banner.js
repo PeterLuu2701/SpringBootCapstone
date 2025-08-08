@@ -38,7 +38,7 @@ const Banner = ({ pageTitle, pageName, search }) => {
           </div>
         </div>
       </section>
-      {search && <SearchFilter />}
+      {/* {search && <SearchFilter />} */}
     </Fragment>
   );
 };

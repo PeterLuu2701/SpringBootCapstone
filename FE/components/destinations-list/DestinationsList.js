@@ -5,38 +5,38 @@ import axios from "axios";
 import DestinationItem from "@/components/destination-item/DestinationItem";
 import ReactPaginate from "react-paginate";
 
-const DestinationsList = ({ initialDestinations = [], itemsPerPage = 10 }) => {
+const DestinationsList = ({
+  initialDestinations = [],
+  initialPageCount = 1,
+}) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [destinations, setDestinations] = useState(initialDestinations);
-  const [pageCount, setPageCount] = useState(0);
+  const [pageCount, setPageCount] = useState(initialPageCount);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const itemsPerPage = 10;
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
   useEffect(() => {
     let isMounted = true;
 
-    // If initialDestinations are provided (e.g., from SSR/SSG), use them
-    if (initialDestinations.length > 0) {
-      setDestinations(initialDestinations);
-      setPageCount(Math.ceil(initialDestinations.length / itemsPerPage));
-      return;
-    }
-
     const fetchDestinations = async () => {
       if (!isMounted) return;
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`${API_URL}/destination`);
-        const data = response.data?.data || [];
-        if (!Array.isArray(data)) {
-          throw new Error("Invalid API response: data is not an array");
-        }
+        const response = await axios.get(`${API_URL}/destination`, {
+          params: { page: currentPage, size: itemsPerPage },
+        });
+        console.log("API Response for page", currentPage, ":", response.data);
+        const content = response.data.data?.content || [];
+        const totalPages = response.data.data?.totalPages || 1;
+        console.log("Parsed content:", content);
+        console.log("Total pages:", totalPages);
         if (isMounted) {
-          setDestinations(data);
-          setPageCount(Math.ceil(data.length / itemsPerPage));
+          setDestinations(content);
+          setPageCount(totalPages);
         }
       } catch (error) {
         console.error("Error fetching destinations:", error);
@@ -54,14 +54,7 @@ const DestinationsList = ({ initialDestinations = [], itemsPerPage = 10 }) => {
     return () => {
       isMounted = false;
     };
-  }, [API_URL, itemsPerPage, initialDestinations]);
-
-  // Calculate the current page's destinations for client-side pagination
-  const startIndex = currentPage * itemsPerPage;
-  const currentDestinations = destinations.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  }, [currentPage]);
 
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
@@ -84,30 +77,22 @@ const DestinationsList = ({ initialDestinations = [], itemsPerPage = 10 }) => {
           </div>
         </div>
         {loading ? (
-          <div className="row gap-10 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2">
-            {Array.from({ length: itemsPerPage }).map((_, index) => (
-              <div
-                key={index}
-                className="skeleton-card h-64 bg-gray-200 animate-pulse"
-              />
-            ))}
+          <div className="text-center">
+            <p>Loading destinations...</p>
           </div>
         ) : error ? (
           <div className="text-center text-red-500">
             <p>{error}</p>
           </div>
-        ) : currentDestinations.length > 0 ? (
+        ) : destinations.length > 0 ? (
           <div className="row gap-10 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2 justify-content-center">
-            {currentDestinations.map((destination, index) => (
+            {destinations.map((destination, index) => (
               <DestinationItem
                 key={destination.id}
-                imageUrl={
-                  destination.image
-                    ? destination.image.split("/").pop()
-                    : "default-image.jpg"
-                }
+                // Sửa đổi ở đây: Truyền destination.imageUrl trực tiếp
+                imageUrl={destination.imageUrl} // Sử dụng imageUrl từ DTO backend
                 title={destination.name}
-                toursCount={destination.toursCount || 10}
+                // toursCount={destination.toursCount || "10"} // toursCount cần được tính toán hoặc lấy từ backend
                 destinationDetailsLink={`/destination-details?id=${destination.id}`}
                 aosDelay={index * 50}
               />
@@ -140,7 +125,6 @@ const DestinationsList = ({ initialDestinations = [], itemsPerPage = 10 }) => {
               containerClassName="pagination flex justify-center space-x-2 mt-10"
               activeClassName="bg-blue-600 text-white"
               disabledClassName="disabled"
-              ariaLabelBuilder={(page) => `Page ${page}`}
               renderOnZeroPageCount={null}
             />
           </div>

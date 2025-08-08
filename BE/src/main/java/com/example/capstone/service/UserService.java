@@ -1,19 +1,16 @@
 package com.example.capstone.service;
 
-import com.example.capstone.entity.User;
-import com.example.capstone.util.error.IdInvalidException;
-import org.springframework.data.domain.Page;
-import java.util.Optional;
+import com.example.capstone.dto.UserDTO;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public interface UserService {
-
-    User createUser(User user) throws IdInvalidException;
-
-    Page<User> getAllUsers(int page, int size);
-
-    Optional<User> getUserById(int id);
-
-    User updateUser(User updatedUser) throws IdInvalidException;
-
-    void deleteUser(int id) throws IdInvalidException;
+    UserDTO createUser(UserDTO userDTO);
+    UserDTO getUserById(Long id);
+    List<UserDTO> getAllUsers();
+    UserDTO updateUser(Long id, UserDTO userDTO);
+    boolean deleteUser(Long id);
+    UserDTO getUserByUsername(String username);
 }

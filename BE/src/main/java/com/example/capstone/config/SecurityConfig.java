@@ -15,9 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -25,13 +22,13 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); // Dùng BCrypt để mã hóa mật khẩu
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            throw new RuntimeException("User not found");
+            throw new RuntimeException("User not found"); // Không tạo user mặc định
         };
     }
 
@@ -40,7 +37,7 @@ public class SecurityConfig {
             PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder);
+        authProvider.setPasswordEncoder(passwordEncoder); // Đúng cách: Dùng BCryptPasswordEncoder
         return new ProviderManager(List.of(authProvider));
     }
 
@@ -48,28 +45,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenFilter customAuthenFilter)
             throws Exception {
         return http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(csrf -> csrf.disable()) // Tắt CSRF để test API
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Không
+                                                                                                              // dùng
+                                                                                                              // session
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/sign-in", "/auth/sign-up", "/destination", "/destination/**", "/roles",
-                                "/roles/**", "/users", "/users/**", "/api/payment/create-order",
+                        .requestMatchers("/auth/**",
+                                "/destination", "/destination/**", "/user/**", "/role/**", "/tour", "/tour/**",
+                                "/tour/search", "/blog", "/blog/**", "/file/**", "/activity/**", "/booking/**",
+                                "/country/**", "/city/**", "/roles/**", "/users", "/users/**",
+                                "/api/payment/create-order",
                                 "/api/payment/callback")
-                        .permitAll()
-                        .anyRequest().authenticated())
-                .addFilterBefore(customAuthenFilter, UsernamePasswordAuthenticationFilter.class)
+                        .permitAll() // Các API này không cần login
+                        .anyRequest().authenticated() // Còn lại thì cần authentication
+                )
+                .addFilterBefore(customAuthenFilter, UsernamePasswordAuthenticationFilter.class) // Thêm filter custom
                 .build();
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 }

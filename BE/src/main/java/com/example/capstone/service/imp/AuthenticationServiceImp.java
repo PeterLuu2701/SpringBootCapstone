@@ -38,7 +38,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
         if(userOptional.isPresent()) {
             User user = userOptional.get();
             if (passwordEncoder.matches(password, user.getPassword())) {
-                token = jwtHelper.generateToken("Hello");
+                token = jwtHelper.generateToken(data);
             }
         }
         return token;
@@ -47,11 +47,13 @@ public class AuthenticationServiceImp implements AuthenticationService {
     @Override
     public boolean signUp(String email, String password, String username) {
         if (userRepository.findByEmail(email).isPresent()) {
+            // User with this email already exists
             return false;
         }
 
         try {
-            Optional<Role> roleOptional = roleRepository.findById(2);
+            // Set default role to USER, which has role_id = 1
+            Optional<Role> roleOptional = roleRepository.findById(1L); // Changed from 2L to 1L
             if (roleOptional.isPresent()) {
                 Role defaultRole = roleOptional.get();
 
@@ -59,14 +61,18 @@ public class AuthenticationServiceImp implements AuthenticationService {
                 newUser.setEmail(email);
                 newUser.setPassword(passwordEncoder.encode(password)); // Hash the password here!
                 newUser.setUsername(username);
-                newUser.setRole_id(defaultRole);
+                newUser.setRole(defaultRole); // Uses the setRole method from the User entity
 
                 userRepository.save(newUser);
                 return true;
             } else {
+                // Log a warning if the default role (ID 1) is not found.
+                // This indicates a database setup or configuration issue.
+                System.err.println("Warning: Default role with ID 1 (USER role) not found in the database.");
                 return false;
             }
         } catch (Exception e) {
+            // Log the full stack trace for detailed debugging
             e.printStackTrace();
             return false;
         }

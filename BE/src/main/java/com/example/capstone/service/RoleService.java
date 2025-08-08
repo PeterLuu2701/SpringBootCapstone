@@ -1,19 +1,16 @@
 package com.example.capstone.service;
 
-import com.example.capstone.entity.Role;
-import com.example.capstone.util.error.IdInvalidException;
-import org.springframework.data.domain.Page;
-import java.util.Optional;
+import com.example.capstone.dto.RoleDTO;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public interface RoleService {
-
-    Role createRole(Role role) throws IdInvalidException;
-
-    Page<Role> getAllRoles(int page, int size);
-
-    Optional<Role> getRoleById(int id);
-
-    Role updateRole(Role updatedRole) throws IdInvalidException;
-
-    void deleteRole(int id) throws IdInvalidException;
+    RoleDTO createRole(RoleDTO roleDTO);
+    RoleDTO getRoleById(Long id);
+    List<RoleDTO> getAllRoles();
+    RoleDTO updateRole(Long id, RoleDTO roleDTO);
+    boolean deleteRole(Long id);
+    RoleDTO getRoleByName(String name);
 }

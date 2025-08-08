@@ -7,11 +7,12 @@ import "@css/nice-select.min.css";
 import "@css/slick.min.css";
 import "@css/style.css";
 import "./globals.css";
-import "rc-slider/assets/index.css";
+import 'rc-slider/assets/index.css';
 
 export const metadata = {
   title: "BootCamp - Travel & Tour Booking by React NextJS",
-  description: "BootCamp - Travel & Tour Booking by React NextJS",
+  description:
+    "BootCamp - Travel & Tour Booking by React NextJS",
 };
 
 export default function RootLayout({ children }) {

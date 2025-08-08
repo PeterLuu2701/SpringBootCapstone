@@ -1,139 +1,142 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Container, Table, Button, Spinner } from "react-bootstrap";
+import CreateUser from "@/components/admin-model/CreateUser";
+import DeleteUser from "@/components/admin-model/DeleteUser";
+import UpdateUser from "@/components/admin-model/UpdateUser";
 import axios from "axios";
-import AddUser from "@/components/admin-model/Add-User";
-import UpdateUser from "@/components/admin-model/Update-User";
-import DeleteUser from "@/components/admin-model/Delete-User";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+import React, { useEffect, useState } from "react";
+import { Container, Table, Button } from "react-bootstrap";
 
 const UsersDashboard = () => {
   const [users, setUsers] = useState([]);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [usernameToDelete, setUsernameToDelete] = useState("");
+  const [infoUpdate, setInfoUpdate] = useState({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false); // Add state for delete modal
-  const [selectedUser, setSelectedUser] = useState(null);
 
-  const fetchUsers = async () => {
+  const fetchData = async () => {
     try {
-      console.log("Fetching users from:", `${API_URL}/users`);
-      const response = await axios.get(`${API_URL}/users`);
-      console.log("GET response:", response.data);
-      const data = response.data.data || [];
-      if (!Array.isArray(data)) {
-        throw new Error("Invalid API response: data is not an array");
+      const res = await axios.get("http://localhost:8080/user");
+      console.log("API response:", res.data);
+      if (res.data && Array.isArray(res.data.data)) {
+        setUsers(res.data.data);
+      } else {
+        console.error("Unexpected response structure:", res.data);
+        setUsers([]);
       }
-      setUsers(data);
-      setLoading(false);
     } catch (error) {
-      console.error("GET error:", error.response?.data || error.message);
-      setError(
-        "Failed to fetch users: " +
-          (error.response?.data?.message || error.message)
-      );
+      console.error("Error fetching data:", error);
+      setUsers([]);
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchData();
   }, []);
 
-  const handleEdit = (user) => {
-    console.log("Editing user:", user);
-    setSelectedUser(user);
-    setShowUpdateModal(true);
+  const refreshUsers = () => {
+    fetchData();
   };
 
-  const handleDeleteClick = (user) => {
-    console.log("Preparing to delete user:", user);
-    setSelectedUser(user);
-    setShowDeleteModal(true); // Show the delete modal
+  const handleUpdateClick = (user) => {
+    setInfoUpdate(user);
+    setOpenUpdate(true);
   };
+
+  const handleCreateClick = () => {
+    setOpenAdd(true);
+  };
+
+  const handleDeleteClick = (userId, username) => {
+    setUserIdToDelete(userId);
+    setUsernameToDelete(username);
+    setOpenDelete(true);
+  };
+
+  if (loading) {
+    return <div>Loading users...</div>;
+  }
 
   return (
     <Container className="mt-4">
       <h2 className="mb-4 text-center">Users Dashboard</h2>
+      <Button variant="primary" className="mb-3" onClick={handleCreateClick}>
+        Create User
+      </Button>
 
-      <br />
-      <br />
-      {error && <div className="text-center text-danger mb-4">{error}</div>}
-      {loading ? (
-        <div className="text-center">
-          <Spinner animation="border" />
-          <p>Loading users...</p>
-        </div>
-      ) : users.length === 0 ? (
-        <div className="text-center">No users available</div>
-      ) : (
-        <Table
-          striped
-          bordered
-          hover
-          responsive
-          className="shadow"
-          aria-label="Users table"
-        >
-          <thead className="bg-light">
-            <tr>
-              <th>No.</th>
-              <th>Username</th>
-              <th>Full Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Role</th>
-              <th className="text-center">Actions</th>
+      <Table striped bordered hover responsive className="shadow">
+        <thead className="bg-light">
+          <tr>
+            <th>No.</th>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th className="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
+            <tr key={user.id}>
+              <td>{user.id}</td>
+              <td>{user.username}</td>
+              <td>{user.fullname}</td>
+              <td>{user.email}</td>
+              <td>{user.phone}</td>
+              <td className="text-center">
+                <Button
+                  variant="warning"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => handleUpdateClick(user)}
+                >
+                  Update
+                </Button>
+
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => handleDeleteClick(user.id, user.username)}
+                >
+                  Delete
+                </Button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.username}</td>
-                <td>{user.fullname}</td>
-                <td>{user.email}</td>
-                <td>{user.phone}</td>
-                <td>{user.roleName || "N/A"}</td>
-                <td className="text-center">
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    className="me-2"
-                    onClick={() => handleEdit(user)}
-                    aria-label={`Edit ${user.username}`}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleDeleteClick(user)} // Trigger modal instead of direct delete
-                    aria-label={`Delete ${user.username}`}
-                  >
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+          ))}
+        </tbody>
+      </Table>
+
+      {openUpdate && (
+        <UpdateUser
+          openUpdate={openUpdate}
+          setOpenUpdate={setOpenUpdate}
+          setUsers={refreshUsers}
+          infoUpdate={infoUpdate}
+        />
       )}
-      <DeleteUser
-        show={showDeleteModal}
-        onHide={() => setShowDeleteModal(false)}
-        user={selectedUser}
-        setUsers={setUsers}
-      />
-      <UpdateUser
-        show={showUpdateModal}
-        onHide={() => setShowUpdateModal(false)}
-        user={selectedUser}
-        setUsers={setUsers}
-      />
+
+      {openAdd && (
+        <CreateUser
+          openAdd={openAdd}
+          setOpenAdd={setOpenAdd}
+          setUsers={refreshUsers}
+        />
+      )}
+
+      {openDelete && (
+        <DeleteUser
+          openDelete={openDelete}
+          setOpenDelete={setOpenDelete}
+          userIdToDelete={userIdToDelete}
+          usernameToDelete={usernameToDelete}
+          setUsers={refreshUsers}
+        />
+      )}
     </Container>
   );
 };

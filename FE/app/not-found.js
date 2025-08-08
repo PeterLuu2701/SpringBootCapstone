@@ -55,7 +55,7 @@ const page = () => {
                 data-aos-duration={1500}
                 data-aos-offset={50}
               >
-                <img src="assets/images/newsletter/404.png" alt="404 Error" />
+                <img src="/assets/images/newsletter/404.png" alt="404 Error" />
               </div>
             </div>
           </div>

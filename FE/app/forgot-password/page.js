@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import styles from './style.module.css'; // Import CSS Module
-import ReveloLayout from '@/layout/ReveloLayout';
+
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <ReveloLayout>
+    
     <div className={styles.container}>
       <div className={styles.wrapper}>
         <h1 className={styles.title}>Forgot Password</h1>
@@ -49,7 +49,7 @@ const ForgotPasswordPage = () => {
         </div>
       </div>
     </div>
-    </ReveloLayout>
+    
   );
 };
 

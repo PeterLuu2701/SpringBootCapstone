@@ -1,19 +1,20 @@
 package com.example.capstone.service.imp;
 
+import com.example.capstone.dto.RoleDTO;
 import com.example.capstone.entity.Role;
+import com.example.capstone.mapper.RoleMapper;
 import com.example.capstone.repository.RoleRepository;
 import com.example.capstone.service.RoleService;
-import com.example.capstone.util.error.IdInvalidException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImp implements RoleService {
-
+    @Autowired
     private final RoleRepository roleRepository;
 
     public RoleServiceImp(RoleRepository roleRepository) {
@@ -21,53 +22,53 @@ public class RoleServiceImp implements RoleService {
     }
 
     @Override
-    public Role createRole(Role role) throws IdInvalidException {
-        if (role.getName() == null || role.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Role name cannot be empty");
-        }
-        if (roleRepository.existsByName(role.getName())) {
-            throw new IllegalArgumentException("Role name already exists");
-        }
-        return roleRepository.save(role);
+    public RoleDTO createRole(RoleDTO roleDTO) {
+        Role role = RoleMapper.toEntity(roleDTO);
+        Role savedRole = roleRepository.save(role);
+        return RoleMapper.toDTO(savedRole);
     }
 
     @Override
-    public Page<Role> getAllRoles(int page, int size) {
-        if (page < 0 || size <= 0) {
-            throw new IllegalArgumentException("Page must be >= 0 and size must be > 0");
-        }
-        Pageable pageable = PageRequest.of(page, size);
-        return roleRepository.findAll(pageable);
+    public RoleDTO getRoleById(Long id) {
+        Optional<Role> roleOptional = roleRepository.findById(id);
+        return roleOptional.map(RoleMapper::toDTO).orElse(null);
     }
 
     @Override
-    public Optional<Role> getRoleById(int id) {
-        return roleRepository.findById(id);
+    public List<RoleDTO> getAllRoles() {
+        return roleRepository.findAll().stream()
+                .map(RoleMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Role updateRole(Role updatedRole) throws IdInvalidException {
-        if (updatedRole.getName() == null || updatedRole.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Role name cannot be empty");
+    public RoleDTO updateRole(Long id, RoleDTO roleDTO) {
+        Optional<Role> existingRoleOptional = roleRepository.findById(id);
+
+        if (existingRoleOptional.isPresent()) {
+            Role existingRole = existingRoleOptional.get();
+
+            existingRole.setName(roleDTO.getName());
+            existingRole.setDescription(roleDTO.getDescription());
+
+            Role updatedRole = roleRepository.save(existingRole);
+            return RoleMapper.toDTO(updatedRole);
         }
-        Optional<Role> optionalRole = roleRepository.findById(updatedRole.getId());
-        if (!optionalRole.isPresent()) {
-            throw new IdInvalidException("Role with ID " + updatedRole.getId() + " does not exist");
-        }
-        Role role = optionalRole.get();
-        if (!role.getName().equals(updatedRole.getName()) && roleRepository.existsByName(updatedRole.getName())) {
-            throw new IllegalArgumentException("Role name already exists");
-        }
-        role.setName(updatedRole.getName());
-        role.setDescription(updatedRole.getDescription());
-        return roleRepository.save(role);
+        return null; // Role not found
     }
 
     @Override
-    public void deleteRole(int id) throws IdInvalidException {
-        if (!roleRepository.existsById(id)) {
-            throw new IdInvalidException("Role with ID " + id + " does not exist");
+    public boolean deleteRole(Long id) {
+        if (roleRepository.existsById(Math.toIntExact(id))) {
+            roleRepository.deleteById(Math.toIntExact(id));
+            return true;
         }
-        roleRepository.deleteById(id);
+        return false;
+    }
+
+    @Override
+    public RoleDTO getRoleByName(String name) {
+        Optional<Role> roleOptional = roleRepository.findByName(name);
+        return roleOptional.map(RoleMapper::toDTO).orElse(null);
     }
 }

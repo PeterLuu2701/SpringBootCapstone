@@ -1,72 +1,93 @@
 package com.example.capstone.controller;
 
-import com.example.capstone.entity.Destination;
+import com.example.capstone.dto.DestinationDTO;
 import com.example.capstone.service.DestinationService;
-import com.example.capstone.service.imp.DestinationServiceImp;
+import com.example.capstone.util.annotation.ApiMessage;
 import com.example.capstone.util.error.IdInvalidException;
 
 import jakarta.validation.Valid;
 
-import java.util.Optional;
-
+// import java.util.Optional; // Không cần thiết nếu service ném exception
+// import java.util.List; // Không cần thiết nếu trả về Page
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @CrossOrigin
+@RequestMapping("/destination")
 public class DestinationController {
-    private final DestinationServiceImp destinationService;
 
-    public DestinationController(DestinationServiceImp destinationService) {
+    private final DestinationService destinationService;
+
+    // Constructor injection
+    public DestinationController(DestinationService destinationService) {
         this.destinationService = destinationService;
     }
 
-    @GetMapping("/destination")
-    public ResponseEntity<Page<Destination>> getAllDestinations(
+    // GET ALL Destination with Pagination
+    @GetMapping
+    @ApiMessage("Get all destinations with pagination")
+    public ResponseEntity<Page<DestinationDTO>> getAllDestinations(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "1000") int size) {
-        Page<Destination> destinations = this.destinationService.getAllDestination(page, size);
-        return ResponseEntity.ok(destinations);
+            @RequestParam(defaultValue = "10") int size) {
+        Page<DestinationDTO> destinations = this.destinationService.getAllDestination(page, size);
+        return ResponseEntity.ok(destinations); // DestinationDTO đã chứa regionName (nếu mapper đúng)
     }
 
-    @GetMapping("/destination/{id}")
-    public ResponseEntity<Optional<Destination>> getDestinationId(@PathVariable("id") long id)
+    @GetMapping("/search")
+    @ApiMessage("Search destinations by keyword")
+    public ResponseEntity<Page<DestinationDTO>> searchDestinations(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<DestinationDTO> searchResults = destinationService.searchDestinations(keyword, page, size);
+        return ResponseEntity.ok(searchResults);
+    }
+
+    // GET Destination BY ID
+    @GetMapping("/{id}")
+    @ApiMessage("Get destination by ID")
+    public ResponseEntity<DestinationDTO> getDestinationId(@PathVariable("id") long id)
             throws IdInvalidException {
-        Optional<Destination> destination = this.destinationService.getDestinationById(id);
-        if (destination.isPresent()) {
-            return ResponseEntity.ok(destination);
-        } else {
-            throw new IdInvalidException("Destination với Id " + id + " không tồn tại");
-        }
+        DestinationDTO destination = this.destinationService.getDestinationById(id);
+        return ResponseEntity.ok(destination); // DestinationDTO đã chứa regionName (nếu mapper đúng)
     }
 
-    @PostMapping("/destination")
-    public ResponseEntity<Destination> createNewDestination(
-            @Valid @RequestBody Destination destinationPostMan) {
-        Destination createdDestination = this.destinationService.createDestination(destinationPostMan);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdDestination);
+    // CREATE Destination
+    @PostMapping
+    @ApiMessage("Create a new destination")
+    public ResponseEntity<DestinationDTO> createNewDestination(
+            @Valid @ModelAttribute DestinationDTO destinationDTO, // Spring sẽ bind regionName từ form-data vào đây
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile
+    ) {
+        destinationDTO.setImageFile(imageFile); // Gán file vào DTO để service xử lý
+        DestinationDTO createdDestination = this.destinationService.createDestination(destinationDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdDestination); // DestinationDTO đã chứa regionName
     }
 
-    @PutMapping("/destination")
-    public ResponseEntity<Destination> updateDestination(@RequestBody Destination destinationPostMan)
-            throws IdInvalidException {
-        Destination updatedDestination = this.destinationService.updateDestination(destinationPostMan);
-        return ResponseEntity.ok(updatedDestination);
+    // UPDATE Destination
+    @PutMapping("/{id}")
+    @ApiMessage("Update an existing destination")
+    public ResponseEntity<DestinationDTO> updateDestination(
+            @PathVariable("id") long id,
+            @Valid @ModelAttribute DestinationDTO destinationDTO, // Spring sẽ bind regionName từ form-data vào đây
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile
+    ) throws IdInvalidException {
+        destinationDTO.setId(id); // Quan trọng: Set ID từ path vào DTO
+        destinationDTO.setImageFile(imageFile);
+        DestinationDTO updatedDestination = this.destinationService.updateDestination(id, destinationDTO);
+        return ResponseEntity.ok(updatedDestination); // DestinationDTO đã chứa regionName
     }
 
-    @DeleteMapping("/destination/{id}")
-    public ResponseEntity<String> delete_destination(@PathVariable("id") long id) throws IdInvalidException {
-        String result = this.destinationService.delete_destination(id);
+    // DELETE Destination
+    @DeleteMapping("/{id}")
+    @ApiMessage("Delete a destination")
+    public ResponseEntity<String> deleteDestination(@PathVariable("id") long id) throws IdInvalidException {
+        String result = this.destinationService.deleteDestination(id);
         return ResponseEntity.ok(result);
     }
 }

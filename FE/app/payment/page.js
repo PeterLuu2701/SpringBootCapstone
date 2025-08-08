@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CreditCard,
   Shield,
@@ -24,8 +24,9 @@ import {
   Bed,
 } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 const Checkout = () => {
@@ -36,6 +37,17 @@ const Checkout = () => {
   const priceFromUrl = searchParams.get("price")
     ? parseInt(searchParams.get("price"))
     : null;
+  const router = useRouter();
+
+  // Fix the useState syntax
+  const [parsedPrice, setParsedPrice] = useState(priceFromUrl || null);
+
+  // Use price from useSearchParams instead of router.query
+  useEffect(() => {
+    if (priceFromUrl !== null) {
+      setParsedPrice(priceFromUrl);
+    }
+  }, [priceFromUrl]);
 
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [formData, setFormData] = useState({
@@ -569,7 +581,18 @@ const Checkout = () => {
                         style={{ borderColor: "#374151 !important" }}
                       >
                         <span>Total Amount</span>
-                        <span>{formatPrice(getTotalPrice())}</span>
+                        <span>
+                          {parsedPrice !== null ? (
+                            <p>
+                              {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(parsedPrice)}
+                            </p>
+                          ) : (
+                            <p>Loading ...</p>
+                          )}
+                        </span>
                       </div>
                     </div>
 

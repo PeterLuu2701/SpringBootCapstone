@@ -32,7 +32,7 @@ public class RSAUtil {
      * @param pubkeyStr a public key in base64 encode
      *
      * @return java.security.PublicKey
-     * */
+     */
     public static PublicKey stringToPublicKey(String pubkeyStr) throws InvalidKeySpecException {
         byte[] bytesKey = Base64.getDecoder().decode(pubkeyStr.getBytes());
         return keyFactory.generatePublic(new X509EncodedKeySpec(bytesKey));
@@ -46,35 +46,31 @@ public class RSAUtil {
      * @param prikeyStr a private key in base64 encode
      *
      * @return java.security.PrivateKey
-     * */
+     */
     public static PrivateKey stringToPrivateKey(String prikeyStr) throws InvalidKeySpecException {
         byte[] bytesKey = Base64.getDecoder().decode(prikeyStr.getBytes());
         return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(bytesKey));
     }
 
     public static String encrypt(PublicKey pubkey, String message)
-            throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException
-    {
+            throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         cipher.init(Cipher.ENCRYPT_MODE, pubkey);
         return Base64.getEncoder().encodeToString(cipher.doFinal(message.getBytes()));
     }
 
     public static String encrypt(String pubkeyStr, String message)
-            throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidKeySpecException
-    {
+            throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidKeySpecException {
         return encrypt(stringToPublicKey(pubkeyStr), message);
     }
 
     public static byte[] decrypt(PrivateKey prikey, String message)
-            throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException
-    {
+            throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         cipher.init(Cipher.ENCRYPT_MODE, prikey);
         return cipher.doFinal(message.getBytes());
     }
 
     public static byte[] decrypt(String prikeyStr, String message)
-            throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidKeySpecException
-    {
+            throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidKeySpecException {
         return decrypt(stringToPrivateKey(prikeyStr), message);
     }
 }

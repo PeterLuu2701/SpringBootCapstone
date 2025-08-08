@@ -1,0 +1,14 @@
+package com.example.capstone.repository;
+
+import com.example.capstone.entity.Tour;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface TourRepository extends JpaRepository<Tour, Long>, JpaSpecificationExecutor<Tour> {
+    List<Tour> findByDestination_Id(Long destinationId);
+}

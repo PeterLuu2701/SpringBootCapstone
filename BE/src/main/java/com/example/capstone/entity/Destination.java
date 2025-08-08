@@ -1,13 +1,10 @@
 package com.example.capstone.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+
+import java.util.Set;
 
 @Data
 @Entity
@@ -16,15 +13,31 @@ public class Destination {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @NotBlank(message = "name không được để trống")
     private String name;
     private String description;
-    private String country;
-    private String city;
-    private String image;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", referencedColumnName = "id")
+    private Country country;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    private City city;
+
+    private String image_url;
     @Column(columnDefinition = "BOOLEAN DEFAULT true")
     private boolean popular;
     private String duration;
     private String google_map_url;
+    private String region_name;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "destination_activity",
+            joinColumns = @JoinColumn(name = "destination_id"),
+            inverseJoinColumns = @JoinColumn(name = "activity_id")
+    )
+    private Set<Activity> activities;
 }

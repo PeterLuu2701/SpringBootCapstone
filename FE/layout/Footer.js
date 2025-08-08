@@ -25,10 +25,10 @@ const FooterInstagram = () => {
           >
             <a
               className="instagram-item"
-              href="assets/images/instagram/instagram1.jpg"
+              href="/assets/images/instagram/instagram1.jpg"
             >
               <img
-                src="assets/images/instagram/instagram1.jpg"
+                src="/assets/images/instagram/instagram1.jpg"
                 alt="Instagram"
               />
             </a>
@@ -41,10 +41,10 @@ const FooterInstagram = () => {
           >
             <a
               className="instagram-item"
-              href="assets/images/instagram/instagram2.jpg"
+              href="/assets/images/instagram/instagram2.jpg"
             >
               <img
-                src="assets/images/instagram/instagram2.jpg"
+                src="/assets/images/instagram/instagram2.jpg"
                 alt="Instagram"
               />
             </a>
@@ -57,10 +57,10 @@ const FooterInstagram = () => {
           >
             <a
               className="instagram-item"
-              href="assets/images/instagram/instagram3.jpg"
+              href="/assets/images/instagram/instagram3.jpg"
             >
               <img
-                src="assets/images/instagram/instagram3.jpg"
+                src="/assets/images/instagram/instagram3.jpg"
                 alt="Instagram"
               />
             </a>
@@ -73,10 +73,10 @@ const FooterInstagram = () => {
           >
             <a
               className="instagram-item"
-              href="assets/images/instagram/instagram4.jpg"
+              href="/assets/images/instagram/instagram4.jpg"
             >
               <img
-                src="assets/images/instagram/instagram4.jpg"
+                src="/assets/images/instagram/instagram4.jpg"
                 alt="Instagram"
               />
             </a>
@@ -89,10 +89,10 @@ const FooterInstagram = () => {
           >
             <a
               className="instagram-item"
-              href="assets/images/instagram/instagram5.jpg"
+              href="/assets/images/instagram/instagram5.jpg"
             >
               <img
-                src="assets/images/instagram/instagram5.jpg"
+                src="/assets/images/instagram/instagram5.jpg"
                 alt="Instagram"
               />
             </a>
@@ -105,10 +105,10 @@ const FooterInstagram = () => {
           >
             <a
               className="instagram-item"
-              href="assets/images/instagram/instagram6.jpg"
+              href="/assets/images/instagram/instagram6.jpg"
             >
               <img
-                src="assets/images/instagram/instagram6.jpg"
+                src="/assets/images/instagram/instagram6.jpg"
                 alt="Instagram"
               />
             </a>
@@ -139,7 +139,7 @@ const Footer1 = () => {
               <div className="footer-widget footer-text">
                 <div className="footer-logo mb-25">
                   <Link href="/">
-                    <img src="/assets/images/logos/bootcamp.png" alt="Logo" />
+                    <img src="/assets/images/logos/logo-two.png" alt="Logo" />
                   </Link>
                 </div>
                 <p>
@@ -385,7 +385,7 @@ const Footer1 = () => {
           </div>
           {/* Scroll Top Button */}
           <button className="scroll-top scroll-to-target" data-target="html">
-            <img src="assets/images/icons/scroll-up.png" alt="Scroll  Up" />
+            <img src="/assets/images/icons/scroll-up.png" alt="Scroll  Up" />
           </button>
         </div>
       </div>
@@ -416,7 +416,7 @@ const Footer2 = ({ insta }) => {
               <div className="footer-widget footer-text">
                 <div className="footer-logo mb-40">
                   <Link href="/">
-                    <img src="/assets/images/logos/bootcamp.png" alt="Logo" />
+                    <img src="/assets/images/logos/logo-two.png" alt="Logo" />
                   </Link>
                 </div>
                 <div className="footer-map">
